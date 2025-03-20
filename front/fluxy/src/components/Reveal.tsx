@@ -8,9 +8,10 @@ interface RevealProps {
     src?: string,
     alt?: string,
     delay?: number,
+    title?: string,
 }
 
-export const Reveal = ({ children, className, type, src, alt, delay }: RevealProps) => {
+export const Reveal = ({ children, className, type, src, alt, delay, title }: RevealProps) => {
 
     const ref = useRef(null);
     const isInView = useInView(ref, {once: false});
@@ -41,14 +42,14 @@ export const Reveal = ({ children, className, type, src, alt, delay }: RevealPro
 
     if (type === "div") {
         return (
-            <motion.div ref={ref} className={className} variants={variants} initial="hidden" animate={mainControls} 
+            <motion.div ref={ref} title={title} className={className} variants={variants} initial="hidden" animate={mainControls} 
                 transition={transition}>
                 {children}
             </motion.div>
         );
     } else if (type === "img") {
         return (
-            <motion.img ref={ref} className={className} variants={variants} initial="hidden" animate={mainControls} 
+            <motion.img ref={ref} title={title} className={className} variants={variants} initial="hidden" animate={mainControls} 
                 transition={transition}
                 src={src}
                 alt={alt}
