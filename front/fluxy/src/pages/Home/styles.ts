@@ -245,7 +245,7 @@ export const AboutWrapper = styled.div`
 export const ClientsWrapper = styled.div`
 
     width: 100%;
-    padding: 20px;
+    padding: 20px 0px;
 
     text-align: center;
 
@@ -256,9 +256,51 @@ export const ClientsWrapper = styled.div`
 
     .clients {
         background-color: ${(props) => props.theme["purple-500"]};
+        margin: 2rem auto;
+        padding: 2rem 0rem;
         width: 100%;
-        height: 200px;
-        margin-top: 2rem;
-        border-radius: 8px;
+
+        display: flex;
+        flex-wrap: wrap; 
+        justify-content: center; 
+        gap: 1rem; 
+
+        div {
+            box-sizing: content-box;
+            width: 15rem;
+            height: 5rem;
+            object-fit: contain;
+            background-color: ${(props) => props.theme["white"]};
+            padding: 4rem 2rem;
+            text-align: center;
+            border-radius: 8px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            img {
+                width: 15rem;
+                height: 5rem;
+                object-fit: contain;
+            }
+        }
+    }
+
+    @media (max-width: 800px) {
+        
+        .clients {
+
+            div {
+                width: 5rem;
+                height: 2rem;
+
+                img {
+                    width: 5rem;
+                }
+            }
+
+        }
+
     }
 `;
