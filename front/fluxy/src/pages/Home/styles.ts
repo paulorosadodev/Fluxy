@@ -65,7 +65,7 @@ export const Banner = styled.div`
         margin-top: 1rem;
 
         h2 {
-            font-size: 2rem;
+            font-size: 3rem;
             text-align: center;
         }
 
