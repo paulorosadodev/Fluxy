@@ -47,7 +47,6 @@ export const NavBar = styled.nav`
 
         &.deactive {
             display: none;
-            background-color: red;
         }
 
         display: flex;
