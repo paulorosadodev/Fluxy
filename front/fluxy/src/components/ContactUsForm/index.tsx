@@ -32,7 +32,7 @@ export function ContactUsForm() {
         resolver: zodResolver(contactUsSchema)
     });
 
-    const [showPopUp, setShowPopUp] = useState(true);
+    const [showPopUp, setShowPopUp] = useState(false);
 
     function handleContactUs() {
         reset();
