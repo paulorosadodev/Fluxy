@@ -1,48 +1,21 @@
-import { useState } from "react";
-
-import { List, ArrowCircleLeft } from "phosphor-react";
-
 import fluxyLogo from "../../assets/fluxy-logo.png";
 
 import { Reveal } from "../../components/Reveal";
+import { HomeNavBar } from "../../components/HomeNavBar";
+import { ContactUsForm } from "../../components/ContactUsForm";
 import AnimatedBackgroundChart from "../../components/AnimatedBackgroundChart";
 
-import { Header, Banner, AboutWrapper, ClientsWrapper } from "./styles";
+import { Header, Banner, AboutWrapper, ClientsWrapper, ContactUsWrapper } from "./styles";
 
 export function Home() {
-
-    const [showMenu, setShowMenu] = useState(false);
-
-    const handleShowMenu = () => {
-        setShowMenu(() => {
-            document.body.style.overflow = "hidden";
-            return true;
-        });
-    };
-
-    const handleCloseMenu = () => {
-        setShowMenu(() => {
-            document.body.style.overflow = "auto";
-            return false;
-        });
-    };
 
     return (
         <>
             <Header>
-                <img src={fluxyLogo} alt="Logotipo da Fluxy" />
-                <List size={50} weight="bold" onClick={handleShowMenu} />
-                <nav className={showMenu ? "active" : "deactive"}>
-                    {showMenu &&
-                        <ArrowCircleLeft size={50} color="white" weight="bold" onClick={handleCloseMenu} />
-                    }
-                    <ul className="active">
-                        <li><a href="#about" onClick={handleCloseMenu}>Sobre</a></li>
-                        <li><a href="#clients" onClick={handleCloseMenu}>Clientes</a></li>
-                        <li><a href="#" onClick={handleCloseMenu}>Contato</a></li>
-                        <li><a id="button" href="#" onClick={handleCloseMenu}>Comece agora</a></li>
-                    </ul>
-                </nav>
+                <a href="/">
+                    <img src={fluxyLogo} alt="Logotipo da Fluxy" />
+                </a>
+                <HomeNavBar />
             </Header>
             <Banner>
                 <h2>Visualize, gerencie, cresça!</h2>
@@ -57,7 +30,7 @@ export function Home() {
             </AboutWrapper>
             <ClientsWrapper id="clients">
                 <Reveal type="div" delay={0}> 
-                    <h2>Conheça alguns dos nossos clientes</h2>
+                    <h2 className="aa">Conheça alguns dos nossos clientes</h2>
                 </Reveal>
                 <div className="clients">
                     <Reveal title="Mix Mateus" type="div" delay={0.1}>
@@ -80,6 +53,10 @@ export function Home() {
                     </Reveal>
                 </div>
             </ClientsWrapper>
+            <ContactUsWrapper id="contact">
+                <h2>Fale conosco</h2>
+                <ContactUsForm />
+            </ContactUsWrapper>
         </>
     );
 
