@@ -16,6 +16,14 @@ export function HomeNavBar() {
     };
 
     const handleCloseMenu = () => {
+        document.body.style.backgroundColor = "blue";
+        setShowMenu(() => {
+            document.body.style.overflow = "auto";
+            return false;
+        });
+    };
+
+    const handleCloseMenuB = () => {
         document.body.style.backgroundColor = "red";
         setShowMenu(() => {
             document.body.style.overflow = "auto";
@@ -28,7 +36,7 @@ export function HomeNavBar() {
             <MenuIcon size={50} weight="bold" onClick={handleShowMenu} />
             <NavBar className={showMenu ? "active" : "deactive"}>
                 {showMenu &&
-                    <ArrowCircleLeft size={50} color="white" weight="bold" onClick={handleCloseMenu} />
+                    <ArrowCircleLeft size={50} color="white" weight="bold" onClick={handleCloseMenuB} />
                 }
                 <ul className="active">
                     <li><a href="#about" onClick={handleCloseMenu}>Sobre</a></li>
