@@ -16,7 +16,6 @@ export function HomeNavBar() {
     };
 
     const handleCloseMenu = () => {
-        document.body.style.backgroundColor = "blue";
         setShowMenu(() => {
             document.body.style.overflow = "auto";
             return false;
