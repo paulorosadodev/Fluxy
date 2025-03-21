@@ -7,6 +7,7 @@ import { MenuIcon, NavBar } from "./styles";
 export function HomeNavBar() {
 
     const [showMenu, setShowMenu] = useState(false);
+    const [cont, setCont] = useState(0);
 
     const handleShowMenu = () => {
         setShowMenu(() => {
@@ -23,7 +24,9 @@ export function HomeNavBar() {
     };
 
     const handleCloseMenuB = (e: any) => {
+        console.log("teste");
         e.target.style.backgroundColor = "red";
+        setCont(prev => prev + 1);
     };
 
     return(
@@ -34,7 +37,7 @@ export function HomeNavBar() {
                     <ArrowCircleLeft size={50} color="white" weight="bold" onClick={(e) => handleCloseMenuB(e)} />
                 }
                 <ul className="active">
-                    <li><a href="#about" onClick={handleCloseMenu}>Sobre</a></li>
+                    <li><a href="#about" onClick={handleCloseMenu}>Sobre {cont}</a></li>
                     <li><a href="#clients" onClick={handleCloseMenu}>Clientes</a></li>
                     <li><a href="#contact" onClick={handleCloseMenu}>Contato</a></li>
                     <li><a id="button" href="#" onClick={handleCloseMenu}>Comece agora</a></li>
