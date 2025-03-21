@@ -10,65 +10,12 @@ export const Header = styled.header`
     width: 100%;
     overflow-x: hidden;
 
-    nav {
-        display: flex;
-        align-items: center;
-    }
-
     img {
         padding-left: 2rem;
         width: 20rem;
     }
 
-    ul {
-        display: flex;
-        align-items: center;
-        gap: 1.5rem;
-        padding: 6rem 3rem;
-    }
-
-    li, a {
-        list-style: none;
-        text-decoration: none;
-        font-weight: 500;
-        font-size: 1.3rem;
-        color: ${(props) => props.theme["purple-900"]};
-
-        &:hover {
-            cursor: pointer;
-        }
-    }
-
-    svg {
-        display: none;
-
-        right: 40px;
-        color: ${(props) => props.theme["purple-900"]};
-
-        z-index: 4;
-
-        &:hover {
-            cursor: pointer;
-        }
-    }
-
-    #button {
-        background-color: ${(props) => props.theme["purple-500"]};
-        padding: 1rem 2rem;
-        border-radius: 8px;
-        color: ${(props) => props.theme["white"]};
-        font-weight: bold;
-        font-size: 1rem;
-        border: none;
-        transition: background-color .1s;
-    }
-
-    #button:hover {
-        cursor: pointer;
-        background-color: ${(props) => props.theme["purple-300"]};
-    }
-
-    @media (max-width: 800px) {
+    @media (max-width: 880px) {
 
         padding: 1rem 2rem 0rem 1rem;
         justify-content: space-between;
@@ -79,75 +26,6 @@ export const Header = styled.header`
             max-width: 12rem; 
             min-width: 6rem; 
             height: auto; 
-        }
-
-        nav.deactive {
-            display: none;
-            background-color: red;
-        }
-        
-        nav {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            position: fixed;
-            background-color: red;
-            padding: 1rem;
-            padding-bottom: 10px;
-            top: 0;
-            bottom: 0;
-            right: 0;
-            z-index: 4;
-            width: 100dvw;
-            height: 100dvh;
-            overflow-y: auto;
-            overflow-x: hidden;
-            -webkit-overflow-scrolling: touch;   
-            background-color: ${(props) => props.theme["purple-900"]};
-
-            svg {
-                position: fixed;
-                top: 1.875rem;
-                right: 2.8125rem;
-            }
-
-        }
-
-        ul {
-            display: none; 
-            align-items: flex-start;
-        }
-
-        ul.active {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            padding: 6rem 3rem;
-            opacity: 1;
-            height: 100dvh;
-            z-index: 3;
-        }
-
-        ul.deactive {
-            display: none;
-        }
-
-        li, a {
-            color: ${(props) => props.theme["white"]};
-        }
-
-        li:nth-last-child(2) {
-            margin-bottom: 1rem;
-        }
-
-        svg {
-            display: block;
-            width: 2.5rem;
-            height: 2.5rem;
-        }
-
-        #button {
-            white-space: nowrap;
         }
 
     }
@@ -164,6 +42,8 @@ export const Banner = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 0;
+    position: relative;
 
     h2 {
         position: absolute;
@@ -179,7 +59,7 @@ export const Banner = styled.div`
         z-index: 0;
     }
 
-    @media (max-width: 800px) {
+    @media (max-width: 880px) {
 
         max-height: 15rem;
         margin-top: 1rem;
@@ -218,6 +98,7 @@ export const AboutWrapper = styled.div`
     h2 {
         font-size: 2.5rem;
         text-align: center;
+        color: ${(props) => props.theme["purple-900"]};
     }
 
     p {
@@ -226,7 +107,7 @@ export const AboutWrapper = styled.div`
         line-height: 1.6rem;
     }
 
-    @media (max-width: 800px) {
+    @media (max-width: 880px) {
         flex-direction: column-reverse;
         align-items: center;
         padding: 2rem 1rem;
@@ -287,7 +168,11 @@ export const ClientsWrapper = styled.div`
         }
     }
 
-    @media (max-width: 800px) {
+    @media (max-width: 880px) {
+
+        h2 {
+            font-size: 2rem;
+        }
         
         .clients {
 
@@ -303,4 +188,17 @@ export const ClientsWrapper = styled.div`
         }
 
     }
+`;
+
+export const ContactUsWrapper = styled.div`
+
+    text-align: center;
+    margin-top: 3rem;
+    overflow: hidden;
+
+    h2 {
+        color: ${(props) => props.theme["purple-900"]};
+        font-size: 2.5rem;
+    }
+
 `;
