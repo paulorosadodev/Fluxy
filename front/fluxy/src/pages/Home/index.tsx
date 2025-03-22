@@ -5,7 +5,7 @@ import { HomeNavBar } from "../../components/HomeNavBar";
 import { ContactUsForm } from "../../components/ContactUsForm";
 import AnimatedBackgroundChart from "../../components/AnimatedBackgroundChart";
 
-import { Header, Banner, AboutWrapper, ClientsWrapper, ContactUsWrapper } from "./styles";
+import { Header, Banner, AboutWrapper, ClientsWrapper, ContactUsWrapper, FooterWrapper } from "./styles";
 
 export function Home() {
 
@@ -57,6 +57,15 @@ export function Home() {
                 <h2>Fale conosco</h2>
                 <ContactUsForm />
             </ContactUsWrapper>
+            <FooterWrapper>
+                <p>© 2025 <a href="https://github.com/paulorosadodev/Fluxy"> <img src="src/assets/fluxy-icon (3).png"/>  Fluxy</a>. Todos os direitos reservados.</p>
+                <p>
+                    Desenvolvido por <a target="__blank" href="https://www.linkedin.com/in/gustavo-mourato-1802b328a/">Gustavo Mourato</a>, <a target="__blank" href="https://www.linkedin.com/in/luankato/">Luan Kato</a>, <a target="__blank" href="https://www.linkedin.com/in/paulorosadodev/">Paulo Rosado</a> e <a target="__blank" href="https://www.linkedin.com/in/viniciusjord%C3%A3o/">Vinícius de Andrade</a>
+                </p>
+                <p>
+                    Projeto para a disciplina de Modelagem e Projeto de Bancos de Dados na <a target="__blank" href="https://www.cesar.school/">CESAR School</a>
+                </p>
+            </FooterWrapper>
         </>
     );
 
