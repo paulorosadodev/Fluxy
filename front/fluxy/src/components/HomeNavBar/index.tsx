@@ -31,9 +31,10 @@ export function HomeNavBar() {
         <>
             <MenuIcon size={50} weight="bold" onClick={handleShowMenu} />
             <NavBar className={showMenu ? "active" : "deactive"}>
-                <ArrowCircleLeft size={50} color="white" weight="bold" onClick={handleCloseMenuB} />
                 <ul className="active">
-                    <ArrowCircleLeft size={50} color="white" weight="bold" onClick={handleCloseMenuB} />
+                    {showMenu &&
+                        <ArrowCircleLeft size={50} color="white" weight="bold" onClick={handleCloseMenuB} />
+                    }
                     <li><a href="#about" onClick={handleCloseMenu}>Sobre {cont}</a></li>
                     <li><a href="#clients" onClick={handleCloseMenu}>Clientes</a></li>
                     <li><a href="#contact" onClick={handleCloseMenu}>Contato</a></li>
