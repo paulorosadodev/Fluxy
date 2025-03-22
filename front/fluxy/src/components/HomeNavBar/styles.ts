@@ -109,6 +109,11 @@ export const NavBar = styled.nav`
             margin-bottom: 1rem;
         }
 
+        ul > svg {
+            color: green;
+            margin-top: 100px;
+        }
+
 }
 
 `;
