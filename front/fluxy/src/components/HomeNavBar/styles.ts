@@ -47,7 +47,6 @@ export const NavBar = styled.nav`
 
         &.deactive {
             display: none;
-            background-color: red;
         }
 
         display: flex;
@@ -71,7 +70,7 @@ export const NavBar = styled.nav`
         svg {
             position: fixed;
             top: 1.875rem;
-            right: 42px;
+            right: 2.5rem;
 
             &:hover {
                 cursor: pointer;
