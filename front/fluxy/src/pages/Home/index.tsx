@@ -58,7 +58,7 @@ export function Home() {
                 <ContactUsForm />
             </ContactUsWrapper>
             <FooterWrapper>
-                <p>© 2025 <a href="https://github.com/paulorosadodev/Fluxy"> <img src="src/assets/fluxy-icon (3).png"/>  Fluxy</a>. Todos os direitos reservados.</p>
+                <p>© 2025 <a href="https://github.com/paulorosadodev/Fluxy"> Fluxy</a>. Todos os direitos reservados.</p> 
                 <p>
                     Desenvolvido por <a target="__blank" href="https://www.linkedin.com/in/gustavo-mourato-1802b328a/">Gustavo Mourato</a>, <a target="__blank" href="https://www.linkedin.com/in/luankato/">Luan Kato</a>, <a target="__blank" href="https://www.linkedin.com/in/paulorosadodev/">Paulo Rosado</a> e <a target="__blank" href="https://www.linkedin.com/in/viniciusjord%C3%A3o/">Vinícius de Andrade</a>
                 </p>
