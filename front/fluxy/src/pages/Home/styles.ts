@@ -194,11 +194,47 @@ export const ContactUsWrapper = styled.div`
 
     text-align: center;
     margin-top: 3rem;
+    margin-bottom: 5rem;
     overflow: hidden;
+
+    padding-top: 1rem;
 
     h2 {
         color: ${(props) => props.theme["purple-900"]};
         font-size: 2.5rem;
+    }
+
+`;
+
+export const FooterWrapper = styled.footer`
+    
+    background-color: ${(props) => props.theme["purple-500"]};
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+
+    padding: 2rem;
+
+    p, a {
+        color: ${(props) => props.theme["white"]};
+        text-align: center;
+
+        img {
+            width: 1rem;
+        }
+    }
+
+    a {
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    a:hover {
+        text-decoration: underline;
+        color: ${(props) => props.theme["gray-50"]};
     }
 
 `;
