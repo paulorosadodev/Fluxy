@@ -70,7 +70,7 @@ export const NavBar = styled.nav`
         svg {
             position: fixed;
             top: 1.875rem;
-            right: 40px;
+            right: 2.5rem;
 
             &:hover {
                 cursor: pointer;
