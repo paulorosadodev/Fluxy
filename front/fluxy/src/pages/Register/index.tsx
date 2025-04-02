@@ -1,12 +1,8 @@
-import { Helmet } from "react-helmet-async";
-
 import { SignInUpPage } from "../../components/SignInUpPage";
 
 export function Register() {
     return (
         <>  
-            <Helmet title="Registro" />
-
             <SignInUpPage title="Registre-se agora">
                 <form>
                     <div className="input-wrapper">
