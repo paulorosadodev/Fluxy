@@ -14,7 +14,7 @@ interface SignInUpPageProps {
 
 export function SignInUpPage({ children, title } : SignInUpPageProps) {
 
-    const isSignUp = title === "Registre-se agora";
+    const isSignUp = title === "Registre-se";
 
     return(
         <>

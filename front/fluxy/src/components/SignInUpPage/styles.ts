@@ -112,6 +112,7 @@ export const FormWrapper = styled.div`
             color: red;
             font-size: 0.8rem;
         }
+
     }
 
     @media (max-width: 880px) {
@@ -123,6 +124,16 @@ export const FormWrapper = styled.div`
             width: 100%;
         }
 
+    }
+
+    a {
+        color: ${(props) => props.theme["purple-500"]};
+        text-decoration: none;
+    }
+
+    a:hover {
+        color: ${(props) => props.theme["purple-300"]};
+        text-decoration: underline;
     }
 
 `;
