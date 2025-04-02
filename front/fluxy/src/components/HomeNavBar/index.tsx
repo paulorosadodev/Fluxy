@@ -3,6 +3,7 @@ import { useState } from "react";
 import { ArrowCircleLeft } from "phosphor-react";
 import { MenuIcon, NavBar } from "./styles";
 
+import { Link } from "react-router-dom";
 
 export function HomeNavBar() {
 
@@ -33,7 +34,11 @@ export function HomeNavBar() {
                     <li><a href="#about" onClick={handleCloseMenu}>Sobre</a></li>
                     <li><a href="#clients" onClick={handleCloseMenu}>Clientes</a></li>
                     <li><a href="#contact" onClick={handleCloseMenu}>Contato</a></li>
-                    <li><a id="button" href="#" onClick={handleCloseMenu}>Comece agora</a></li>
+                    <li>
+                        <Link to={"/register"} id="button" onClick={handleCloseMenu}>
+                            Comece agora
+                        </Link>
+                    </li>
                 </ul>
             </NavBar>
         </>
