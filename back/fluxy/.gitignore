@@ -33,4 +33,4 @@ build/
 .vscode/
 
 ### Variavel de Ambiente
-src/main/resources/.env
+.env
