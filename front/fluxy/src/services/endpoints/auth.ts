@@ -16,9 +16,8 @@ export const register = async (data: RegisterPayload) => {
     try {
         const response = await api.post("/register", data);
         return response;
-    } catch (error) {
-        console.error("Erro ao registrar:", error);
-        throw error; 
+    } catch {
+        throw "Internal Server Error"; 
     }
 };
 
@@ -26,8 +25,7 @@ export const login = async (data: LoginPayload) => {
     try {
         const response = await api.post("/login", data);
         return response;
-    } catch (error) {
-        console.error("Erro ao logar:", error);
-        throw error;
+    } catch {
+        throw "Internal Server Error";
     }
 };

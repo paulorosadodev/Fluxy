@@ -57,7 +57,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
                 maxAge: 60 * 60 * 2, 
             });
         } catch (err: any) {
-            console.log(err);
+            console.log("Deu ruim: " + err);
             return err.response.data.error;
         }
 
