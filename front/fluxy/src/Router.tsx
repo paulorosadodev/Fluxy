@@ -7,7 +7,13 @@ import { DefaultLayout } from "./layouts/DefaultLayout";
 import { Home } from "./pages/Home";
 import { Login } from "./pages/Login";
 import { Register } from "./pages/Register";
+
 import MainDashboard from "./pages/Dashboards/Main";
+import ProductsDashboard from "./pages/Dashboards/Products";
+import SuppliersDashboard from "./pages/Dashboards/Suppliers";
+import EmployeesDashboard from "./pages/Dashboards/Employees";
+import CustomersDashboard from "./pages/Dashboards/Customers";
+import OrdersDashboard from "./pages/Dashboards/Orders";
 
 export function Router() {
     const { isAuthenticated } = useAuth();
@@ -20,7 +26,18 @@ export function Router() {
                 <Route path="/register" element={<Register />} />
 
                 <Route element={<DefaultLayout />}>
-                    <Route path="/dashboard" element={ isAuthenticated ? <MainDashboard /> : <Navigate to="/login"/> } />
+                    <Route path="/dashboard/inicio" 
+                        element={ isAuthenticated ? <MainDashboard /> : <Navigate to="/login"/> } />
+                    <Route path="/dashboard/produtos" 
+                        element={ isAuthenticated ? <ProductsDashboard /> : <Navigate to="/login"/> } />
+                    <Route path="/dashboard/fornecedores" 
+                        element={ isAuthenticated ? <SuppliersDashboard /> : <Navigate to="/login"/> } />
+                    <Route path="/dashboard/funcionarios" 
+                        element={ isAuthenticated ? <EmployeesDashboard /> : <Navigate to="/login"/> } />
+                    <Route path="/dashboard/clientes" 
+                        element={ isAuthenticated ? <CustomersDashboard /> : <Navigate to="/login"/> } />
+                    <Route path="/dashboard/compras" 
+                        element={ isAuthenticated ? <OrdersDashboard /> : <Navigate to="/login"/> } />
                 </Route>
             </Routes>
         </BrowserRouter>

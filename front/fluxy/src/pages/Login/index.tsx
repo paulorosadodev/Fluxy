@@ -49,7 +49,7 @@ export function Login() {
     };
 
     if (isAuthenticated) {
-        return <Navigate to={"/dashboard"} />;
+        return <Navigate to={"/dashboard/inicio"} />;
     }
 
     const isSubmitDisabled = !(watch("name") && watch("password")) || isSubmitting;
