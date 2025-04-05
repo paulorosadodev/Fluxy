@@ -32,20 +32,26 @@ export function Login() {
     });
 
     const handleLogin = async (data: LoginSchema) => {
-        setIsSubmitting(true); 
-        const error = await login({
-            name: data.name,
-            password: data.password,
-        });
-
-        if (error) {
-            setPopUpMessage(error);
+        try {
+            setIsSubmitting(true); 
+            const error = await login({
+                name: data.name,
+                password: data.password,
+            });
+    
+            if (error) {
+                setPopUpMessage(error);
+                setPopUpType("error");
+                setShowPopUp(true);
+            } else {
+                reset();
+            }
+            setIsSubmitting(false); 
+        } catch {
+            setPopUpMessage("Tente novamente mais tarde");
             setPopUpType("error");
             setShowPopUp(true);
-        } else {
-            reset();
         }
-        setIsSubmitting(false); 
     };
 
     if (isAuthenticated) {
