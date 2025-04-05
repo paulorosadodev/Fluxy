@@ -13,9 +13,21 @@ interface LoginPayload {
 }
 
 export const register = async (data: RegisterPayload) => {
-    return api.post("/register", data);
+    try {
+        const response = await api.post("/register", data);
+        return response;
+    } catch (error) {
+        console.error("Erro ao registrar:", error);
+        throw error; 
+    }
 };
 
 export const login = async (data: LoginPayload) => {
-    return api.post("/login", data);
+    try {
+        const response = await api.post("/login", data);
+        return response;
+    } catch (error) {
+        console.error("Erro ao logar:", error);
+        throw error;
+    }
 };
