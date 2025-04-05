@@ -1,10 +1,13 @@
-import { Routes, Route, BrowserRouter } from "react-router-dom";
+import { Routes, Route, BrowserRouter, Navigate } from "react-router-dom";
+
+import { useAuth } from "./hooks/useAuth";
 
 import { Home } from "./pages/Home";
-import { Register } from "./pages/Register";
 import { Login } from "./pages/Login";
+import { Register } from "./pages/Register";
 
 export function Router() {
+    const { isAuthenticated } = useAuth();
 
     return (
         <BrowserRouter>
@@ -15,6 +18,4 @@ export function Router() {
             </Routes>
         </BrowserRouter>
     );
-
 }
-

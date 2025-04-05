@@ -3,7 +3,13 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import { PopUp } from "../../components/PopUp";
 import { SignInUpPage } from "../../components/SignInUpPage";
+
+import * as auth from "../../services/endpoints/auth";
+
+import { useState } from "react";
+import { Navigate } from "react-router-dom";
 
 const registerSchema = z.object(
     {
@@ -27,36 +33,78 @@ const registerSchema = z.object(
 type RegisterSchema = z.infer<typeof registerSchema>
 
 export function Register() {
-
     const { register, handleSubmit, reset, watch, formState: {errors} } = useForm<RegisterSchema>({
         resolver: zodResolver(registerSchema)
     });
 
-    function handleRegister() {
-        reset();
+    const [showPopUp, setShowPopUp] = useState(false);
+    const [popUpMessage, setPopUpMessage] = useState("");
+    const [popUpType, setPopUpType] = useState<"error" | "success">("success");
+    const [isSubmitting, setIsSubmitting] = useState(false); 
+    const [redirectToLogin, setRedirectToLogin] = useState(false);
+
+    const handleRegister = async (data: RegisterSchema) => {
+        setIsSubmitting(true); 
+        try {
+            const storeData = {
+                name: data.name,
+                password: data.password,
+                confirmPassword: data.confirmPassword,
+            };
+            
+            await auth.register(storeData);
+            reset();
+            setPopUpMessage("Loja cadastrada com sucesso");
+            setPopUpType("success");
+            setTimeout(() => {
+                setRedirectToLogin(true); 
+            }, 2000);
+        } catch (err: any) {
+            setPopUpMessage(err.response?.data?.error || "Erro ao registrar. Tente novamente.");
+            setPopUpType("error");
+            reset();
+        } finally {
+            setShowPopUp(true);
+            setIsSubmitting(false);
+        }
+    };
+
+    if (redirectToLogin) {
+        return <Navigate to="/login" />;
     }
 
-    const isSubmitDisabled = !(watch("name") && watch("password") && watch("confirmPassword"));
+    const isSubmitDisabled = !(watch("name") && watch("password") && watch("confirmPassword")) || isSubmitting;
 
     return (
         <>  
             <SignInUpPage title="Registre-se">
                 <form onSubmit={handleSubmit(handleRegister)} noValidate >
                     <div className="input-wrapper">
-                        <label htmlFor="name">Nome: {errors.name && <span className="error">{errors.name.message}</span>}</label>
+                        <label htmlFor="name">
+                            Nome: {errors.name && <span className="error">{errors.name.message}</span>}
+                        </label>
                         <input id="name" type="text" placeholder="Digite seu nome" {...register("name")} />
                     </div>
                     <div className="input-wrapper">
-                        <label htmlFor="password">Senha: {errors.password && <span className="error">{errors.password.message}</span>}</label>
+                        <label htmlFor="password">
+                            Senha: {errors.password && <span className="error">{errors.password.message}</span>}
+                        </label>
                         <input id="password" type="password" placeholder="Digite sua senha" {...register("password")} />
                     </div>
                     <div className="input-wrapper">
-                        <label htmlFor="confirm-password">Confirme sua senha: {errors.confirmPassword && <span className="error">{errors.confirmPassword.message}</span>}</label>
+                        <label htmlFor="confirm-password">
+                            Confirme sua senha: {errors.confirmPassword && <span className="error">{errors.confirmPassword.message}</span>}
+                        </label>
                         <input id="confirm-password" type="password" placeholder="Digite sua senha novamente" {...register("confirmPassword")} />
                     </div>
-                    <button type="submit" disabled={isSubmitDisabled}>REGISTRAR</button>
+                    <button type="submit" disabled={isSubmitDisabled}>
+                        {isSubmitting ? "Registrando..." : "REGISTRAR"}
+                    </button>
                 </form>
             </SignInUpPage>
+            {showPopUp && 
+                <PopUp type={popUpType} message={popUpMessage} show={showPopUp} onClose={() => setShowPopUp(false)} />
+            }
         </>
     );
 }
