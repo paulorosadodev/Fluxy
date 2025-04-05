@@ -35,7 +35,7 @@ export function HomeNavBar() {
                     <li><a href="#clients" onClick={handleCloseMenu}>Clientes</a></li>
                     <li><a href="#contact" onClick={handleCloseMenu}>Contato</a></li>
                     <li>
-                        <Link to={"/register"} id="button" onClick={handleCloseMenu}>
+                        <Link to={"/login"} id="button" onClick={handleCloseMenu}>
                             Comece agora
                         </Link>
                     </li>
