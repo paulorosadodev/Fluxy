@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -22,29 +25,31 @@ public class AuthController {
                 request.getSenha()
         );
 
-        System.out.println("entrou");
+        // System.out.println("entrou");
         if (!registrado) {
             return ResponseEntity
                     .badRequest()
-                    .body("Loja com esse nome já existe.");
+                    .body("Nome já existente em outra loja!");
         }
 
         return ResponseEntity.ok("Registrado com sucesso!");
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequest request) {
-        boolean autenticado = lojaService.autenticar(
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+        Optional<String> tokenOptional = lojaService.autenticar(
                 request.getNome(),
                 request.getSenha()
         );
 
-        if (!autenticado) {
+        if (tokenOptional.isEmpty()) {
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
-                    .body("Credenciais inválidas.");
+                    .body("Credenciais Inválidas.");
         }
 
-        return ResponseEntity.ok("Login realizado com sucesso!");
+        String token = tokenOptional.get();
+
+        return ResponseEntity.ok(Map.of("token", token));
     }
 }
