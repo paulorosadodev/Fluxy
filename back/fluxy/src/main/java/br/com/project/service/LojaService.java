@@ -24,7 +24,7 @@ public class LojaService {
         this.encoder = encoder;
     }
 
-    public boolean registrar(int id, String nome, String senha) {
+    public boolean registrar(String nome, String senha) {
         Optional<Loja> existente = lojaRepository.encontrarPorNome(nome);
 
         if (existente.isPresent()) {
@@ -34,8 +34,7 @@ public class LojaService {
         String senhaCriptografada = encoder.encode(senha);
 
         Loja novo = new Loja();
-        novo.setId(id);
-        novo.setUsername(nome);
+        novo.setNome(nome);
         novo.setSenha(senhaCriptografada);
 
         lojaRepository.salvar(novo);
@@ -49,7 +48,7 @@ public class LojaService {
             return Optional.empty();
         }
 
-        String token = gerarToken(loja.get().getUsername());
+        String token = gerarToken(loja.get().getNome());
         return Optional.of(token);
     }
 

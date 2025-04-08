@@ -24,7 +24,7 @@ public class TokenService {
             Algorithm algorithm = Algorithm.HMAC256(secretKey);
 
             String token = JWT.create().withIssuer("fluxy")
-                    .withSubject(loja.getUsername())
+                    .withSubject(loja.getNome())
                     .withExpiresAt(this.generateExpirationDate())
                     .sign(algorithm);
 

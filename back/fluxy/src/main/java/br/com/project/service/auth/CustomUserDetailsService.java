@@ -19,6 +19,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String nome) throws UsernameNotFoundException {
         Loja loja = this.lojaRepository.encontrarPorNome(nome).orElseThrow(() -> new UsernameNotFoundException("Loja não encontrada."));
-        return new org.springframework.security.core.userdetails.User(loja.getUsername(), loja.getSenha(), new ArrayList<>());
+        return new org.springframework.security.core.userdetails.User(loja.getNome(), loja.getSenha(), new ArrayList<>());
     }
 }

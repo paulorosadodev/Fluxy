@@ -22,26 +22,21 @@ public class LojaRepository {
     public Optional<Loja> encontrarPorNome(String nome) {
         String sql = "SELECT * FROM loja WHERE nome = ?";
 
-        List<Loja> resultado = jdbcTemplate.query(sql, new Object[]{nome}, new LojaRowMapper());
+        List<Loja> resultado = jdbcTemplate.query(sql, new LojaRowMapper(), nome);
 
-        if (resultado.isEmpty()) {
-            return Optional.empty();
-        }
-
-        return Optional.of(resultado.get(0));
+        return resultado.stream().findFirst();
     }
 
     public void salvar(Loja loja) {
-        String sql = "INSERT INTO loja (id, nome, senha) VALUES (?, ?, ?)";
-        jdbcTemplate.update(sql, loja.getId(), loja.getUsername(), loja.getSenha());
+        String sql = "INSERT INTO loja (nome, senha) VALUES ( ?, ?)";
+        jdbcTemplate.update(sql, loja.getNome(), loja.getSenha());
     }
 
     private static class LojaRowMapper implements RowMapper<Loja> {
         @Override
         public Loja mapRow(ResultSet rs, int rowNum) throws SQLException {
             Loja loja = new Loja();
-            loja.setId(rs.getInt("id"));
-            loja.setUsername(rs.getString("nome"));
+            loja.setNome(rs.getString("nome"));
             loja.setSenha(rs.getString("senha"));
             return loja;
         }
