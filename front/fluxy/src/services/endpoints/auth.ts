@@ -16,15 +16,14 @@ export const register = async (data: RegisterPayload) => {
     try {
         const response = await api.post("/register", data);
         return response;
-    } catch (e) {
-        console.log(e);
-        throw {
-            response: {
-                data: {
-                    error: "Internal Server Error"
-                }
-            }
-        }; 
+    } catch (error: any) {
+        
+        const errorMessage = error.response?.data;
+
+        if (errorMessage) {
+            throw new Error(errorMessage);
+        }
+        throw new Error("Erro inesperado ao se cadastrar");
     }
 };
 
@@ -32,9 +31,12 @@ export const login = async (data: LoginPayload) => {
     try {
         const response = await api.post("/login", data);
         return response;
-    } catch (e: any) {
-        if (e.response && e.response.status === 401) {
-            throw new Error("Usuário ou senha inválidos");
+    } catch (error: any) {
+
+        const errorMessage = error.response?.data;
+
+        if (errorMessage) {
+            throw new Error(errorMessage);
         }
         throw new Error("Erro inesperado ao fazer login");
     }

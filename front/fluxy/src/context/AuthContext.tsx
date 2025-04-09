@@ -41,9 +41,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
         try {
             const response = await auth.login({name, password});
-            console.log(response);
             const {token, store} = response.data;
-            console.log(token);
+
             api.defaults.headers.common.authorization = `Bearer ${token}`;
 
             setStore(store);

@@ -45,29 +45,31 @@ export function Register() {
 
     const handleRegister = async (data: RegisterSchema) => {
         setIsSubmitting(true); 
+
         try {
-            const storeData = {
+            await auth.register({
                 name: data.name,
                 password: data.password,
                 confirmPassword: data.confirmPassword,
-            };
-            
-            await auth.register(storeData);
+            });
+
             reset();
             setPopUpMessage("Loja cadastrada com sucesso");
             setPopUpType("success");
+            setShowPopUp(true);
             setTimeout(() => {
                 setRedirectToLogin(true); 
             }, 2000);
-        } catch (err: any) {
-            setPopUpMessage(err.response?.data?.error || "Erro ao registrar. Tente novamente.");
+
+        } catch (error: any) {
+            setPopUpMessage(error.message);
             setPopUpType("error");
-            reset();
-        } finally {
             setShowPopUp(true);
-            setIsSubmitting(false);
+        } finally {
+            setIsSubmitting(false); 
         }
     };
+    
 
     if (redirectToLogin) {
         return <Navigate to="/login" />;
