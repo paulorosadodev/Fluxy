@@ -1,4 +1,4 @@
 package br.com.project.dto.auth;
 
-public record LoginRequestDTO(String nome, String senha){
+public record LoginRequestDTO(String name, String password){
 }

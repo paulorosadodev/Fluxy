@@ -1,5 +1,6 @@
 package br.com.project.service.auth;
 
+import br.com.project.config.EnvConfig;
 import br.com.project.model.Loja;
 
 import com.auth0.jwt.JWT;
@@ -16,8 +17,7 @@ import java.time.ZoneOffset;
 @Service
 public class TokenService {
 
-    @Value("${security.jwt.secret-key}")
-    private String secretKey;
+    private String secretKey = EnvConfig.getJWTToken();
 
     public String generateToken(Loja loja) {
         try {

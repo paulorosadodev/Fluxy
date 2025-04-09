@@ -41,8 +41,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
         try {
             const response = await auth.login({name, password});
+            console.log(response);
             const {token, store} = response.data;
-
+            console.log(token);
             api.defaults.headers.common.authorization = `Bearer ${token}`;
 
             setStore(store);
@@ -56,8 +57,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
                 maxAge: 60 * 60 * 2, 
             });
         } catch (err: any) {
-            console.log("Deu ruim: " + err);
-            return err.response.data.error;
+            return err.message;
         }
 
     };

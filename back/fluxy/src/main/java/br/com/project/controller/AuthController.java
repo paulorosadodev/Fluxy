@@ -1,10 +1,12 @@
 package br.com.project.controller;
 
 import br.com.project.dto.auth.LoginRequestDTO;
+import br.com.project.dto.auth.LoginResponseDTO;
 import br.com.project.dto.auth.RegisterRequestDTO;
 import br.com.project.dto.auth.ResponseDTO;
 import br.com.project.model.Loja;
 import br.com.project.repository.LojaRepository;
+import br.com.project.service.LojaService;
 import br.com.project.service.auth.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
@@ -22,6 +24,7 @@ public class AuthController {
     private final LojaRepository lojaRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
+    private final LojaService lojaService;
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequestDTO body) {
@@ -48,15 +51,11 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<Object> login(@RequestBody LoginRequestDTO body) {
-        Map<String, Object> response = new HashMap<>();
-        response.put("token", "abc123");
+        String name = body.name();
+        String password = body.password();
 
-        Map<String, Object> loja = new HashMap<>();
-        loja.put("id", 1);
-        loja.put("nome", "Loja de Teste");
-
-        response.put("loja", loja);
-
-        return ResponseEntity.ok(response);
+        return lojaService.autenticar(name, password)
+                .<ResponseEntity<Object>>map(ResponseEntity::ok)
+                .orElse(ResponseEntity.status(401).body("Usuário ou senha inválidos"));
     }
 }

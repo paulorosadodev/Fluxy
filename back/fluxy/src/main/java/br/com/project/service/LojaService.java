@@ -1,5 +1,6 @@
 package br.com.project.service;
 
+import br.com.project.dto.auth.LoginResponseDTO;
 import br.com.project.model.Loja;
 import br.com.project.repository.LojaRepository;
 import io.jsonwebtoken.Jwts;
@@ -41,7 +42,7 @@ public class LojaService {
         return true;
     }
 
-    public Optional<String> autenticar(String nome, String senhaDigitada) {
+    public Optional<LoginResponseDTO> autenticar(String nome, String senhaDigitada) {
         Optional<Loja> loja = lojaRepository.encontrarPorNome(nome);
 
         if (loja.isEmpty() || !encoder.matches(senhaDigitada, loja.get().getSenha())) {
@@ -49,8 +50,9 @@ public class LojaService {
         }
 
         String token = gerarToken(loja.get().getNome());
-        return Optional.of(token);
+        return Optional.of(new LoginResponseDTO(token, loja.get().getNome()));
     }
+
 
     private String gerarToken(String nomeUsuario) {
         return Jwts.builder()

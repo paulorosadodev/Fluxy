@@ -31,16 +31,11 @@ export const register = async (data: RegisterPayload) => {
 export const login = async (data: LoginPayload) => {
     try {
         const response = await api.post("/login", data);
-        console.log(response);
         return response;
-    } catch (e) {
-        console.log(e);
-        throw {
-            response: {
-                data: {
-                    error: "Internal Server Error"
-                }
-            }
-        }; 
+    } catch (e: any) {
+        if (e.response && e.response.status === 401) {
+            throw new Error("Usuário ou senha inválidos");
+        }
+        throw new Error("Erro inesperado ao fazer login");
     }
 };
