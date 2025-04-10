@@ -14,7 +14,7 @@ interface LoginPayload {
 
 export const register = async (data: RegisterPayload) => {
     try {
-        const response = await api.post("/register", data);
+        const response = await api.post("/auth/register", data);
         return response;
     } catch (error: any) {
         
@@ -29,7 +29,7 @@ export const register = async (data: RegisterPayload) => {
 
 export const login = async (data: LoginPayload) => {
     try {
-        const response = await api.post("/login", data);
+        const response = await api.post("/auth/login", data);
         return response;
     } catch (error: any) {
 
