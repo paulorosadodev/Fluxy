@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/Fluxy.iml" filepath="$PROJECT_DIR$/.idea/Fluxy.iml" />
+      <module fileurl="file://$PROJECT_DIR$/back/fluxy/demo.iml" filepath="$PROJECT_DIR$/back/fluxy/demo.iml" />
     </modules>
   </component>
 </project>

@@ -1,20 +1,45 @@
-import { Routes, Route, BrowserRouter } from "react-router-dom";
+import { Routes, Route, BrowserRouter, Navigate } from "react-router-dom";
+
+import { useAuth } from "./hooks/useAuth";
+
+import { DefaultLayout } from "./layouts/DefaultLayout";
 
 import { Home } from "./pages/Home";
-import { Register } from "./pages/Register";
 import { Login } from "./pages/Login";
+import { Register } from "./pages/Register";
+
+import MainDashboard from "./pages/Dashboards/Main";
+import ProductsDashboard from "./pages/Dashboards/Products";
+import SuppliersDashboard from "./pages/Dashboards/Suppliers";
+import EmployeesDashboard from "./pages/Dashboards/Employees";
+import CustomersDashboard from "./pages/Dashboards/Customers";
+import OrdersDashboard from "./pages/Dashboards/Orders";
 
 export function Router() {
+    const { isAuthenticated } = useAuth();
 
     return (
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/register" element={<Register />} />
                 <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+
+                <Route element={<DefaultLayout />}>
+                    <Route path="/dashboard/inicio" 
+                        element={ isAuthenticated ? <MainDashboard /> : <Navigate to="/login"/> } />
+                    <Route path="/dashboard/produtos" 
+                        element={ isAuthenticated ? <ProductsDashboard /> : <Navigate to="/login"/> } />
+                    <Route path="/dashboard/fornecedores" 
+                        element={ isAuthenticated ? <SuppliersDashboard /> : <Navigate to="/login"/> } />
+                    <Route path="/dashboard/funcionarios" 
+                        element={ isAuthenticated ? <EmployeesDashboard /> : <Navigate to="/login"/> } />
+                    <Route path="/dashboard/clientes" 
+                        element={ isAuthenticated ? <CustomersDashboard /> : <Navigate to="/login"/> } />
+                    <Route path="/dashboard/compras" 
+                        element={ isAuthenticated ? <OrdersDashboard /> : <Navigate to="/login"/> } />
+                </Route>
             </Routes>
         </BrowserRouter>
     );
-
 }
-

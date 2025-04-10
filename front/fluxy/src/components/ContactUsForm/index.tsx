@@ -5,9 +5,8 @@ import { ContactForm } from "./styles";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { Check, X } from "phosphor-react";
-import { Reveal } from "../Reveal";
 import { useState } from "react";
+import { PopUp } from "../PopUp";
 
 const contactUsSchema = z.object({
     name: z.string().refine((val) => val.length >= 3 && val.length <= 100, {
@@ -27,47 +26,51 @@ const contactUsSchema = z.object({
 type ContactUsSchema = z.infer<typeof contactUsSchema>
 
 export function ContactUsForm() {
-
-    const { register, handleSubmit, reset, watch, formState: {errors} } = useForm<ContactUsSchema>({
+    const { register, handleSubmit, reset, watch, formState: { errors } } = useForm<ContactUsSchema>({
         resolver: zodResolver(contactUsSchema)
     });
 
     const [showPopUp, setShowPopUp] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false); 
 
-    function handleContactUs() {
+    async function handleContactUs() {
+        setIsSubmitting(true); 
+
+        await new Promise(resolve => setTimeout(resolve, 1000)); 
+
         reset();
-        handleShowPopUp();
+        setShowPopUp(true);
+        setIsSubmitting(false); 
     }
 
-    function handleShowPopUp() {
-        setShowPopUp(prev => !prev);
-    }
-
-    const isSubmitDisabled = !(watch("name") && watch("email") && watch("message"));
+    const isSubmitDisabled = !(watch("name") && watch("email") && watch("message")) || isSubmitting;
 
     return (
-        <ContactForm onSubmit={handleSubmit(handleContactUs)} noValidate >
+        <ContactForm onSubmit={handleSubmit(handleContactUs)} noValidate>
             <div className="input-wrapper">
-                <label htmlFor="name">Nome: {errors.name && <span className="error">{errors.name.message}</span>}</label>
-                <input type="text" id="name" placeholder="Digite o seu nome" {...register("name")}/>
+                <label htmlFor="name">
+                    Nome: {errors.name && <span className="error">{errors.name.message}</span>}
+                </label>
+                <input type="text" id="name" placeholder="Digite o seu nome" {...register("name")} />
             </div>
             <div className="input-wrapper">
-                <label htmlFor="email" >E-mail: {errors.email && <span className="error">{errors.email.message}</span>}</label>
-                <input type="email" id="email" placeholder="Digite o seu e-mail" {...register("email")}/>
+                <label htmlFor="email">
+                    E-mail: {errors.email && <span className="error">{errors.email.message}</span>}
+                </label>
+                <input type="email" id="email" placeholder="Digite o seu e-mail" {...register("email")} />
             </div>
             <div className="input-wrapper">
-                <label htmlFor="message">Mensagem: {errors.message && <span className="error">{errors.message.message}</span>}</label>
+                <label htmlFor="message">
+                    Mensagem: {errors.message && <span className="error">{errors.message.message}</span>}
+                </label>
                 <textarea id="message" placeholder="Deixe uma mensagem" {...register("message")}></textarea>
             </div>
-            <button type="submit" disabled={isSubmitDisabled}>Enviar</button>
+            <button type="submit" disabled={isSubmitDisabled}>
+                {isSubmitting ? "Enviando..." : "Enviar"}
+            </button>
             {showPopUp &&
-                <Reveal type="div" className="popUp">
-                    <Check size={30} color="green" weight="bold" />
-                    <span>E-mail enviado com sucesso</span>
-                    <X onClick={handleShowPopUp} size={20} color="gray" weight="bold" id="closePopUp"/>
-                </Reveal>
+                <PopUp type="success" message="E-mail enviado com sucesso" show={showPopUp} onClose={() => setShowPopUp(false)} />
             }
         </ContactForm>
     );
-
 }
