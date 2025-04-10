@@ -1,13 +1,12 @@
 package br.com.project.service.auth;
 
 import br.com.project.config.EnvConfig;
-import br.com.project.model.Loja;
+import br.com.project.model.Store;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -19,12 +18,12 @@ public class TokenService {
 
     private String secretKey = EnvConfig.getJWTToken();
 
-    public String generateToken(Loja loja) {
+    public String generateToken(Store store) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secretKey);
 
             String token = JWT.create().withIssuer("fluxy")
-                    .withSubject(loja.getNome())
+                    .withSubject(store.getName())
                     .withExpiresAt(this.generateExpirationDate())
                     .sign(algorithm);
 
