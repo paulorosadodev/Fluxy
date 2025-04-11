@@ -1,7 +1,7 @@
 package br.com.project.service.auth;
 
 import br.com.project.config.EnvConfig;
-import br.com.project.model.Store;
+import br.com.project.model.User;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -18,18 +18,18 @@ public class TokenService {
 
     private String secretKey = EnvConfig.getJWTToken();
 
-    public String generateToken(Store store) {
+    public String generateToken(User user) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secretKey);
 
             String token = JWT.create().withIssuer("fluxy")
-                    .withSubject(store.getName())
+                    .withSubject(user.getName())
                     .withExpiresAt(this.generateExpirationDate())
                     .sign(algorithm);
 
             return token;
         } catch (JWTCreationException exception) {
-            throw new RuntimeException("Error while authenticating");
+            throw new RuntimeException("Erro de autenticação");
         }
     }
 

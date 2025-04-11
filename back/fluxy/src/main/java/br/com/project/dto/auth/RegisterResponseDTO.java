@@ -1,6 +1,6 @@
 package br.com.project.dto.auth;
 
-import br.com.project.model.Store;
+import br.com.project.model.User;
 
-public record RegisterResponseDTO(String token, Store store){
+public record RegisterResponseDTO(String token, User user){
 }

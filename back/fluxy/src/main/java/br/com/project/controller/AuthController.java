@@ -3,9 +3,9 @@ package br.com.project.controller;
 import br.com.project.dto.auth.LoginRequestDTO;
 import br.com.project.dto.auth.RegisterRequestDTO;
 import br.com.project.dto.auth.RegisterResponseDTO;
-import br.com.project.model.Store;
-import br.com.project.repository.StoreRepository;
-import br.com.project.service.StoreService;
+import br.com.project.model.User;
+import br.com.project.repository.UserRepository;
+import br.com.project.service.UserService;
 import br.com.project.service.auth.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
@@ -18,10 +18,10 @@ import java.util.Optional;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
-    private final StoreRepository storeRepository;
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
-    private final StoreService storeService;
+    private final UserService userService;
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequestDTO body) {
@@ -29,20 +29,20 @@ public class AuthController {
             return ResponseEntity.badRequest().body("As senhas não coincidem");
         }
 
-        Optional<Store> existingStore = storeRepository.findByName(body.name());
+        Optional<User> existingUser = userRepository.findByName(body.name());
 
-        if (existingStore.isPresent()) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Loja já cadastrada");
+        if (existingUser.isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Usuário já cadastrado");
         }
 
-        Store newStore = new Store();
-        newStore.setName(body.name());
-        newStore.setPassword(passwordEncoder.encode(body.password()));
+        User newUser = new User();
+        newUser.setName(body.name());
+        newUser.setPassword(passwordEncoder.encode(body.password()));
 
-        storeRepository.save(newStore);
+        userRepository.save(newUser);
 
-        String token = tokenService.generateToken(newStore);
-        return ResponseEntity.ok(new RegisterResponseDTO(token, newStore));
+        String token = tokenService.generateToken(newUser);
+        return ResponseEntity.ok(new RegisterResponseDTO(token, newUser));
     }
 
     @PostMapping("/login")
@@ -50,7 +50,7 @@ public class AuthController {
         String name = body.name();
         String password = body.password();
 
-        return storeService.authenticate(name, password)
+        return userService.authenticate(name, password)
                 .<ResponseEntity<Object>>map(ResponseEntity::ok)
                 .orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuário ou senha inválidos"));
     }
