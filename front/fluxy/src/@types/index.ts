@@ -27,32 +27,19 @@ export interface Employee extends Person {
     cpf: string;
     name: string;
     salary: number
+    role?: string
+    sectorOfActivity?: string
+    workShift?: string
 }
 
-export interface ManagerEmployee  extends Employee {
-    sectorOfActivity: string
+export interface Customer extends Person {
+    cnpj?: string;
+    legalName?: string;
+    stateRegistration?: string
+    name?: string;
+    cpf?: string
 }
 
-export interface AssistantManagerEmployee  extends Employee {
-    workShift: string
-}
-
-export interface OperationsEmployee extends Employee {
-    role: string
-}
-
-export interface Customer extends Person {}
-
-export interface LegalEntityCustomer extends Customer {
-    cnpj: string;
-    legalName: string;
-    stateRegistration: string
-}
-
-export interface NaturalPersonCustomer extends Customer {
-    name: string;
-    cpf: string
-}
 
 export interface Category extends Entity {
     code: string;
@@ -83,8 +70,9 @@ export interface Purchase extends Entity {
     number: number;
     customer: Customer;
     product: Product;
-    employee: OperationsEmployee[]
+    employee: Employee[]
     productAmount: number;
+    total?: number;
     date: Date;
     paymentMethod: PaymentMethod
 }

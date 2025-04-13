@@ -5,8 +5,9 @@ import { Router } from "./Router";
 import { GlobalStyle } from "./styles/global";
 import { defaultTheme } from "./styles/themes/default";
 
-import { AuthProvider } from "./context/AuthContext";
 import { CookiesProvider } from "react-cookie";
+import { AuthProvider } from "./context/AuthContext";
+import { DataProvider } from "./context/DataContext";
 
 export function App() {
 
@@ -15,8 +16,10 @@ export function App() {
             <ThemeProvider theme={defaultTheme}>
                 <CookiesProvider>
                     <AuthProvider>
-                        <Router />
-                        <GlobalStyle />
+                        <DataProvider>
+                            <Router />
+                            <GlobalStyle />
+                        </DataProvider>
                     </AuthProvider>
                 </CookiesProvider>
             </ThemeProvider>

@@ -1,4 +1,4 @@
-import { Address, Employee, LegalEntityCustomer, NaturalPersonCustomer, PaymentMethod, Product, Supplier } from "../@types";
+import { Address, Customer, Employee, PaymentMethod, Product, Supplier } from "../@types";
 
 export function formatMoney(value: number) {
     return `R$ ${Number(value).toFixed(2).replace(".", ",")}`;
@@ -62,11 +62,11 @@ export function formatProduct(product: Product) {
     return product.name;
 }
 
-export function formatCustomer(customer: NaturalPersonCustomer | LegalEntityCustomer) {
+export function formatCustomer(customer: Customer) {
     if ("cpf" in customer) {
-        return `${customer.name} | ${formatCPF(customer.cpf)}`;
+        return `${customer.name} | ${formatCPF(customer.cpf ?? "")}`;
     }
-    return `${customer.legalName} | ${formatCNPJ(customer.cnpj)}`;
+    return `${customer.legalName} | ${formatCNPJ(customer.cnpj ?? "")}`;
 }
 
 export function formatEmployee(employee: Employee[]) {

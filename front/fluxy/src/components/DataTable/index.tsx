@@ -28,8 +28,8 @@ export function DataTable<T extends Record<string, any>>({ data, columns }: Data
                             {columns.map((column, colIndex) => {
                                 const cellValue = row[column.accessor];
                                 const formattedValue = column.formatter
-                                    ? column.formatter(cellValue)
-                                    : String(cellValue);
+                                    ? column.formatter(cellValue) ?? "?"
+                                    : cellValue ?? "?";
                                 return <td data-label={columns[colIndex].header + ":"} key={colIndex}>{formattedValue}</td>;
                             })}
                         </tr>

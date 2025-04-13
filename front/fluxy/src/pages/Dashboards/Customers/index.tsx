@@ -1,51 +1,48 @@
+import { useEffect, useState } from "react";
+import { Customer } from "../../../@types";
 import { Column, DataTable } from "../../../components/DataTable";
-import { LegalEntityCustomer, NaturalPersonCustomer } from "../../../@types";
-import { formatAddress, formatPhoneNumber, formatStateRegistration } from "../../../utils";
+import { useData } from "../../../hooks/useData";
+import { formatAddress, formatCNPJ, formatCPF, formatPhoneNumber, formatStateRegistration } from "../../../utils";
 
 export default function CustomersDashboard() {
 
-    const dictionaryNaturalPerson = {cpf: "14383252400", name: "Paulo Rosado", address: {street: "Rua Faustino Porto", number: "200", neighborhood: "Boa Viagem", city: "Recife", cep: "51020270"}, phone: ["81999972730"]};
-    const columnsNaturalPerson: Column<NaturalPersonCustomer>[] = [
-        { header: "CPF", accessor: "cpf" },
+    const {customers} = useData();
+
+    const [naturalPersonCustomers, setNaturalPersonCustumers] = useState<Customer[]>([]);
+    const [legalEntityCustomers, setLegalEntityCustomers] = useState<Customer[]>([]);
+
+    useEffect(() => {
+        const naturalPerson = customers.filter(customer => customer.cpf);
+        const legalEntity = customers.filter(customer => customer.cnpj);
+    
+        setNaturalPersonCustumers(naturalPerson);
+        setLegalEntityCustomers(legalEntity);
+    }, [customers]);
+    
+    const columnsNaturalPerson: Column<Customer>[] = [
+        { header: "CPF", accessor: "cpf", formatter: formatCPF },
         { header: "Nome", accessor: "name" },
         { header: "Endereço", accessor: "address", formatter: formatAddress },
         { header: "Telefone", accessor: "phone", formatter: formatPhoneNumber }
     ];
 
-    const arrayNaturalPerson = [];
-    arrayNaturalPerson.push(dictionaryNaturalPerson);
-    arrayNaturalPerson.push(dictionaryNaturalPerson);
-    arrayNaturalPerson.push(dictionaryNaturalPerson);
-    arrayNaturalPerson.push(dictionaryNaturalPerson);
-    arrayNaturalPerson.push(dictionaryNaturalPerson);
-    arrayNaturalPerson.push(dictionaryNaturalPerson);
-
-    const dictionaryLegalEntity = {cnpj: "67015726000179", legalName: "Estudos LTDA", stateRegistration: "032141840", address: {street: "Rua Faustino Porto", number: "200", neighborhood: "Boa Viagem", city: "Recife", cep: "51020270"}, phone: ["81999972730"]};
-    const columnsLegalEntity: Column<LegalEntityCustomer>[] = [
-        { header: "CNPJ", accessor: "cnpj" },
+    const columnsLegalEntity: Column<Customer>[] = [
+        { header: "CNPJ", accessor: "cnpj", formatter: formatCNPJ },
         { header: "Inscrição Estadual", accessor: "stateRegistration", formatter: formatStateRegistration },
         { header: "Razão Social", accessor: "legalName" },
         { header: "Endereço", accessor: "address", formatter: formatAddress },
         { header: "Telefone", accessor: "phone", formatter: formatPhoneNumber }
     ];
 
-    const arrayLegalEntity = [];
-    arrayLegalEntity.push(dictionaryLegalEntity);
-    arrayLegalEntity.push(dictionaryLegalEntity);
-    arrayLegalEntity.push(dictionaryLegalEntity);
-    arrayLegalEntity.push(dictionaryLegalEntity);
-    arrayLegalEntity.push(dictionaryLegalEntity);
-    arrayLegalEntity.push(dictionaryLegalEntity);
-
     return (
         <>
             <h1>Customers</h1>
 
             <h2>Pessoa Física</h2>
-            <DataTable data={arrayNaturalPerson} columns={columnsNaturalPerson} />
+            <DataTable data={naturalPersonCustomers} columns={columnsNaturalPerson} />
 
             <h2>Pessoa Jurídica</h2>
-            <DataTable data={arrayLegalEntity} columns={columnsLegalEntity} />
+            <DataTable data={legalEntityCustomers} columns={columnsLegalEntity} />
         </>
     );
 }

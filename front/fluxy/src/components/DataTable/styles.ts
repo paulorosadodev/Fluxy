@@ -4,6 +4,7 @@ export const DataTableWrapper = styled.div`
     max-height: 18.75rem; 
     overflow-y: auto; 
     width: 100%; 
+    transition: all 3s;
     
     table {
         border-collapse: collapse;

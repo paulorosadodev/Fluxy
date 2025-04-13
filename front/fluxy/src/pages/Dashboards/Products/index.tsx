@@ -2,9 +2,12 @@ import { Column, DataTable } from "../../../components/DataTable";
 import { Product } from "../../../@types";
 import { formatMoney, formatStock } from "../../../utils";
 
+import { useData } from "../../../hooks/useData";
+
 export default function ProductsDashboard() {
 
-    const dictionary = {codEa: "001", name: "Maçã", category: "HortiFruti", price: 5, stockQuantity: 304};
+    const { products } = useData();
+
     const columns: Column<Product>[] = [
         { header: "Código EA", accessor: "codEa" },
         { header: "Nome", accessor: "name" },
@@ -13,18 +16,10 @@ export default function ProductsDashboard() {
         { header: "Quantidade", accessor: "stockQuantity", formatter: formatStock },
     ];
 
-    const array = [];
-    array.push(dictionary);
-    array.push(dictionary);
-    array.push(dictionary);
-    array.push(dictionary);
-    array.push(dictionary);
-    array.push(dictionary);
-
     return (
         <>
             <h1>Products</h1>
-            <DataTable data={array} columns={columns} />
+            <DataTable data={products} columns={columns} />
         </>
     );
 }
