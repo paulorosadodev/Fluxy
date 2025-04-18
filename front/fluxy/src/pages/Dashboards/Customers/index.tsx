@@ -39,10 +39,10 @@ export default function CustomersDashboard() {
             <h1>Customers</h1>
 
             <h2>Pessoa Física</h2>
-            <DataTable data={naturalPersonCustomers} columns={columnsNaturalPerson} />
+            <DataTable data={naturalPersonCustomers} columns={columnsNaturalPerson} entityName="pessoas físicas" />
 
             <h2>Pessoa Jurídica</h2>
-            <DataTable data={legalEntityCustomers} columns={columnsLegalEntity} />
+            <DataTable data={legalEntityCustomers} columns={columnsLegalEntity} entityName="pessoas jurídicas" />
         </>
     );
 }

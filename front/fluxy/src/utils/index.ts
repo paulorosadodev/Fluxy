@@ -69,8 +69,8 @@ export function formatCustomer(customer: Customer) {
     return `${customer.legalName} | ${formatCNPJ(customer.cnpj ?? "")}`;
 }
 
-export function formatEmployee(employee: Employee[]) {
-    return `${employee[0].name} | ${employee[0].employeeNumber}`;
+export function formatEmployee(employee: Employee) {
+    return `${employee.name} | ${employee.employeeNumber}`;
 }
 
 export function formatPaymentMethod(paymentMethod: PaymentMethod) {

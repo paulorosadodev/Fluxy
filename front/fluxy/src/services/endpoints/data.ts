@@ -69,21 +69,8 @@ export const fetchData = async () => {
                 cpf: "14383252400",
                 role: "Caixa",
                 salary: 3040.50,
-                address: {
-                    street: "Rua Faustino Porto",
-                    number: "200",
-                    neighborhood: "Boa Viagem",
-                    city: "Recife",
-                    cep: "51020270"
-                },
-                phone: ["81999972730"]
-            },
-            {
-                employeeNumber: "001",
-                name: "Paulo Rosado",
-                cpf: "14383252400",
                 workShift: "08:00 - 18:00",
-                salary: 3040.50,
+                sectorOfActivity: "Estoque",
                 address: {
                     street: "Rua Faustino Porto",
                     number: "200",
@@ -94,11 +81,30 @@ export const fetchData = async () => {
                 phone: ["81999972730"]
             },
             {
-                employeeNumber: "001",
-                name: "Paulo Rosado",
-                cpf: "14383252400",
+                employeeNumber: "002",
+                name: "Francisco",
+                cpf: "14483252400",
+                role: "Repositor",
+                workShift: "09:00 - 19:00",
                 sectorOfActivity: "Financeiro",
-                salary: 3040.50,
+                salary: 300.50,
+                address: {
+                    street: "Rua Faustino Porto",
+                    number: "200",
+                    neighborhood: "Boa Viagem",
+                    city: "Recife",
+                    cep: "51020270"
+                },
+                phone: ["81999972730"]
+            },
+            {
+                employeeNumber: "003",
+                name: "Jonathan Lemos",
+                cpf: "14083252400",
+                sectorOfActivity: "Financeiro",
+                role: "Gerente",
+                workShift: "10:00 - 18:00",
+                salary: 2040.50,
                 address: {
                     street: "Rua Faustino Porto",
                     number: "200",
@@ -195,7 +201,7 @@ export const fetchData = async () => {
                     price: 3,
                     stockQuantity: 120
                 },
-                employee: [{
+                employee: {
                     employeeNumber: "002",
                     name: "Fernanda Lima",
                     cpf: "12345678900",
@@ -209,7 +215,7 @@ export const fetchData = async () => {
                         cep: "01015002"
                     },
                     phone: ["11987654322"]
-                }],
+                },
                 productAmount: 8,
                 date: new Date(),
                 paymentMethod: {
@@ -238,7 +244,7 @@ export const fetchData = async () => {
                     price: 25,
                     stockQuantity: 200
                 },
-                employee: [{
+                employee: {
                     employeeNumber: "003",
                     name: "Lucas Pereira",
                     cpf: "98765432100",
@@ -252,7 +258,7 @@ export const fetchData = async () => {
                         cep: "13034061"
                     },
                     phone: ["19988884444"]
-                }],
+                },
                 productAmount: 2,
                 date: new Date(),
                 paymentMethod: {
@@ -282,7 +288,7 @@ export const fetchData = async () => {
                     price: 3500,
                     stockQuantity: 15
                 },
-                employee: [{
+                employee: {
                     employeeNumber: "004",
                     name: "Juliana Rocha",
                     cpf: "65432198700",
@@ -296,7 +302,7 @@ export const fetchData = async () => {
                         cep: "05422020"
                     },
                     phone: ["11998761234"]
-                }],
+                },
                 productAmount: 1,
                 date: new Date(),
                 paymentMethod: {
@@ -325,7 +331,7 @@ export const fetchData = async () => {
                     price: 2.5,
                     stockQuantity: 500
                 },
-                employee: [{
+                employee: {
                     employeeNumber: "005",
                     name: "Carla Mendes",
                     cpf: "32178965400",
@@ -339,7 +345,7 @@ export const fetchData = async () => {
                         cep: "79002002"
                     },
                     phone: ["67999887766"]
-                }],
+                },
                 productAmount: 20,
                 date: new Date(),
                 paymentMethod: {
@@ -368,7 +374,7 @@ export const fetchData = async () => {
                     price: 1.8,
                     stockQuantity: 300
                 },
-                employee: [{
+                employee: {
                     employeeNumber: "001",
                     name: "Paulo Rosado",
                     cpf: "14383252400",
@@ -382,7 +388,7 @@ export const fetchData = async () => {
                         cep: "51020270"
                     },
                     phone: ["81999972730"]
-                }],
+                },
                 productAmount: 15,
                 date: new Date(),
                 paymentMethod: {
@@ -412,7 +418,7 @@ export const fetchData = async () => {
                     price: 8,
                     stockQuantity: 100
                 },
-                employee: [{
+                employee: {
                     employeeNumber: "006",
                     name: "Roberto Souza",
                     cpf: "99887766554",
@@ -426,7 +432,7 @@ export const fetchData = async () => {
                         cep: "22021001"
                     },
                     phone: ["21999988776"]
-                }],
+                },
                 productAmount: 10,
                 date: new Date(),
                 paymentMethod: {
@@ -455,7 +461,7 @@ export const fetchData = async () => {
                     price: 12,
                     stockQuantity: 150
                 },
-                employee: [{
+                employee: {
                     employeeNumber: "007",
                     name: "Mariana Freitas",
                     cpf: "33445566778",
@@ -469,7 +475,7 @@ export const fetchData = async () => {
                         cep: "40100234"
                     },
                     phone: ["71999887744"]
-                }],
+                },
                 productAmount: 5,
                 date: new Date(),
                 paymentMethod: {
@@ -498,7 +504,7 @@ export const fetchData = async () => {
                     price: 6.5,
                     stockQuantity: 180
                 },
-                employee: [{
+                employee: {
                     employeeNumber: "008",
                     name: "Eduardo Silva",
                     cpf: "77665544332",
@@ -512,7 +518,7 @@ export const fetchData = async () => {
                         cep: "60060123"
                     },
                     phone: ["85998877666"]
-                }],
+                },
                 productAmount: 6,
                 date: new Date(),
                 paymentMethod: {
@@ -541,7 +547,7 @@ export const fetchData = async () => {
                     price: 4.2,
                     stockQuantity: 220
                 },
-                employee: [{
+                employee: {
                     employeeNumber: "009",
                     name: "Henrique Dias",
                     cpf: "22334455667",
@@ -555,7 +561,7 @@ export const fetchData = async () => {
                         cep: "30140072"
                     },
                     phone: ["31991234567"]
-                }],
+                },
                 productAmount: 12,
                 date: new Date(),
                 paymentMethod: {
@@ -594,7 +600,7 @@ export const fetchData = async () => {
                 },
                 productAmount: 580,
                 price: 250,
-                date: new Date()
+                date: new Date(new Date().setDate(new Date().getDate() - 1))
             },
             {
                 supplier: {
@@ -642,7 +648,7 @@ export const fetchData = async () => {
                 },
                 productAmount: 400,
                 price: 160,
-                date: new Date()
+                date: new Date(new Date().setDate(new Date().getDate() - 2))
             },
             {
                 supplier: {
@@ -666,10 +672,17 @@ export const fetchData = async () => {
                 },
                 productAmount: 350,
                 price: 87.5,
-                date: new Date()
+                date: yesterday
             }
         ]        
     };
 
     return data;
 };
+
+const yesterday = new Date();
+yesterday.setDate(yesterday.getDate() - 1); // subtrai um dia (ontem)
+yesterday.setHours(8);                      // define a hora como 08
+yesterday.setMinutes(30);                   // define os minutos como 30
+yesterday.setSeconds(0);                    // zera os segundos
+yesterday.setMilliseconds(0);               // zera os milissegundos

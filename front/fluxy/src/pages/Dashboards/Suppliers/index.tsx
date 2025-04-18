@@ -27,10 +27,10 @@ export default function SuppliersDashboard() {
             <h1>Supplier</h1>
 
             <h2>Fornecedores</h2>
-            <DataTable data={suppliers} columns={columnsSuppliers} />
+            <DataTable data={suppliers} columns={columnsSuppliers} entityName="fornecedores" />
 
             <h2>Entregas</h2>
-            <DataTable data={productSupplies} columns={columnsSupply} />
+            <DataTable data={productSupplies} columns={columnsSupply} entityName="entregas" />
         </>
     );
 }

@@ -32,7 +32,7 @@ export default function PurchasesDashboard() {
     return (
         <>
             <h1>Purchases</h1>
-            <DataTable data={formattedPurchases} columns={columns} />
+            <DataTable data={formattedPurchases} columns={columns} entityName="compras" />
         </>
     );
 }

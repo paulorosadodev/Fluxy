@@ -70,7 +70,7 @@ export interface Purchase extends Entity {
     number: number;
     customer: Customer;
     product: Product;
-    employee: Employee[]
+    employee: Employee;
     productAmount: number;
     total?: number;
     date: Date;
