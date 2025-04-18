@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { DataTableWrapper } from "./styles";
+import { DataTableWrapper, InputWrapper } from "./styles";
 import { SearchFilterInput } from "../SearchFilterInput";
 
 type DataTableProps<T extends Record<string, any>> = {
@@ -20,7 +20,10 @@ export function DataTable<T extends Record<string, any>>({ data, columns, entity
 
     return (
         <>
-            <SearchFilterInput data={data} columns={columns} filteredData={filteredData} setFilteredData={setFilteredData} entityName={entityName}/>
+            <InputWrapper>
+                <button>Adicionar</button>
+                <SearchFilterInput data={data} columns={columns} filteredData={filteredData} setFilteredData={setFilteredData} entityName={entityName}/>
+            </InputWrapper>
             <DataTableWrapper>
                 <table className="responsive-table">
                     <thead>

@@ -2,17 +2,23 @@ import styled from "styled-components";
 
 export const InputWrapper = styled.div`
     display: flex;
-    width: 100%;
     justify-content: center;
     gap: 2rem;
     align-items: center;
-    margin-top: 1.5rem;
-    margin-bottom: 1rem;
+
+
+    @media (max-width: 880px) {
+        flex-direction: column-reverse;
+        gap: 0.5rem;
+        margin-bottom: 0.7rem;
+        width: 100%;
+    }
 `;
 
 export const SortInput = styled.div`
     display: flex;
     gap: 1rem;
+    margin-left: auto;
 `;
 
 export const SearchInput = styled.input`
@@ -26,6 +32,15 @@ export const SearchInput = styled.input`
     border: none;
     outline: none;
     box-shadow: none;
+    transition: all .2s;
+
+    @media (max-width: 880px) {
+        min-width: 100%;
+    }
+
+    &:focus {
+        filter: brightness(1.06);
+    }
 `;
 
 export const SortSelect = styled.select`
@@ -42,6 +57,10 @@ export const SortSelect = styled.select`
         background-color: ${props => props.theme["gray-200"]};
         color: ${props => props.theme["brown-800"]};
     }
+
+    &:hover {
+        filter: brightness(1.06);
+    }
 `;
 
 export const DirectionButton = styled.button`
@@ -54,5 +73,10 @@ export const DirectionButton = styled.button`
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: all .2s;
+
+    &:hover {
+        filter: brightness(1.06);
+    }
 
 `;

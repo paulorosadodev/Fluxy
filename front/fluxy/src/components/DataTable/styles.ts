@@ -1,10 +1,44 @@
 import styled from "styled-components";
 
+export const InputWrapper = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+
+    & > button {
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        font-size: 1rem;
+        justify-self: left;
+        background-color: ${(props) => props.theme["purple-300"]};
+        color: ${(props) => props.theme["white"]};;
+        font-weight: bold;
+        border: none;
+        transition: all .2s;
+    }
+    
+    & > button:hover {
+        background-color: ${(props) => props.theme["purple-200"]};
+        cursor: pointer;
+    }
+
+    @media (max-width: 880px) {
+        flex-direction: column-reverse;
+
+        button {
+            width: 100%;
+        }
+    }
+`;
+
 export const DataTableWrapper = styled.div`
-    max-height: 18.75rem; 
+    max-height: 23rem; 
     overflow-y: auto; 
     width: 100%; 
     transition: all 3s;
+    margin-bottom: 3rem;
     
     table {
         border-collapse: collapse;

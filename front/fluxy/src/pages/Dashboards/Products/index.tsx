@@ -18,7 +18,7 @@ export default function ProductsDashboard() {
 
     return (
         <>
-            <h1>Products</h1>
+            <h1>Produtos</h1>
             <DataTable data={products} columns={columns} entityName="produtos"/>
         </>
     );

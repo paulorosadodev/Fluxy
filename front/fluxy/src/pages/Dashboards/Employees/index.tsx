@@ -19,7 +19,7 @@ export default function EmployeesDashboard() {
 
     return (
         <>
-            <h1>Employees</h1>
+            <h1>Funcionários</h1>
 
             <DataTable data={employees} columns={columns} entityName="funcionários"/>
         </>
