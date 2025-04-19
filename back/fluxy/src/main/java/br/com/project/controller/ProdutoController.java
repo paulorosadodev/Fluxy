@@ -1,11 +1,12 @@
 package br.com.project.controller;
 
-import br.com.project.model.Produto;
+import br.com.project.dto.request.ProdutoRequestDTO;
+import br.com.project.dto.response.ProdutoResponseDTO;
 import br.com.project.service.ProdutoService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/produtos")
@@ -18,28 +19,32 @@ public class ProdutoController {
     }
 
     @PostMapping
-    public void salvar(@RequestBody Produto produto) {
-        produtoService.salvar(produto);
+    public ResponseEntity<Void> salvar(@RequestBody ProdutoRequestDTO requestDTO) {
+        produtoService.salvar(requestDTO);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{id}")
-    public Optional<Produto> buscarPorId(@PathVariable Integer id) {
-        return produtoService.buscarPorId(id);
+    public ResponseEntity<ProdutoResponseDTO> buscarPorId(@PathVariable Integer id) {
+        return produtoService.buscarPorId(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping
-    public List<Produto> listarTodos() {
-        return produtoService.listarTodos();
+    public ResponseEntity<List<ProdutoResponseDTO>> listarTodos() {
+        return ResponseEntity.ok(produtoService.listarTodos());
     }
 
     @PutMapping("/{id}")
-    public void atualizar(@PathVariable Integer id, @RequestBody Produto produto) {
-        produto.setIdProduto(id);
-        produtoService.atualizar(produto);
+    public ResponseEntity<Void> atualizar(@PathVariable Integer id, @RequestBody ProdutoRequestDTO requestDTO) {
+        produtoService.atualizar(id, requestDTO);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
-    public void deletarPorId(@PathVariable Integer id) {
+    public ResponseEntity<Void> deletar(@PathVariable Integer id) {
         produtoService.deletarPorId(id);
+        return ResponseEntity.ok().build();
     }
 }

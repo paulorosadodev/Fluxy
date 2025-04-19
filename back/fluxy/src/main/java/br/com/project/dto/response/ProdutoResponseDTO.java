@@ -1,10 +1,17 @@
 package br.com.project.dto.response;
 
-public record ProdutoResponseDTO(
-        Integer idProduto,
-        Integer qtdEstoque,
-        String codEa,
-        Integer preco,
-        String descricao,
-        String nome
-) {}
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class ProdutoResponseDTO {
+    private Integer idProduto;
+    private Integer qtdEstoque;
+    private String codEa;
+    private Integer preco;
+    private String descricao;
+    private String nome;
+}
