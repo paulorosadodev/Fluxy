@@ -25,9 +25,9 @@ public class TelefoneService {
     public void deletarPorIdPessoa(Integer idPessoa) {
         // Busca todos os telefones que pertencem a essa pessoa e deleta um por um
         List<Phone> telefones = telefoneRepository.findAll().stream()
-                .filter(t -> t.getIdTelefone().equals(idPessoa))
+                .filter(t -> t.getIdPhone().equals(idPessoa))
                 .toList();
 
-        telefones.forEach(t -> telefoneRepository.deleteByNumero(t.getNumero()));
+        telefones.forEach(t -> telefoneRepository.deleteByNumero(t.getNumber()));
     }
 }

@@ -7,10 +7,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Supplier {
-    private Integer idSupplier;
-    private String cnpj;
+public class PhysicalClient {
+    private Integer id; // id_cliente
     private String name;
+    private String cpf;
     private String street;
     private String number;
     private String neighborhood;

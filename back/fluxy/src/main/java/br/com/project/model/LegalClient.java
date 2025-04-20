@@ -7,10 +7,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Supplier {
-    private Integer idSupplier;
+public class LegalClient {
+    private Integer id; // id_cliente
+    private String corporateName; // razao social
     private String cnpj;
-    private String name;
+    private String stateRegistration; // inscrição estadual
     private String street;
     private String number;
     private String neighborhood;

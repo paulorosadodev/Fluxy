@@ -21,29 +21,23 @@ public class CategoryRepository {
 
     public void save(Category category) {
         String sql = "INSERT INTO categoria (codigo, nome) VALUES (?, ?)";
-        jdbcTemplate.update(sql,
-                category.getCode(),
-                category.getName()
-        );
+        jdbcTemplate.update(sql, category.getCode(), category.getName());
     }
 
     public Optional<Category> findByCode(String code) {
         String sql = "SELECT * FROM categoria WHERE codigo = ?";
-        List<Category> result = jdbcTemplate.query(sql, new CategoriaRowMapper(), code);
+        List<Category> result = jdbcTemplate.query(sql, new CategoryRowMapper(), code);
         return result.stream().findFirst();
     }
 
     public List<Category> findAll() {
         String sql = "SELECT * FROM categoria";
-        return jdbcTemplate.query(sql, new CategoriaRowMapper());
+        return jdbcTemplate.query(sql, new CategoryRowMapper());
     }
 
     public void update(Category category) {
         String sql = "UPDATE categoria SET nome = ? WHERE codigo = ?";
-        jdbcTemplate.update(sql,
-                category.getName(),
-                category.getCode()
-        );
+        jdbcTemplate.update(sql, category.getName(), category.getCode());
     }
 
     public void deleteByCode(String code) {
@@ -51,7 +45,7 @@ public class CategoryRepository {
         jdbcTemplate.update(sql, code);
     }
 
-    private static class CategoriaRowMapper implements RowMapper<Category> {
+    private static class CategoryRowMapper implements RowMapper<Category> {
         @Override
         public Category mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new Category(

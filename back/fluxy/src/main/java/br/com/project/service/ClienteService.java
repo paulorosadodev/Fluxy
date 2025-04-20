@@ -30,8 +30,8 @@ public class ClienteService {
         Client cliente = mapperUtils.map(clienteRequestDTO, Client.class);
         clienteRepository.save(cliente);
 
-        List<Phone> telefones = clienteRequestDTO.getTelefones().stream()
-                .map(numero -> new Phone(numero, cliente.getIdCliente()))
+        List<Phone> telefones = clienteRequestDTO.getPhone().stream()
+                .map(numero -> new Phone(numero, cliente.getIdClient()))
                 .collect(Collectors.toList());
 
         telefones.forEach(telefoneService::salvar);
@@ -40,12 +40,12 @@ public class ClienteService {
     @Transactional
     public void atualizar(Integer id, ClientRequestDTO clienteRequestDTO) {
         Client cliente = mapperUtils.map(clienteRequestDTO, Client.class);
-        cliente.setIdCliente(id);
+        cliente.setIdClient(id);
         clienteRepository.update(cliente);
 
         telefoneService.deletarPorIdPessoa(id);
 
-        List<Phone> telefones = clienteRequestDTO.getTelefones().stream()
+        List<Phone> telefones = clienteRequestDTO.getPhone().stream()
                 .map(numero -> new Phone(numero, id))
                 .collect(Collectors.toList());
 

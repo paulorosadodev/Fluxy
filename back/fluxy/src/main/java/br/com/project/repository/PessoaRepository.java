@@ -22,11 +22,11 @@ public class PessoaRepository {
     public void save(Person pessoa) {
         String sql = "INSERT INTO pessoa (id_pessoa, rua, numero, bairro, cidade, cep) VALUES (?, ?, ?, ?, ?, ?)";
         jdbcTemplate.update(sql,
-                pessoa.getIdPessoa(),
-                pessoa.getRua(),
-                pessoa.getNumero(),
-                pessoa.getBairro(),
-                pessoa.getCidade(),
+                pessoa.getIdPerson(),
+                pessoa.getStreet(),
+                pessoa.getNumber(),
+                pessoa.getNeighborhood(),
+                pessoa.getCity(),
                 pessoa.getCep()
         );
     }
@@ -45,12 +45,12 @@ public class PessoaRepository {
     public void update(Person pessoa) {
         String sql = "UPDATE pessoa SET rua = ?, numero = ?, bairro = ?, cidade = ?, cep = ? WHERE id_pessoa = ?";
         jdbcTemplate.update(sql,
-                pessoa.getRua(),
-                pessoa.getNumero(),
-                pessoa.getBairro(),
-                pessoa.getCidade(),
+                pessoa.getStreet(),
+                pessoa.getNumber(),
+                pessoa.getNeighborhood(),
+                pessoa.getCity(),
                 pessoa.getCep(),
-                pessoa.getIdPessoa()
+                pessoa.getIdPerson()
         );
     }
 
