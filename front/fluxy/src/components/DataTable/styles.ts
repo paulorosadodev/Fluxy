@@ -121,7 +121,7 @@ export const DataTableWrapper = styled.div`
     }
 
     td.selected {
-        background-color: ${(props) => props.theme["gray-50"]};
+        background-color: ${(props) => props.theme["purple-100"]};
     }
 
     thead tr {

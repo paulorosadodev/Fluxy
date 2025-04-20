@@ -1,7 +1,26 @@
+import { api } from "../api";
+
+interface RegisterPayload {
+    name: string;
+    password: string;
+    confirmPassword: string;
+}
+
+export const addProduct = async (data: any) => {
+    const response = await api.post("/produtos", {
+        "qtdEstoque": 50,
+        "codEa": "9876543210987",
+        "preco": 1200,
+        "nome": "Pepsi 2L"
+    });
+    console.log(response);
+    return response;
+};
+
 export const fetchData = async () => {
     const data = {
         products: [
-            { codEa: "001", name: "Maçã", category: "HortiFruti", price: 5, stockQuantity: 304 },
+            { codEa: "001", name: "Maçã", category: "Hortifruti", price: 5, stockQuantity: 304 },
             { codEa: "002", name: "Arroz Tipo 1", category: "Grãos", price: 22.5, stockQuantity: 120 },
             { codEa: "003", name: "Feijão Carioca", category: "Grãos", price: 8.99, stockQuantity: 75 },
             { codEa: "004", name: "Leite Integral", category: "Laticínios", price: 4.79, stockQuantity: 260 },
@@ -69,7 +88,7 @@ export const fetchData = async () => {
                 cpf: "14383252400",
                 role: "Caixa",
                 salary: 3040.50,
-                workShift: "08:00 - 18:00",
+                workShift: "Integral",
                 sectorOfActivity: "Estoque",
                 address: {
                     street: "Rua Faustino Porto",
@@ -85,9 +104,9 @@ export const fetchData = async () => {
                 name: "Francisco",
                 cpf: "14483252400",
                 role: "Repositor",
-                workShift: "09:00 - 19:00",
-                sectorOfActivity: "Financeiro",
-                salary: 300.50,
+                salary: 1300.50,
+                workShift: "Manhã",
+                sectorOfActivity: "Hortifruti",
                 address: {
                     street: "Rua Faustino Porto",
                     number: "200",
@@ -101,10 +120,10 @@ export const fetchData = async () => {
                 employeeNumber: "003",
                 name: "Jonathan Lemos",
                 cpf: "14083252400",
-                sectorOfActivity: "Financeiro",
-                role: "Gerente",
-                workShift: "10:00 - 18:00",
-                salary: 2040.50,
+                role: "Gerente de Setor",
+                salary: 4200.00,
+                workShift: "Tarde",
+                sectorOfActivity: "Administração",
                 address: {
                     street: "Rua Faustino Porto",
                     number: "200",
@@ -114,7 +133,7 @@ export const fetchData = async () => {
                 },
                 phone: ["81999972730"]
             }
-        ],
+        ],        
         customers: [
             {
                 cpf: "23456789012",
@@ -197,7 +216,7 @@ export const fetchData = async () => {
                 product: {
                     codEa: "002",
                     name: "Banana",
-                    category: "HortiFruti",
+                    category: "Hortifruti",
                     price: 3,
                     stockQuantity: 120
                 },
@@ -573,10 +592,65 @@ export const fetchData = async () => {
         categories: [
             { 
                 code: "01",
-                name: "HortiFruti",
+                name: "Hortifruti",
                 description: "Frutas e verduras" 
+            },
+            { 
+                code: "02",
+                name: "Limpeza",
+                description: "Produtos de limpeza doméstica" 
+            },
+            { 
+                code: "03",
+                name: "Eletrodomésticos",
+                description: "Celulares, televisores e eletros em geral" 
+            },
+            { 
+                code: "04",
+                name: "Grãos",
+                description: "Arroz, feijão, lentilhas, cereais e afins"
+            },
+            { 
+                code: "05",
+                name: "Laticínios",
+                description: "Leite, queijos, iogurtes e derivados"
+            },
+            { 
+                code: "06",
+                name: "Padaria",
+                description: "Pães, bolos, doces e salgados"
+            },
+            { 
+                code: "07",
+                name: "Higiene",
+                description: "Produtos de uso pessoal como sabonetes, cremes dentais e absorventes"
+            },
+            { 
+                code: "08",
+                name: "Bebidas",
+                description: "Água, refrigerantes, sucos e bebidas alcoólicas"
+            },
+            { 
+                code: "09",
+                name: "Carnes",
+                description: "Carnes bovinas, suínas, aves e pescados"
+            },
+            { 
+                code: "10",
+                name: "Congelados",
+                description: "Produtos congelados como pizzas, lasanhas e vegetais"
+            },
+            { 
+                code: "11",
+                name: "Mercearia",
+                description: "Produtos embalados e secos, como massas, molhos e enlatados"
+            },
+            { 
+                code: "12",
+                name: "Pet Shop",
+                description: "Produtos para animais de estimação"
             }
-        ],
+        ],        
         productSupplies: [
             {
                 supplier: {
@@ -594,7 +668,7 @@ export const fetchData = async () => {
                 product: {
                     codEa: "001",
                     name: "Maçã",
-                    category: "HortiFruti",
+                    category: "Hortifruti",
                     price: 5,
                     stockQuantity: 304
                 },
@@ -618,7 +692,7 @@ export const fetchData = async () => {
                 product: {
                     codEa: "002",
                     name: "Banana",
-                    category: "HortiFruti",
+                    category: "Hortifruti",
                     price: 3,
                     stockQuantity: 450
                 },
@@ -642,7 +716,7 @@ export const fetchData = async () => {
                 product: {
                     codEa: "003",
                     name: "Manga",
-                    category: "HortiFruti",
+                    category: "Hortifruti",
                     price: 4,
                     stockQuantity: 500
                 },
@@ -666,7 +740,7 @@ export const fetchData = async () => {
                 product: {
                     codEa: "004",
                     name: "Cenoura",
-                    category: "HortiFruti",
+                    category: "Hortifruti",
                     price: 2.5,
                     stockQuantity: 600
                 },

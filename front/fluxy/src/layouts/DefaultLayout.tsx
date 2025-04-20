@@ -13,8 +13,17 @@ const LayoutContainer = styled.div`
 
 const Main = styled.main`
     flex: 1;
-    padding: 1rem 2rem;
     overflow-y: auto;
+    
+    #main {
+        padding: 1rem 2rem;
+        margin-left: 5rem;
+
+        @media (max-width: 880px) {
+            margin-left: 0;
+        }
+    }
+    
 `;
 
 export function DefaultLayout() {

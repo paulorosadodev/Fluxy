@@ -35,12 +35,14 @@ export default function CustomersDashboard() {
     ];
 
     return (
-        <>
-            <h1>Clientes Pessoas Físicas</h1>
-            <DataTable data={naturalPersonCustomers} columns={columnsNaturalPerson} entityName="pessoas físicas" />
+        <>  
+            <div id="main">
+                <h1>Clientes Pessoas Físicas</h1>
+                <DataTable data={naturalPersonCustomers} columns={columnsNaturalPerson} entityName="pessoas físicas" />
 
-            <h1>Clientes Pessoas Jurídicas</h1>
-            <DataTable data={legalEntityCustomers} columns={columnsLegalEntity} entityName="pessoas jurídicas" />
+                <h1>Clientes Pessoas Jurídicas</h1>
+                <DataTable data={legalEntityCustomers} columns={columnsLegalEntity} entityName="pessoas jurídicas" />
+            </div>
         </>
     );
 }

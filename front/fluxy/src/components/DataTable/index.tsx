@@ -4,19 +4,27 @@ import { SearchFilterInput } from "../SearchFilterInput";
 
 import { Square, CheckSquare, Trash, Pencil } from "phosphor-react";
 
+export type FormControllers = {
+    add: React.Dispatch<React.SetStateAction<boolean>>;
+    edit: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
 type DataTableProps<T extends Record<string, any>> = {
     data: T[];
     columns: Column<T>[];
-    entityName: string
+    entityName: string;
+    formControllers: FormControllers;
+    popUpController: React.Dispatch<React.SetStateAction<boolean>>;
+    selectedRowController: React.Dispatch<React.SetStateAction<string>>
 };
 
 export type Column<T> = {
     header: string;
     accessor: keyof T;
-    formatter?: (value: any) => string | string[] ; 
+    formatter?: (value: any) => string | string[];
 };
 
-export function DataTable<T extends Record<string, any>>({ data, columns, entityName }: DataTableProps<T>) {
+export function DataTable<T extends Record<string, any>>({ data, columns, entityName, formControllers, selectedRowController, popUpController }: DataTableProps<T>) {
 
     const [filteredData, setFilteredData] = useState<any[]>([]);
     const [selectedsRow, setSelectedsRow] = useState<string[]>([]);
@@ -47,14 +55,32 @@ export function DataTable<T extends Record<string, any>>({ data, columns, entity
                 return [...current, row];
             }
         });
-    }    
+    }
+
+    const handleClick = () => {
+        setSelectedsRow([]);
+        popUpController(false);
+        formControllers.add(true);
+    };
+
+    const handleEditClick = (data: string) => {
+        if (data.length > 0) {
+            selectedRowController(data);
+            formControllers.edit(true);
+        } else {
+            if (selectedsRow.length === 1) {
+                selectedRowController(selectedsRow[0]);
+                formControllers.edit(true);
+            }
+        }
+    };
 
     return (
         <>
             <InputWrapper>
                 <ActionsWrapper>
-                    <button>Adicionar</button>
-                    <Pencil id="edit" className={selectedsRow.length === 1 ? "active" : ""} size={25} />
+                    <button onClick={handleClick}>Adicionar</button>
+                    <Pencil id="edit" onClick={() => handleEditClick("")} className={selectedsRow.length === 1 ? "active" : ""} size={25} />
                     <Trash id="delete" className={selectedsRow.length >= 1 ? "active" : ""} size={25} />
                 </ActionsWrapper>
                 <SearchFilterInput data={data} columns={columns} filteredData={filteredData} setFilteredData={setFilteredData} entityName={entityName}/>
@@ -74,7 +100,7 @@ export function DataTable<T extends Record<string, any>>({ data, columns, entity
                             <tr key={Object.values(row).toString()} onClick={() => handleSelect(Object.values(row).toString())}>
                                 <td className={`selector ${selectedsRow?.includes(Object.values(row).toString()) ? "selected" : ""}`}>
                                     <ActionsWrapper className="mobile inactive">
-                                        <Pencil id="edit" className={selectedsRow ? "active" : ""} size={25} />
+                                        <Pencil id="edit" onClick={() => handleEditClick(Object.values(row).toString())} className={selectedsRow ? "active" : ""} size={25} />
                                         <Trash id="delete" className={selectedsRow ? "active" : ""} size={25} />
                                     </ActionsWrapper>
                                     {selectedsRow?.includes(Object.values(row).toString()) ?
