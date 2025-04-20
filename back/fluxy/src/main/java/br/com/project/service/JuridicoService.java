@@ -1,7 +1,7 @@
 package br.com.project.service;
 
-import br.com.project.dto.request.JuridicoRequestDTO;
-import br.com.project.dto.response.JuridicoResponseDTO;
+import br.com.project.dto.request.JuridicalRequestDTO;
+import br.com.project.dto.response.JuridicalResponseDTO;
 import br.com.project.model.Juridico;
 import br.com.project.repository.JuridicoRepository;
 import br.com.project.util.MapperUtils;
@@ -20,23 +20,23 @@ public class JuridicoService {
         this.mapperUtils = mapperUtils;
     }
 
-    public void salvar(JuridicoRequestDTO juridicoRequestDTO) {
+    public void salvar(JuridicalRequestDTO juridicoRequestDTO) {
         Juridico juridico = mapperUtils.map(juridicoRequestDTO, Juridico.class);
         juridicoRepository.save(juridico);
     }
 
-    public JuridicoResponseDTO buscarPorFkClienteId(Integer fkClienteId) {
+    public JuridicalResponseDTO buscarPorFkClienteId(Integer fkClienteId) {
         Juridico juridico = juridicoRepository.findByFkClienteId(fkClienteId)
                 .orElseThrow(() -> new RuntimeException("Cliente Jurídico não encontrado"));
-        return mapperUtils.map(juridico, JuridicoResponseDTO.class);
+        return mapperUtils.map(juridico, JuridicalResponseDTO.class);
     }
 
-    public List<JuridicoResponseDTO> listarTodos() {
+    public List<JuridicalResponseDTO> listarTodos() {
         List<Juridico> juridicos = juridicoRepository.findAll();
-        return mapperUtils.mapList(juridicos, JuridicoResponseDTO.class);
+        return mapperUtils.mapList(juridicos, JuridicalResponseDTO.class);
     }
 
-    public void atualizar(Integer fkClienteId, JuridicoRequestDTO juridicoRequestDTO) {
+    public void atualizar(Integer fkClienteId, JuridicalRequestDTO juridicoRequestDTO) {
         Juridico juridico = mapperUtils.map(juridicoRequestDTO, Juridico.class);
         juridico.setFkClienteId(fkClienteId);
         juridicoRepository.update(juridico);

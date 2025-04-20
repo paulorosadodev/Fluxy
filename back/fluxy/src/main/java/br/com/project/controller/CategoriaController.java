@@ -1,7 +1,7 @@
 package br.com.project.controller;
 
-import br.com.project.dto.request.CategoriaRequestDTO;
-import br.com.project.dto.response.CategoriaResponseDTO;
+import br.com.project.dto.request.CategoryRequestDTO;
+import br.com.project.dto.response.CategoryResponseDTO;
 import br.com.project.service.CategoriaService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,22 +19,22 @@ public class CategoriaController {
     }
 
     @PostMapping
-    public ResponseEntity<CategoriaResponseDTO> salvar(@RequestBody CategoriaRequestDTO categoriaRequestDTO) {
+    public ResponseEntity<CategoryResponseDTO> salvar(@RequestBody CategoryRequestDTO categoriaRequestDTO) {
         return ResponseEntity.ok(categoriaService.salvar(categoriaRequestDTO));
     }
 
     @GetMapping
-    public ResponseEntity<List<CategoriaResponseDTO>> listarTodos() {
+    public ResponseEntity<List<CategoryResponseDTO>> listarTodos() {
         return ResponseEntity.ok(categoriaService.listarTodos());
     }
 
     @GetMapping("/{codigo}")
-    public ResponseEntity<CategoriaResponseDTO> buscarPorCodigo(@PathVariable String codigo) {
+    public ResponseEntity<CategoryResponseDTO> buscarPorCodigo(@PathVariable String codigo) {
         return ResponseEntity.ok(categoriaService.buscarPorCodigo(codigo));
     }
 
     @PutMapping("/{codigo}")
-    public ResponseEntity<CategoriaResponseDTO> atualizar(@PathVariable String codigo, @RequestBody CategoriaRequestDTO categoriaRequestDTO) {
+    public ResponseEntity<CategoryResponseDTO> atualizar(@PathVariable String codigo, @RequestBody CategoryRequestDTO categoriaRequestDTO) {
         return ResponseEntity.ok(categoriaService.atualizar(codigo, categoriaRequestDTO));
     }
 

@@ -1,6 +1,6 @@
 package br.com.project.dto.request;
 
-public record FisicoRequestDTO(
-        String nome,
+public record PhysiqueRequestDTO(
+        String name,
         String cpf
 ) {}

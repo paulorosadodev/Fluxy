@@ -1,6 +1,6 @@
 package br.com.project.service;
 
-import br.com.project.dto.request.CompraRequestDTO;
+import br.com.project.dto.request.PurchaseRequestDTO;
 import br.com.project.dto.response.CompraResponseDTO;
 import br.com.project.model.Compra;
 import br.com.project.repository.CompraRepository;
@@ -20,7 +20,7 @@ public class CompraService {
         this.mapperUtils = mapperUtils;
     }
 
-    public void salvar(CompraRequestDTO compraRequestDTO) {
+    public void salvar(PurchaseRequestDTO compraRequestDTO) {
         Compra compra = mapperUtils.map(compraRequestDTO, Compra.class);
         compraRepository.save(compra);
     }
@@ -36,7 +36,7 @@ public class CompraService {
         return mapperUtils.mapList(compras, CompraResponseDTO.class);
     }
 
-    public void atualizar(Integer numero, CompraRequestDTO compraRequestDTO) {
+    public void atualizar(Integer numero, PurchaseRequestDTO compraRequestDTO) {
         Compra compra = mapperUtils.map(compraRequestDTO, Compra.class);
         compra.setNumero(numero);
         compraRepository.update(compra);

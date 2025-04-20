@@ -1,7 +1,7 @@
 package br.com.project.service;
 
-import br.com.project.dto.request.CategoriaRequestDTO;
-import br.com.project.dto.response.CategoriaResponseDTO;
+import br.com.project.dto.request.CategoryRequestDTO;
+import br.com.project.dto.response.CategoryResponseDTO;
 import br.com.project.model.Categoria;
 import br.com.project.repository.CategoriaRepository;
 import br.com.project.util.MapperUtils;
@@ -21,28 +21,28 @@ public class CategoriaService {
         this.mapperUtils = mapperUtils;
     }
 
-    public CategoriaResponseDTO salvar(CategoriaRequestDTO categoriaRequestDTO) {
+    public CategoryResponseDTO salvar(CategoryRequestDTO categoriaRequestDTO) {
         Categoria categoria = mapperUtils.map(categoriaRequestDTO, Categoria.class);
         categoriaRepository.save(categoria);
-        return mapperUtils.map(categoria, CategoriaResponseDTO.class);
+        return mapperUtils.map(categoria, CategoryResponseDTO.class);
     }
 
-    public List<CategoriaResponseDTO> listarTodos() {
+    public List<CategoryResponseDTO> listarTodos() {
         List<Categoria> categorias = categoriaRepository.findAll();
-        return mapperUtils.mapList(categorias, CategoriaResponseDTO.class);
+        return mapperUtils.mapList(categorias, CategoryResponseDTO.class);
     }
 
-    public CategoriaResponseDTO buscarPorCodigo(String codigo) {
+    public CategoryResponseDTO buscarPorCodigo(String codigo) {
         Optional<Categoria> categoria = categoriaRepository.findByCodigo(codigo);
         Categoria entity = categoria.orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
-        return mapperUtils.map(entity, CategoriaResponseDTO.class);
+        return mapperUtils.map(entity, CategoryResponseDTO.class);
     }
 
-    public CategoriaResponseDTO atualizar(String codigo, CategoriaRequestDTO categoriaRequestDTO) {
+    public CategoryResponseDTO atualizar(String codigo, CategoryRequestDTO categoriaRequestDTO) {
         Categoria categoria = mapperUtils.map(categoriaRequestDTO, Categoria.class);
         categoria.setCodigo(codigo);
         categoriaRepository.update(categoria);
-        return mapperUtils.map(categoria, CategoriaResponseDTO.class);
+        return mapperUtils.map(categoria, CategoryResponseDTO.class);
     }
 
     public void deletar(String codigo) {

@@ -1,4 +1,4 @@
-package br.com.project.dto.request;
+package br.com.project.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoriaRequestDTO {
-    private String codigo;
-    private String nome;
+public class CategoryResponseDTO {
+    private String code;
+    private String name;
 }

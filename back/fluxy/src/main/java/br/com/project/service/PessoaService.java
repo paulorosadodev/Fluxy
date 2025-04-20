@@ -1,11 +1,10 @@
 package br.com.project.service;
 
-import br.com.project.dto.request.PessoaRequestDTO;
-import br.com.project.dto.response.PessoaResponseDTO;
+import br.com.project.dto.request.PersonRequestDTO;
+import br.com.project.dto.response.PersonResponseDTO;
 import br.com.project.model.Pessoa;
 import br.com.project.model.Telefone;
 import br.com.project.repository.PessoaRepository;
-import br.com.project.service.TelefoneService;
 import br.com.project.util.MapperUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +26,7 @@ public class PessoaService {
     }
 
     @Transactional
-    public void salvar(PessoaRequestDTO pessoaRequestDTO) {
+    public void salvar(PersonRequestDTO pessoaRequestDTO) {
         Pessoa pessoa = mapperUtils.map(pessoaRequestDTO, Pessoa.class);
         pessoaRepository.save(pessoa);
 
@@ -40,7 +39,7 @@ public class PessoaService {
     }
 
     @Transactional
-    public void atualizar(Integer id, PessoaRequestDTO pessoaRequestDTO) {
+    public void atualizar(Integer id, PersonRequestDTO pessoaRequestDTO) {
         Pessoa pessoa = mapperUtils.map(pessoaRequestDTO, Pessoa.class);
         pessoa.setIdPessoa(id);
         pessoaRepository.update(pessoa);
@@ -56,15 +55,15 @@ public class PessoaService {
         telefones.forEach(telefoneService::salvar);
     }
 
-    public PessoaResponseDTO buscarPorId(Integer id) {
+    public PersonResponseDTO buscarPorId(Integer id) {
         Pessoa pessoa = pessoaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Pessoa não encontrada"));
-        return mapperUtils.map(pessoa, PessoaResponseDTO.class);
+        return mapperUtils.map(pessoa, PersonResponseDTO.class);
     }
 
-    public List<PessoaResponseDTO> listarTodas() {
+    public List<PersonResponseDTO> listarTodas() {
         List<Pessoa> pessoas = pessoaRepository.findAll();
-        return mapperUtils.mapList(pessoas, PessoaResponseDTO.class);
+        return mapperUtils.mapList(pessoas, PersonResponseDTO.class);
     }
 
     public void deletar(Integer id) {

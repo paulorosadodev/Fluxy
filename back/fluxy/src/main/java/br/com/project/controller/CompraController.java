@@ -1,6 +1,6 @@
 package br.com.project.controller;
 
-import br.com.project.dto.request.CompraRequestDTO;
+import br.com.project.dto.request.PurchaseRequestDTO;
 import br.com.project.dto.response.CompraResponseDTO;
 import br.com.project.service.CompraService;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +19,7 @@ public class CompraController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> salvar(@RequestBody CompraRequestDTO compraRequestDTO) {
+    public ResponseEntity<Void> salvar(@RequestBody PurchaseRequestDTO compraRequestDTO) {
         compraService.salvar(compraRequestDTO);
         return ResponseEntity.ok().build();
     }
@@ -37,7 +37,7 @@ public class CompraController {
     }
 
     @PutMapping("/{numero}")
-    public ResponseEntity<Void> atualizar(@PathVariable Integer numero, @RequestBody CompraRequestDTO compraRequestDTO) {
+    public ResponseEntity<Void> atualizar(@PathVariable Integer numero, @RequestBody PurchaseRequestDTO compraRequestDTO) {
         compraService.atualizar(numero, compraRequestDTO);
         return ResponseEntity.ok().build();
     }

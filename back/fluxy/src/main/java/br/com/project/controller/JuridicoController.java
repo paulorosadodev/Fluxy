@@ -1,7 +1,7 @@
 package br.com.project.controller;
 
-import br.com.project.dto.request.JuridicoRequestDTO;
-import br.com.project.dto.response.JuridicoResponseDTO;
+import br.com.project.dto.request.JuridicalRequestDTO;
+import br.com.project.dto.response.JuridicalResponseDTO;
 import br.com.project.service.JuridicoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,25 +19,25 @@ public class JuridicoController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> salvar(@RequestBody JuridicoRequestDTO juridicoRequestDTO) {
+    public ResponseEntity<Void> salvar(@RequestBody JuridicalRequestDTO juridicoRequestDTO) {
         juridicoService.salvar(juridicoRequestDTO);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<JuridicoResponseDTO> buscarPorId(@PathVariable Integer id) {
-        JuridicoResponseDTO responseDTO = juridicoService.buscarPorFkClienteId(id);
+    public ResponseEntity<JuridicalResponseDTO> buscarPorId(@PathVariable Integer id) {
+        JuridicalResponseDTO responseDTO = juridicoService.buscarPorFkClienteId(id);
         return ResponseEntity.ok(responseDTO);
     }
 
     @GetMapping
-    public ResponseEntity<List<JuridicoResponseDTO>> listarTodos() {
-        List<JuridicoResponseDTO> juridicos = juridicoService.listarTodos();
+    public ResponseEntity<List<JuridicalResponseDTO>> listarTodos() {
+        List<JuridicalResponseDTO> juridicos = juridicoService.listarTodos();
         return ResponseEntity.ok(juridicos);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> atualizar(@PathVariable Integer id, @RequestBody JuridicoRequestDTO juridicoRequestDTO) {
+    public ResponseEntity<Void> atualizar(@PathVariable Integer id, @RequestBody JuridicalRequestDTO juridicoRequestDTO) {
         juridicoService.atualizar(id, juridicoRequestDTO);
         return ResponseEntity.ok().build();
     }

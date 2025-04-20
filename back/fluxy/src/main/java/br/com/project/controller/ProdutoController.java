@@ -1,7 +1,7 @@
 package br.com.project.controller;
 
-import br.com.project.dto.request.ProdutoRequestDTO;
-import br.com.project.dto.response.ProdutoResponseDTO;
+import br.com.project.dto.request.ProductRequestDTO;
+import br.com.project.dto.response.ProductResponseDTO;
 import br.com.project.service.ProdutoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,25 +19,25 @@ public class ProdutoController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> salvar(@RequestBody ProdutoRequestDTO produtoRequestDTO) {
+    public ResponseEntity<Void> salvar(@RequestBody ProductRequestDTO produtoRequestDTO) {
         produtoService.salvar(produtoRequestDTO);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProdutoResponseDTO> buscarPorId(@PathVariable Integer id) {
-        ProdutoResponseDTO produto = produtoService.buscarPorId(id);
+    public ResponseEntity<ProductResponseDTO> buscarPorId(@PathVariable Integer id) {
+        ProductResponseDTO produto = produtoService.buscarPorId(id);
         return ResponseEntity.ok(produto);
     }
 
     @GetMapping
-    public ResponseEntity<List<ProdutoResponseDTO>> listarTodos() {
-        List<ProdutoResponseDTO> produtos = produtoService.listarTodos();
+    public ResponseEntity<List<ProductResponseDTO>> listarTodos() {
+        List<ProductResponseDTO> produtos = produtoService.listarTodos();
         return ResponseEntity.ok(produtos);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> atualizar(@PathVariable Integer id, @RequestBody ProdutoRequestDTO produtoRequestDTO) {
+    public ResponseEntity<Void> atualizar(@PathVariable Integer id, @RequestBody ProductRequestDTO produtoRequestDTO) {
         produtoService.atualizar(id, produtoRequestDTO);
         return ResponseEntity.ok().build();
     }

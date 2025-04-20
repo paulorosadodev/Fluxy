@@ -1,7 +1,7 @@
 package br.com.project.service;
 
-import br.com.project.dto.request.ProdutoRequestDTO;
-import br.com.project.dto.response.ProdutoResponseDTO;
+import br.com.project.dto.request.ProductRequestDTO;
+import br.com.project.dto.response.ProductResponseDTO;
 import br.com.project.model.Produto;
 import br.com.project.repository.ProdutoRepository;
 import br.com.project.util.MapperUtils;
@@ -22,7 +22,7 @@ public class ProdutoService {
         this.mapperUtils = mapperUtils;
     }
 
-    public ProdutoResponseDTO salvar(ProdutoRequestDTO produtoRequestDTO) {
+    public ProductResponseDTO salvar(ProductRequestDTO produtoRequestDTO) {
         Produto produto = mapperUtils.map(produtoRequestDTO, Produto.class);
 
         // Primeiro salva o Produto e captura o ID
@@ -33,24 +33,24 @@ public class ProdutoService {
 
         produto.setIdProduto(idProduto); // Atualiza o objeto para devolver no response
 
-        return mapperUtils.map(produto, ProdutoResponseDTO.class);
+        return mapperUtils.map(produto, ProductResponseDTO.class);
     }
 
-    public List<ProdutoResponseDTO> listarTodos() {
-        return mapperUtils.mapList(produtoRepository.findAll(), ProdutoResponseDTO.class);
+    public List<ProductResponseDTO> listarTodos() {
+        return mapperUtils.mapList(produtoRepository.findAll(), ProductResponseDTO.class);
     }
 
-    public ProdutoResponseDTO buscarPorId(Integer id) {
+    public ProductResponseDTO buscarPorId(Integer id) {
         Produto produto = produtoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
-        return mapperUtils.map(produto, ProdutoResponseDTO.class);
+        return mapperUtils.map(produto, ProductResponseDTO.class);
     }
 
-    public ProdutoResponseDTO atualizar(Integer id, ProdutoRequestDTO produtoRequestDTO) {
+    public ProductResponseDTO atualizar(Integer id, ProductRequestDTO produtoRequestDTO) {
         Produto produto = mapperUtils.map(produtoRequestDTO, Produto.class);
         produto.setIdProduto(id);
         produtoRepository.update(produto);
-        return mapperUtils.map(produto, ProdutoResponseDTO.class);
+        return mapperUtils.map(produto, ProductResponseDTO.class);
     }
 
     public void deletar(Integer id) {

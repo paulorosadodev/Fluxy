@@ -1,7 +1,7 @@
 package br.com.project.controller;
 
-import br.com.project.dto.request.ClienteRequestDTO;
-import br.com.project.dto.response.ClienteResponseDTO;
+import br.com.project.dto.request.ClientRequestDTO;
+import br.com.project.dto.response.ClientResponseDTO;
 import br.com.project.service.ClienteService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,25 +19,25 @@ public class ClienteController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> salvar(@RequestBody ClienteRequestDTO clienteRequestDTO) {
+    public ResponseEntity<Void> salvar(@RequestBody ClientRequestDTO clienteRequestDTO) {
         clienteService.salvar(clienteRequestDTO);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ClienteResponseDTO> buscarPorId(@PathVariable Integer id) {
-        ClienteResponseDTO responseDTO = clienteService.buscarPorId(id);
+    public ResponseEntity<ClientResponseDTO> buscarPorId(@PathVariable Integer id) {
+        ClientResponseDTO responseDTO = clienteService.buscarPorId(id);
         return ResponseEntity.ok(responseDTO);
     }
 
     @GetMapping
-    public ResponseEntity<List<ClienteResponseDTO>> listarTodos() {
-        List<ClienteResponseDTO> clientes = clienteService.listarTodos();
+    public ResponseEntity<List<ClientResponseDTO>> listarTodos() {
+        List<ClientResponseDTO> clientes = clienteService.listarTodos();
         return ResponseEntity.ok(clientes);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> atualizar(@PathVariable Integer id, @RequestBody ClienteRequestDTO clienteRequestDTO) {
+    public ResponseEntity<Void> atualizar(@PathVariable Integer id, @RequestBody ClientRequestDTO clienteRequestDTO) {
         clienteService.atualizar(id, clienteRequestDTO);
         return ResponseEntity.ok().build();
     }

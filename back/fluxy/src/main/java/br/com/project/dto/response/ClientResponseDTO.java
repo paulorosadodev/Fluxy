@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ClienteResponseDTO {
-    private Integer idCliente;
-    private Integer idPessoa; // 🔥
+public class ClientResponseDTO {
+    private Integer idClient;
+    private Integer idPerson;
 }

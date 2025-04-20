@@ -1,11 +1,10 @@
 package br.com.project.service;
 
-import br.com.project.dto.request.FornecedorRequestDTO;
-import br.com.project.dto.response.FornecedorResponseDTO;
+import br.com.project.dto.request.SupplierRequestDTO;
+import br.com.project.dto.response.SupplierResponseDTO;
 import br.com.project.model.Fornecedor;
 import br.com.project.model.Telefone;
 import br.com.project.repository.FornecedorRepository;
-import br.com.project.service.TelefoneService;
 import br.com.project.util.MapperUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +26,7 @@ public class FornecedorService {
     }
 
     @Transactional
-    public void salvar(FornecedorRequestDTO fornecedorRequestDTO) {
+    public void salvar(SupplierRequestDTO fornecedorRequestDTO) {
         Fornecedor fornecedor = mapperUtils.map(fornecedorRequestDTO, Fornecedor.class);
         fornecedorRepository.save(fornecedor);
 
@@ -39,7 +38,7 @@ public class FornecedorService {
     }
 
     @Transactional
-    public void atualizar(Integer id, FornecedorRequestDTO fornecedorRequestDTO) {
+    public void atualizar(Integer id, SupplierRequestDTO fornecedorRequestDTO) {
         Fornecedor fornecedor = mapperUtils.map(fornecedorRequestDTO, Fornecedor.class);
         fornecedor.setIdFornecedor(id);
         fornecedorRepository.update(fornecedor);
@@ -53,15 +52,15 @@ public class FornecedorService {
         telefones.forEach(telefoneService::salvar);
     }
 
-    public FornecedorResponseDTO buscarPorId(Integer id) {
+    public SupplierResponseDTO buscarPorId(Integer id) {
         Fornecedor fornecedor = fornecedorRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Fornecedor não encontrado"));
-        return mapperUtils.map(fornecedor, FornecedorResponseDTO.class);
+        return mapperUtils.map(fornecedor, SupplierResponseDTO.class);
     }
 
-    public List<FornecedorResponseDTO> listarTodos() {
+    public List<SupplierResponseDTO> listarTodos() {
         List<Fornecedor> fornecedores = fornecedorRepository.findAll();
-        return mapperUtils.mapList(fornecedores, FornecedorResponseDTO.class);
+        return mapperUtils.mapList(fornecedores, SupplierResponseDTO.class);
     }
 
     public void deletar(Integer id) {

@@ -1,7 +1,7 @@
 package br.com.project.controller;
 
-import br.com.project.dto.request.FornecedorRequestDTO;
-import br.com.project.dto.response.FornecedorResponseDTO;
+import br.com.project.dto.request.SupplierRequestDTO;
+import br.com.project.dto.response.SupplierResponseDTO;
 import br.com.project.service.FornecedorService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,25 +19,25 @@ public class FornecedorController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> salvar(@RequestBody FornecedorRequestDTO fornecedorRequestDTO) {
+    public ResponseEntity<Void> salvar(@RequestBody SupplierRequestDTO fornecedorRequestDTO) {
         fornecedorService.salvar(fornecedorRequestDTO);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<FornecedorResponseDTO> buscarPorId(@PathVariable Integer id) {
-        FornecedorResponseDTO responseDTO = fornecedorService.buscarPorId(id);
+    public ResponseEntity<SupplierResponseDTO> buscarPorId(@PathVariable Integer id) {
+        SupplierResponseDTO responseDTO = fornecedorService.buscarPorId(id);
         return ResponseEntity.ok(responseDTO);
     }
 
     @GetMapping
-    public ResponseEntity<List<FornecedorResponseDTO>> listarTodos() {
-        List<FornecedorResponseDTO> fornecedores = fornecedorService.listarTodos();
+    public ResponseEntity<List<SupplierResponseDTO>> listarTodos() {
+        List<SupplierResponseDTO> fornecedores = fornecedorService.listarTodos();
         return ResponseEntity.ok(fornecedores);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> atualizar(@PathVariable Integer id, @RequestBody FornecedorRequestDTO fornecedorRequestDTO) {
+    public ResponseEntity<Void> atualizar(@PathVariable Integer id, @RequestBody SupplierRequestDTO fornecedorRequestDTO) {
         fornecedorService.atualizar(id, fornecedorRequestDTO);
         return ResponseEntity.ok().build();
     }

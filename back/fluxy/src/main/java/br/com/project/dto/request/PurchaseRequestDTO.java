@@ -1,11 +1,10 @@
-package br.com.project.dto.response;
+package br.com.project.dto.request;
 
 import java.sql.Date;
 
-public record CompraResponseDTO(
-        Integer number,
+public record PurchaseRequestDTO(
         Date date,
-        Integer hour,
+        Integer total,
         Integer installments,
         String type,
         Integer productAmount,

@@ -1,7 +1,7 @@
 package br.com.project.service;
 
-import br.com.project.dto.request.FuncionarioRequestDTO;
-import br.com.project.dto.response.FuncionarioResponseDTO;
+import br.com.project.dto.request.EmployeeRequestDTO;
+import br.com.project.dto.response.EmployeeResponseDTO;
 import br.com.project.model.Funcionario;
 import br.com.project.repository.FuncionarioRepository;
 import br.com.project.util.MapperUtils;
@@ -20,23 +20,23 @@ public class FuncionarioService {
         this.mapperUtils = mapperUtils;
     }
 
-    public void salvar(FuncionarioRequestDTO funcionarioRequestDTO) {
+    public void salvar(EmployeeRequestDTO funcionarioRequestDTO) {
         Funcionario funcionario = mapperUtils.map(funcionarioRequestDTO, Funcionario.class);
         funcionarioRepository.save(funcionario);
     }
 
-    public FuncionarioResponseDTO buscarPorId(Integer id) {
+    public EmployeeResponseDTO buscarPorId(Integer id) {
         Funcionario funcionario = funcionarioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Funcionário não encontrado"));
-        return mapperUtils.map(funcionario, FuncionarioResponseDTO.class);
+        return mapperUtils.map(funcionario, EmployeeResponseDTO.class);
     }
 
-    public List<FuncionarioResponseDTO> listarTodos() {
+    public List<EmployeeResponseDTO> listarTodos() {
         List<Funcionario> funcionarios = funcionarioRepository.findAll();
-        return mapperUtils.mapList(funcionarios, FuncionarioResponseDTO.class);
+        return mapperUtils.mapList(funcionarios, EmployeeResponseDTO.class);
     }
 
-    public void atualizar(Integer id, FuncionarioRequestDTO funcionarioRequestDTO) {
+    public void atualizar(Integer id, EmployeeRequestDTO funcionarioRequestDTO) {
         Funcionario funcionario = mapperUtils.map(funcionarioRequestDTO, Funcionario.class);
         funcionario.setIdFuncionario(id);
         funcionarioRepository.update(funcionario);

@@ -11,5 +11,5 @@ public class Fornecedor {
     private Integer idFornecedor;
     private Integer idPessoa; // 🔥 FK para Pessoa
     private String cnpj;
-    private String nome;
+    private String name;
 }

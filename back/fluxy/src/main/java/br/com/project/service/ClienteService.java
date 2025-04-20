@@ -1,11 +1,10 @@
 package br.com.project.service;
 
-import br.com.project.dto.request.ClienteRequestDTO;
-import br.com.project.dto.response.ClienteResponseDTO;
+import br.com.project.dto.request.ClientRequestDTO;
+import br.com.project.dto.response.ClientResponseDTO;
 import br.com.project.model.Cliente;
 import br.com.project.model.Telefone;
 import br.com.project.repository.ClienteRepository;
-import br.com.project.service.TelefoneService;
 import br.com.project.util.MapperUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +26,7 @@ public class ClienteService {
     }
 
     @Transactional
-    public void salvar(ClienteRequestDTO clienteRequestDTO) {
+    public void salvar(ClientRequestDTO clienteRequestDTO) {
         Cliente cliente = mapperUtils.map(clienteRequestDTO, Cliente.class);
         clienteRepository.save(cliente);
 
@@ -39,7 +38,7 @@ public class ClienteService {
     }
 
     @Transactional
-    public void atualizar(Integer id, ClienteRequestDTO clienteRequestDTO) {
+    public void atualizar(Integer id, ClientRequestDTO clienteRequestDTO) {
         Cliente cliente = mapperUtils.map(clienteRequestDTO, Cliente.class);
         cliente.setIdCliente(id);
         clienteRepository.update(cliente);
@@ -53,15 +52,15 @@ public class ClienteService {
         telefones.forEach(telefoneService::salvar);
     }
 
-    public ClienteResponseDTO buscarPorId(Integer id) {
+    public ClientResponseDTO buscarPorId(Integer id) {
         Cliente cliente = clienteRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
-        return mapperUtils.map(cliente, ClienteResponseDTO.class);
+        return mapperUtils.map(cliente, ClientResponseDTO.class);
     }
 
-    public List<ClienteResponseDTO> listarTodos() {
+    public List<ClientResponseDTO> listarTodos() {
         List<Cliente> clientes = clienteRepository.findAll();
-        return mapperUtils.mapList(clientes, ClienteResponseDTO.class);
+        return mapperUtils.mapList(clientes, ClientResponseDTO.class);
     }
 
     public void deletar(Integer id) {
