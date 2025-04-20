@@ -1,7 +1,7 @@
 package br.com.project.service;
 
 import br.com.project.model.Physique;
-import br.com.project.repository.FisicoRepository;
+import br.com.project.repository.PhysiqueRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,9 +10,9 @@ import java.util.Optional;
 @Service
 public class FisicoService {
 
-    private final FisicoRepository fisicoRepository;
+    private final PhysiqueRepository fisicoRepository;
 
-    public FisicoService(FisicoRepository fisicoRepository) {
+    public FisicoService(PhysiqueRepository fisicoRepository) {
         this.fisicoRepository = fisicoRepository;
     }
 

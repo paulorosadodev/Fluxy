@@ -11,25 +11,25 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class CategoriaRepository {
+public class CategoryRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public CategoriaRepository(JdbcTemplate jdbcTemplate) {
+    public CategoryRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void save(Category categoria) {
+    public void save(Category category) {
         String sql = "INSERT INTO categoria (codigo, nome) VALUES (?, ?)";
         jdbcTemplate.update(sql,
-                categoria.getCodigo(),
-                categoria.getNome()
+                category.getCode(),
+                category.getName()
         );
     }
 
-    public Optional<Category> findByCodigo(String codigo) {
+    public Optional<Category> findByCode(String code) {
         String sql = "SELECT * FROM categoria WHERE codigo = ?";
-        List<Category> result = jdbcTemplate.query(sql, new CategoriaRowMapper(), codigo);
+        List<Category> result = jdbcTemplate.query(sql, new CategoriaRowMapper(), code);
         return result.stream().findFirst();
     }
 
@@ -38,17 +38,17 @@ public class CategoriaRepository {
         return jdbcTemplate.query(sql, new CategoriaRowMapper());
     }
 
-    public void update(Category categoria) {
+    public void update(Category category) {
         String sql = "UPDATE categoria SET nome = ? WHERE codigo = ?";
         jdbcTemplate.update(sql,
-                categoria.getNome(),
-                categoria.getCodigo()
+                category.getName(),
+                category.getCode()
         );
     }
 
-    public void deleteByCodigo(String codigo) {
+    public void deleteByCode(String code) {
         String sql = "DELETE FROM categoria WHERE codigo = ?";
-        jdbcTemplate.update(sql, codigo);
+        jdbcTemplate.update(sql, code);
     }
 
     private static class CategoriaRowMapper implements RowMapper<Category> {

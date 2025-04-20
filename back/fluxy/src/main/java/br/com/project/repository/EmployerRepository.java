@@ -11,31 +11,31 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class FuncionarioRepository {
+public class EmployerRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public FuncionarioRepository(JdbcTemplate jdbcTemplate) {
+    public EmployerRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void save(Employer funcionario) {
+    public void save(Employer employer) {
         String sql = "INSERT INTO funcionario (id_funcionario, matricula, nome, cpf, salario, setor, turno, funcao, id_supervisor) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         jdbcTemplate.update(sql,
-                funcionario.getIdPessoa(), // O id_funcionario é o id_pessoa
-                funcionario.getMatricula(),
-                funcionario.getNome(),
-                funcionario.getCpf(),
-                funcionario.getSalario(),
-                funcionario.getSetor(),
-                funcionario.getTurno(),
-                funcionario.getFuncao(),
-                funcionario.getIdSupervisor()
+                employer.getIdPerson(), // O id_funcionario é o id_pessoa
+                employer.getIdEmployee(),
+                employer.getName(),
+                employer.getCpf(),
+                employer.getSalary(),
+                employer.getSectorOfActivity(),
+                employer.getWorkShift(),
+                employer.getRole(),
+                employer.getIdSupervisor()
         );
     }
 
     public Optional<Employer> findById(Integer id) {
-        String sql = "SELECT * FROM funcionario WHERE id_funcionario = ?";
+        String sql = "SELECT * FROM funcionario WHERE funcionario.id = ?";
         List<Employer> result = jdbcTemplate.query(sql, new FuncionarioRowMapper(), id);
         return result.stream().findFirst();
     }
@@ -45,23 +45,23 @@ public class FuncionarioRepository {
         return jdbcTemplate.query(sql, new FuncionarioRowMapper());
     }
 
-    public void update(Employer funcionario) {
+    public void update(Employer employer) {
         String sql = "UPDATE funcionario SET matricula = ?, nome = ?, cpf = ?, salario = ?, setor = ?, turno = ?, funcao = ?, id_supervisor = ? WHERE id_funcionario = ?";
         jdbcTemplate.update(sql,
-                funcionario.getMatricula(),
-                funcionario.getNome(),
-                funcionario.getCpf(),
-                funcionario.getSalario(),
-                funcionario.getSetor(),
-                funcionario.getTurno(),
-                funcionario.getFuncao(),
-                funcionario.getIdSupervisor(),
-                funcionario.getIdFuncionario()
+                employer.getEmployeeNumber(),
+                employer.getName(),
+                employer.getCpf(),
+                employer.getSalary(),
+                employer.getSectorOfActivity(),
+                employer.getWorkShift(),
+                employer.getRole(),
+                employer.getIdSupervisor(),
+                employer.getIdEmployee()
         );
     }
 
     public void deleteById(Integer id) {
-        String sql = "DELETE FROM funcionario WHERE id_funcionario = ?";
+        String sql = "DELETE FROM funcionario WHERE funcionario.id = ?";
         jdbcTemplate.update(sql, id);
     }
 

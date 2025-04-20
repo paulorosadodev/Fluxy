@@ -14,8 +14,12 @@ public class Purchase {
     private Integer installments;
     private String type;
     private Integer product;
+    private String productAmount;
 
     private Integer idProduct;
     private Integer idClient;
     private Integer idEmployeeOperational;
+
+    public Purchase(int numero, String data, String hora, int parcelas, String tipo, int qtdProduto, int fkProdutoId, int fkClienteId, int fkOperacionalIdFuncionario) {
+    }
 }

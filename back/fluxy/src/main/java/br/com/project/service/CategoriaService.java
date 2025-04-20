@@ -3,7 +3,7 @@ package br.com.project.service;
 import br.com.project.dto.request.CategoryRequestDTO;
 import br.com.project.dto.response.CategoryResponseDTO;
 import br.com.project.model.Category;
-import br.com.project.repository.CategoriaRepository;
+import br.com.project.repository.CategoryRepository;
 import br.com.project.util.MapperUtils;
 import org.springframework.stereotype.Service;
 
@@ -13,10 +13,10 @@ import java.util.Optional;
 @Service
 public class CategoriaService {
 
-    private final CategoriaRepository categoriaRepository;
+    private final CategoryRepository categoriaRepository;
     private final MapperUtils mapperUtils;
 
-    public CategoriaService(CategoriaRepository categoriaRepository, MapperUtils mapperUtils) {
+    public CategoriaService(CategoryRepository categoriaRepository, MapperUtils mapperUtils) {
         this.categoriaRepository = categoriaRepository;
         this.mapperUtils = mapperUtils;
     }
@@ -33,7 +33,7 @@ public class CategoriaService {
     }
 
     public CategoryResponseDTO buscarPorCodigo(String codigo) {
-        Optional<Category> categoria = categoriaRepository.findByCodigo(codigo);
+        Optional<Category> categoria = categoriaRepository.findByCode(codigo);
         Category entity = categoria.orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
         return mapperUtils.map(entity, CategoryResponseDTO.class);
     }
@@ -46,6 +46,6 @@ public class CategoriaService {
     }
 
     public void deletar(String codigo) {
-        categoriaRepository.deleteByCodigo(codigo);
+        categoriaRepository.deleteByCode(codigo);
     }
 }

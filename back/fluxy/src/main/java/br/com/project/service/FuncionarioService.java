@@ -3,7 +3,7 @@ package br.com.project.service;
 import br.com.project.dto.request.EmployeeRequestDTO;
 import br.com.project.dto.response.EmployeeResponseDTO;
 import br.com.project.model.Employer;
-import br.com.project.repository.FuncionarioRepository;
+import br.com.project.repository.EmployerRepository;
 import br.com.project.util.MapperUtils;
 import org.springframework.stereotype.Service;
 
@@ -12,10 +12,10 @@ import java.util.List;
 @Service
 public class FuncionarioService {
 
-    private final FuncionarioRepository funcionarioRepository;
+    private final EmployerRepository funcionarioRepository;
     private final MapperUtils mapperUtils;
 
-    public FuncionarioService(FuncionarioRepository funcionarioRepository, MapperUtils mapperUtils) {
+    public FuncionarioService(EmployerRepository funcionarioRepository, MapperUtils mapperUtils) {
         this.funcionarioRepository = funcionarioRepository;
         this.mapperUtils = mapperUtils;
     }

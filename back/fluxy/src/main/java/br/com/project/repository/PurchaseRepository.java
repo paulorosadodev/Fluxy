@@ -11,32 +11,32 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class CompraRepository {
+public class PurchaseRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public CompraRepository(JdbcTemplate jdbcTemplate) {
+    public PurchaseRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void save(Purchase compra) {
-        String sql = "INSERT INTO compra (data, hora, parcelas, tipo, qtd_produto, fk_produto_id, fk_cliente_id, fk_operacional_id_funcionario) " +
+    public void save(Purchase purchase) {
+        String sql = "INSERT INTO compra (data, hora, parcelas, tipo, qtd_produto, fk_produto_id, fk_cliente_id, fk_operacional_matricula) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         jdbcTemplate.update(sql,
-                compra.getData(),
-                compra.getHora(),
-                compra.getParcelas(),
-                compra.getTipo(),
-                compra.getQtdProduto(),
-                compra.getIdProduto(),
-                compra.getIdCliente(),
-                compra.getIdFuncionarioOperacional()
+                purchase.getDate(),
+                purchase.getHour(),
+                purchase.getInstallments(),
+                purchase.getType(),
+                purchase.getProductAmount(),
+                purchase.getIdProduct(),
+                purchase.getIdClient(),
+                purchase.getIdEmployeeOperational()
         );
     }
 
-    public Optional<Purchase> findByNumero(Integer numero) {
+    public Optional<Purchase> findByNumber(Integer number) {
         String sql = "SELECT * FROM compra WHERE numero = ?";
-        List<Purchase> result = jdbcTemplate.query(sql, new CompraRowMapper(), numero);
+        List<Purchase> result = jdbcTemplate.query(sql, new CompraRowMapper(), number);
         return result.stream().findFirst();
     }
 
@@ -45,18 +45,18 @@ public class CompraRepository {
         return jdbcTemplate.query(sql, new CompraRowMapper());
     }
 
-    public void update(Purchase compra) {
-        String sql = "UPDATE compra SET data = ?, hora = ?, parcelas = ?, tipo = ?, qtd_produto = ?, fk_produto_id = ?, fk_cliente_id = ?, fk_operacional_id_funcionario = ? WHERE numero = ?";
+    public void update(Purchase purchase) {
+        String sql = "UPDATE compra SET data = ?, hora = ?, parcelas = ?, tipo = ?, qtd_produto = ?, fk_produto_id = ?, fk_cliente_id = ?, fk_operacional_matricula = ? WHERE numero = ?";
         jdbcTemplate.update(sql,
-                compra.getData(),
-                compra.getHora(),
-                compra.getParcelas(),
-                compra.getTipo(),
-                compra.getQtdProduto(),
-                compra.getIdProduto(),
-                compra.getIdCliente(),
-                compra.getIdFuncionarioOperacional(),
-                compra.getNumero()
+                purchase.getDate(),
+                purchase.getHour(),
+                purchase.getInstallments(),
+                purchase.getType(),
+                purchase.getProductAmount(),
+                purchase.getIdProduct(),
+                purchase.getIdClient(),
+                purchase.getIdEmployeeOperational(),
+                purchase.getNumber()
         );
     }
 

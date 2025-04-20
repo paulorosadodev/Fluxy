@@ -4,7 +4,7 @@ import br.com.project.dto.request.ClientRequestDTO;
 import br.com.project.dto.response.ClientResponseDTO;
 import br.com.project.model.Client;
 import br.com.project.model.Phone;
-import br.com.project.repository.ClienteRepository;
+import br.com.project.repository.ClientRepository;
 import br.com.project.util.MapperUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,11 +15,11 @@ import java.util.stream.Collectors;
 @Service
 public class ClienteService {
 
-    private final ClienteRepository clienteRepository;
+    private final ClientRepository clienteRepository;
     private final TelefoneService telefoneService;
     private final MapperUtils mapperUtils;
 
-    public ClienteService(ClienteRepository clienteRepository, TelefoneService telefoneService, MapperUtils mapperUtils) {
+    public ClienteService(ClientRepository clienteRepository, TelefoneService telefoneService, MapperUtils mapperUtils) {
         this.clienteRepository = clienteRepository;
         this.telefoneService = telefoneService;
         this.mapperUtils = mapperUtils;

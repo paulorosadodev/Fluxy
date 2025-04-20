@@ -11,20 +11,20 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class FisicoRepository {
+public class PhysiqueRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public FisicoRepository(JdbcTemplate jdbcTemplate) {
+    public PhysiqueRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void save(Physique fisico) {
+    public void save(Physique physique) {
         String sql = "INSERT INTO fisico (fk_cliente_id, nome, cpf) VALUES (?, ?, ?)";
         jdbcTemplate.update(sql,
-                fisico.getFkClienteId(),  // <-- Corrigido aqui!
-                fisico.getNome(),
-                fisico.getCpf()
+                physique.getFkClientId(),
+                physique.getName(),
+                physique.getCpf()
         );
     }
 
@@ -39,18 +39,18 @@ public class FisicoRepository {
         return jdbcTemplate.query(sql, new FisicoRowMapper());
     }
 
-    public void update(Physique fisico) {
+    public void update(Physique physique) {
         String sql = "UPDATE fisico SET nome = ?, cpf = ? WHERE fk_cliente_id = ?";
         jdbcTemplate.update(sql,
-                fisico.getNome(),
-                fisico.getCpf(),
-                fisico.getFkClienteId()
+                physique.getName(),
+                physique.getCpf(),
+                physique.getFkClientId()
         );
     }
 
-    public void deleteById(Integer idCliente) {
+    public void deleteById(Integer idClient) {
         String sql = "DELETE FROM fisico WHERE fk_cliente_id = ?";
-        jdbcTemplate.update(sql, idCliente);
+        jdbcTemplate.update(sql, idClient);
     }
 
     private static class FisicoRowMapper implements RowMapper<Physique> {

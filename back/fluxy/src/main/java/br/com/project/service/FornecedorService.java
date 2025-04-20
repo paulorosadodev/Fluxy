@@ -4,7 +4,7 @@ import br.com.project.dto.request.SupplierRequestDTO;
 import br.com.project.dto.response.SupplierResponseDTO;
 import br.com.project.model.Supplier;
 import br.com.project.model.Phone;
-import br.com.project.repository.FornecedorRepository;
+import br.com.project.repository.SupplierRepository;
 import br.com.project.util.MapperUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,11 +15,11 @@ import java.util.stream.Collectors;
 @Service
 public class FornecedorService {
 
-    private final FornecedorRepository fornecedorRepository;
+    private final SupplierRepository fornecedorRepository;
     private final TelefoneService telefoneService;
     private final MapperUtils mapperUtils;
 
-    public FornecedorService(FornecedorRepository fornecedorRepository, TelefoneService telefoneService, MapperUtils mapperUtils) {
+    public FornecedorService(SupplierRepository fornecedorRepository, TelefoneService telefoneService, MapperUtils mapperUtils) {
         this.fornecedorRepository = fornecedorRepository;
         this.telefoneService = telefoneService;
         this.mapperUtils = mapperUtils;

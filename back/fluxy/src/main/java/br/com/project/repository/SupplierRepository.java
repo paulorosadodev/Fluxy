@@ -11,25 +11,25 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class FornecedorRepository {
+public class SupplierRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public FornecedorRepository(JdbcTemplate jdbcTemplate) {
+    public SupplierRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void save(Supplier fornecedor) {
-        String sql = "INSERT INTO fornecedor (id_fornecedor, cnpj, nome) VALUES (?, ?, ?)";
+    public void save(Supplier supplier) {
+        String sql = "INSERT INTO fornecedor (fornecedor.id, cnpj, nome) VALUES (?, ?, ?)";
         jdbcTemplate.update(sql,
-                fornecedor.getIdPessoa(), // O id_fornecedor é o id_pessoa
-                fornecedor.getCnpj(),
-                fornecedor.getNome()
+                supplier.getIdPerson(), // O id_fornecedor é o id_pessoa
+                supplier.getCnpj(),
+                supplier.getName()
         );
     }
 
     public Optional<Supplier> findById(Integer id) {
-        String sql = "SELECT * FROM fornecedor WHERE id_fornecedor = ?";
+        String sql = "SELECT * FROM fornecedor WHERE fornecedor.id = ?";
         List<Supplier> result = jdbcTemplate.query(sql, new FornecedorRowMapper(), id);
         return result.stream().findFirst();
     }
@@ -39,17 +39,17 @@ public class FornecedorRepository {
         return jdbcTemplate.query(sql, new FornecedorRowMapper());
     }
 
-    public void update(Supplier fornecedor) {
-        String sql = "UPDATE fornecedor SET cnpj = ?, nome = ? WHERE id_fornecedor = ?";
+    public void update(Supplier supplier) {
+        String sql = "UPDATE fornecedor SET cnpj = ?, nome = ? WHERE fornecedor.id = ?";
         jdbcTemplate.update(sql,
-                fornecedor.getCnpj(),
-                fornecedor.getNome(),
-                fornecedor.getIdFornecedor()
+                supplier.getCnpj(),
+                supplier.getName(),
+                supplier.getIdSupplier()
         );
     }
 
     public void deleteById(Integer id) {
-        String sql = "DELETE FROM fornecedor WHERE id_fornecedor = ?";
+        String sql = "DELETE FROM fornecedor WHERE fornecedor.id = ?";
         jdbcTemplate.update(sql, id);
     }
 
