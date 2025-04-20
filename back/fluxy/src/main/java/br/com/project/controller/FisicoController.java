@@ -1,6 +1,6 @@
 package br.com.project.controller;
 
-import br.com.project.model.Fisico;
+import br.com.project.model.Physique;
 import br.com.project.service.FisicoService;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,22 +18,22 @@ public class FisicoController {
     }
 
     @PostMapping
-    public void salvar(@RequestBody Fisico fisico) {
+    public void salvar(@RequestBody Physique fisico) {
         fisicoService.salvar(fisico);
     }
 
     @GetMapping("/{id}")
-    public Optional<Fisico> buscarPorId(@PathVariable Integer id) {
+    public Optional<Physique> buscarPorId(@PathVariable Integer id) {
         return fisicoService.buscarPorId(id);
     }
 
     @GetMapping
-    public List<Fisico> listarTodos() {
+    public List<Physique> listarTodos() {
         return fisicoService.listarTodos();
     }
 
     @PutMapping("/{id}")
-    public void atualizar(@PathVariable Integer id, @RequestBody Fisico fisico) {
+    public void atualizar(@PathVariable Integer id, @RequestBody Physique fisico) {
         fisico.setFkClienteId(id);
         fisicoService.atualizar(fisico);
     }

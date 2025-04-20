@@ -1,38 +1,48 @@
 package br.com.project.service;
 
-import br.com.project.model.Juridico;
+import br.com.project.dto.request.JuridicalRequestDTO;
+import br.com.project.dto.response.JuridicalResponseDTO;
+import br.com.project.model.Juridical;
 import br.com.project.repository.JuridicoRepository;
+import br.com.project.util.MapperUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class JuridicoService {
 
     private final JuridicoRepository juridicoRepository;
+    private final MapperUtils mapperUtils;
 
-    public JuridicoService(JuridicoRepository juridicoRepository) {
+    public JuridicoService(JuridicoRepository juridicoRepository, MapperUtils mapperUtils) {
         this.juridicoRepository = juridicoRepository;
+        this.mapperUtils = mapperUtils;
     }
 
-    public void salvar(Juridico juridico) {
+    public void salvar(JuridicalRequestDTO juridicoRequestDTO) {
+        Juridical juridico = mapperUtils.map(juridicoRequestDTO, Juridical.class);
         juridicoRepository.save(juridico);
     }
 
-    public Optional<Juridico> buscarPorId(Integer id) {
-        return juridicoRepository.findById(id);
+    public JuridicalResponseDTO buscarPorFkClienteId(Integer fkClienteId) {
+        Juridical juridico = juridicoRepository.findByFkClienteId(fkClienteId)
+                .orElseThrow(() -> new RuntimeException("Cliente Jurídico não encontrado"));
+        return mapperUtils.map(juridico, JuridicalResponseDTO.class);
     }
 
-    public List<Juridico> listarTodos() {
-        return juridicoRepository.findAll();
+    public List<JuridicalResponseDTO> listarTodos() {
+        List<Juridical> juridicos = juridicoRepository.findAll();
+        return mapperUtils.mapList(juridicos, JuridicalResponseDTO.class);
     }
 
-    public void atualizar(Juridico juridico) {
+    public void atualizar(Integer fkClienteId, JuridicalRequestDTO juridicoRequestDTO) {
+        Juridical juridico = mapperUtils.map(juridicoRequestDTO, Juridical.class);
+        juridico.setFkClienteId(fkClienteId);
         juridicoRepository.update(juridico);
     }
 
-    public void deletarPorId(Integer id) {
-        juridicoRepository.deleteById(id);
+    public void deletar(Integer fkClienteId) {
+        juridicoRepository.deleteByFkClienteId(fkClienteId);
     }
 }

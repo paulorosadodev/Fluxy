@@ -1,7 +1,7 @@
 package br.com.project.controller;
 
-import br.com.project.dto.request.ProdutoRequestDTO;
-import br.com.project.dto.response.ProdutoResponseDTO;
+import br.com.project.dto.request.ProductRequestDTO;
+import br.com.project.dto.response.ProductResponseDTO;
 import br.com.project.service.ProdutoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,32 +19,32 @@ public class ProdutoController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> salvar(@RequestBody ProdutoRequestDTO requestDTO) {
-        produtoService.salvar(requestDTO);
+    public ResponseEntity<Void> salvar(@RequestBody ProductRequestDTO produtoRequestDTO) {
+        produtoService.salvar(produtoRequestDTO);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProdutoResponseDTO> buscarPorId(@PathVariable Integer id) {
-        return produtoService.buscarPorId(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<ProductResponseDTO> buscarPorId(@PathVariable Integer id) {
+        ProductResponseDTO produto = produtoService.buscarPorId(id);
+        return ResponseEntity.ok(produto);
     }
 
     @GetMapping
-    public ResponseEntity<List<ProdutoResponseDTO>> listarTodos() {
-        return ResponseEntity.ok(produtoService.listarTodos());
+    public ResponseEntity<List<ProductResponseDTO>> listarTodos() {
+        List<ProductResponseDTO> produtos = produtoService.listarTodos();
+        return ResponseEntity.ok(produtos);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> atualizar(@PathVariable Integer id, @RequestBody ProdutoRequestDTO requestDTO) {
-        produtoService.atualizar(id, requestDTO);
+    public ResponseEntity<Void> atualizar(@PathVariable Integer id, @RequestBody ProductRequestDTO produtoRequestDTO) {
+        produtoService.atualizar(id, produtoRequestDTO);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Integer id) {
-        produtoService.deletarPorId(id);
+        produtoService.deletar(id);
         return ResponseEntity.ok().build();
     }
 }

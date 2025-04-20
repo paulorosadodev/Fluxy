@@ -1,38 +1,48 @@
 package br.com.project.service;
 
-import br.com.project.model.Compra;
-import br.com.project.repository.CompraRepository;
+import br.com.project.dto.request.PurchaseRequestDTO;
+import br.com.project.dto.response.PurchaseResponseDTO;
+import br.com.project.model.Purchase;
+import br.com.project.repository.PurchaseRepository;
+import br.com.project.util.MapperUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CompraService {
 
-    private final CompraRepository compraRepository;
+    private final PurchaseRepository compraRepository;
+    private final MapperUtils mapperUtils;
 
-    public CompraService(CompraRepository compraRepository) {
+    public CompraService(PurchaseRepository compraRepository, MapperUtils mapperUtils) {
         this.compraRepository = compraRepository;
+        this.mapperUtils = mapperUtils;
     }
 
-    public void salvar(Compra compra) {
+    public void salvar(PurchaseRequestDTO compraRequestDTO) {
+        Purchase compra = mapperUtils.map(compraRequestDTO, Purchase.class);
         compraRepository.save(compra);
     }
 
-    public Optional<Compra> buscarPorNumero(Integer numero) {
-        return compraRepository.findByNumero(numero);
+    public PurchaseResponseDTO buscarPorNumero(Integer numero) {
+        Purchase compra = compraRepository.findByNumber(numero)
+                .orElseThrow(() -> new RuntimeException("Compra não encontrada"));
+        return mapperUtils.map(compra, PurchaseResponseDTO.class);
     }
 
-    public List<Compra> listarTodos() {
-        return compraRepository.findAll();
+    public List<PurchaseResponseDTO> listarTodas() {
+        List<Purchase> compras = compraRepository.findAll();
+        return mapperUtils.mapList(compras, PurchaseResponseDTO.class);
     }
 
-    public void atualizar(Compra compra) {
+    public void atualizar(Integer numero, PurchaseRequestDTO compraRequestDTO) {
+        Purchase compra = mapperUtils.map(compraRequestDTO, Purchase.class);
+        compra.setNumero(numero);
         compraRepository.update(compra);
     }
 
-    public void deletarPorNumero(Integer numero) {
+    public void deletar(Integer numero) {
         compraRepository.deleteByNumero(numero);
     }
 }
