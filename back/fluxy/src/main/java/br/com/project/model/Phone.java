@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Telefone {
-    private String numero;
-    private Integer idTelefone; // 🔥 FK para Pessoa
+public class Phone {
+    private String number;
+    private Integer idPhone; // 🔥 FK para Pessoa
 }

@@ -2,15 +2,14 @@ package br.com.project.service;
 
 import br.com.project.dto.request.PersonRequestDTO;
 import br.com.project.dto.response.PersonResponseDTO;
-import br.com.project.model.Pessoa;
-import br.com.project.model.Telefone;
+import br.com.project.model.Person;
+import br.com.project.model.Phone;
 import br.com.project.repository.PessoaRepository;
 import br.com.project.util.MapperUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class PessoaService {
@@ -26,47 +25,47 @@ public class PessoaService {
     }
 
     @Transactional
-    public void salvar(PersonRequestDTO pessoaRequestDTO) {
-        Pessoa pessoa = mapperUtils.map(pessoaRequestDTO, Pessoa.class);
-        pessoaRepository.save(pessoa);
+    public void save(PersonRequestDTO personRequestDTO) {
+        Person person = mapperUtils.map(personRequestDTO, Person.class);
+        pessoaRepository.save(person);
 
         // Salva todos os telefones vinculados
-        List<Telefone> telefones = pessoaRequestDTO.getTelefones().stream()
-                .map(numero -> new Telefone(numero, pessoa.getIdPessoa()))
-                .collect(Collectors.toList());
+        List<Phone> phones = personRequestDTO.getPhone().stream()
+                .map(number -> new Phone(number, person.getIdPerson()))
+                .toList();
 
-        telefones.forEach(telefoneService::salvar);
+        phones.forEach(telefoneService::salvar);
     }
 
     @Transactional
-    public void atualizar(Integer id, PersonRequestDTO pessoaRequestDTO) {
-        Pessoa pessoa = mapperUtils.map(pessoaRequestDTO, Pessoa.class);
-        pessoa.setIdPessoa(id);
-        pessoaRepository.update(pessoa);
+    public void update(Integer id, PersonRequestDTO pessoaRequestDTO) {
+        Person person = mapperUtils.map(pessoaRequestDTO, Person.class);
+        person.setIdPerson(id);
+        pessoaRepository.update(person);
 
         // Primeiro apaga os telefones antigos
         telefoneService.deletarPorIdPessoa(id);
 
         // Depois salva os novos telefones
-        List<Telefone> telefones = pessoaRequestDTO.getTelefones().stream()
-                .map(numero -> new Telefone(numero, id))
-                .collect(Collectors.toList());
+        List<Phone> phones = pessoaRequestDTO.getPhone().stream()
+                .map(number -> new Phone(number, id))
+                .toList();
 
-        telefones.forEach(telefoneService::salvar);
+        phones.forEach(telefoneService::salvar);
     }
 
-    public PersonResponseDTO buscarPorId(Integer id) {
-        Pessoa pessoa = pessoaRepository.findById(id)
+    public PersonResponseDTO findById(Integer id) {
+        Person person = pessoaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Pessoa não encontrada"));
-        return mapperUtils.map(pessoa, PersonResponseDTO.class);
+        return mapperUtils.map(person, PersonResponseDTO.class);
     }
 
-    public List<PersonResponseDTO> listarTodas() {
-        List<Pessoa> pessoas = pessoaRepository.findAll();
-        return mapperUtils.mapList(pessoas, PersonResponseDTO.class);
+    public List<PersonResponseDTO> listAll() {
+        List<Person> persons = pessoaRepository.findAll();
+        return mapperUtils.mapList(persons, PersonResponseDTO.class);
     }
 
-    public void deletar(Integer id) {
+    public void delete(Integer id) {
         telefoneService.deletarPorIdPessoa(id);
         pessoaRepository.deleteById(id);
     }

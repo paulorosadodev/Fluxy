@@ -1,6 +1,6 @@
 package br.com.project.repository;
 
-import br.com.project.model.ProdutoHistorico;
+import br.com.project.model.ProductHistoric;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -19,20 +19,20 @@ public class ProdutoHistoricoRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void save(ProdutoHistorico produtoHistorico) {
+    public void save(ProductHistoric produtoHistorico) {
         String sql = "INSERT INTO produto_historico (fk_produto_id, fk_historicoprecoproduto_id) VALUES (?, ?)";
         jdbcTemplate.update(sql,
                 produtoHistorico.getFkProdutoId(),
                 produtoHistorico.getFkHistoricoPrecoProdutoId());
     }
 
-    public Optional<ProdutoHistorico> findByIds(Integer produtoId, Integer historicoPrecoProdutoId) {
+    public Optional<ProductHistoric> findByIds(Integer produtoId, Integer historicoPrecoProdutoId) {
         String sql = "SELECT * FROM produto_historico WHERE fk_produto_id = ? AND fk_historicoprecoproduto_id = ?";
-        List<ProdutoHistorico> result = jdbcTemplate.query(sql, new ProdutoHistoricoRowMapper(), produtoId, historicoPrecoProdutoId);
+        List<ProductHistoric> result = jdbcTemplate.query(sql, new ProdutoHistoricoRowMapper(), produtoId, historicoPrecoProdutoId);
         return result.stream().findFirst();
     }
 
-    public List<ProdutoHistorico> findAll() {
+    public List<ProductHistoric> findAll() {
         String sql = "SELECT * FROM produto_historico";
         return jdbcTemplate.query(sql, new ProdutoHistoricoRowMapper());
     }
@@ -42,10 +42,10 @@ public class ProdutoHistoricoRepository {
         jdbcTemplate.update(sql, produtoId, historicoPrecoProdutoId);
     }
 
-    private static class ProdutoHistoricoRowMapper implements RowMapper<ProdutoHistorico> {
+    private static class ProdutoHistoricoRowMapper implements RowMapper<ProductHistoric> {
         @Override
-        public ProdutoHistorico mapRow(ResultSet rs, int rowNum) throws SQLException {
-            ProdutoHistorico ph = new ProdutoHistorico();
+        public ProductHistoric mapRow(ResultSet rs, int rowNum) throws SQLException {
+            ProductHistoric ph = new ProductHistoric();
             ph.setFkProdutoId(rs.getInt("fk_produto_id"));
             ph.setFkHistoricoPrecoProdutoId(rs.getInt("fk_historicoprecoproduto_id"));
             return ph;

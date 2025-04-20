@@ -7,11 +7,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Pessoa {
-    private Integer idPessoa;
-    private String rua;
-    private String numero;
-    private String bairro;
-    private String cidade;
+public class Person {
+    private Integer idPerson;
+    private String street;
+    private String number;
+    private String neighborhood;
+    private String city;
     private String cep;
 }

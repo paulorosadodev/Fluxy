@@ -11,5 +11,5 @@ public record PurchaseRequestDTO(
 
         Integer fkProductId,
         Integer fkClientId,
-        Integer fkOperationalIdFunctionary
+        Integer fkOperationalIdEmployee
 ) {}

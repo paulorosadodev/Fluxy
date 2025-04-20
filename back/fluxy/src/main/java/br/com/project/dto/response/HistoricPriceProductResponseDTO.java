@@ -2,7 +2,7 @@ package br.com.project.dto.response;
 
 import java.sql.Date;
 
-public record HistoricalProductPriceResponseDTO(
+public record HistoricPriceProductResponseDTO(
         Integer idHistoricalProductPrice,
         Date date,
         Integer price

@@ -13,5 +13,5 @@ public class ProductResponseDTO {
     private String codEa;
     private Double price;
     private String name;
-    private String FKCategory; // 🔥 FK adicionada
+    private String FKCategory; // FK adicionada
 }

@@ -1,6 +1,6 @@
 package br.com.project.repository;
 
-import br.com.project.model.Juridico;
+import br.com.project.model.Juridical;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -19,7 +19,7 @@ public class JuridicoRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void save(Juridico juridico) {
+    public void save(Juridical juridico) {
         String sql = "INSERT INTO juridico (fk_cliente_id, inscr_estadual, cnpj, razao_social) VALUES (?, ?, ?, ?)";
         jdbcTemplate.update(sql,
                 juridico.getFkClienteId(),
@@ -29,18 +29,18 @@ public class JuridicoRepository {
         );
     }
 
-    public Optional<Juridico> findByFkClienteId(Integer fkClienteId) {
+    public Optional<Juridical> findByFkClienteId(Integer fkClienteId) {
         String sql = "SELECT * FROM juridico WHERE fk_cliente_id = ?";
-        List<Juridico> result = jdbcTemplate.query(sql, new JuridicoRowMapper(), fkClienteId);
+        List<Juridical> result = jdbcTemplate.query(sql, new JuridicoRowMapper(), fkClienteId);
         return result.stream().findFirst();
     }
 
-    public List<Juridico> findAll() {
+    public List<Juridical> findAll() {
         String sql = "SELECT * FROM juridico";
         return jdbcTemplate.query(sql, new JuridicoRowMapper());
     }
 
-    public void update(Juridico juridico) {
+    public void update(Juridical juridico) {
         String sql = "UPDATE juridico SET inscr_estadual = ?, cnpj = ?, razao_social = ? WHERE fk_cliente_id = ?";
         jdbcTemplate.update(sql,
                 juridico.getInscrEstadual(),
@@ -55,10 +55,10 @@ public class JuridicoRepository {
         jdbcTemplate.update(sql, fkClienteId);
     }
 
-    private static class JuridicoRowMapper implements RowMapper<Juridico> {
+    private static class JuridicoRowMapper implements RowMapper<Juridical> {
         @Override
-        public Juridico mapRow(ResultSet rs, int rowNum) throws SQLException {
-            Juridico juridico = new Juridico();
+        public Juridical mapRow(ResultSet rs, int rowNum) throws SQLException {
+            Juridical juridico = new Juridical();
             juridico.setFkClienteId(rs.getInt("fk_cliente_id"));
             juridico.setInscrEstadual(rs.getString("inscr_estadual"));
             juridico.setCnpj(rs.getString("cnpj"));

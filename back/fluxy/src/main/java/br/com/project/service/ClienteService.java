@@ -2,8 +2,8 @@ package br.com.project.service;
 
 import br.com.project.dto.request.ClientRequestDTO;
 import br.com.project.dto.response.ClientResponseDTO;
-import br.com.project.model.Cliente;
-import br.com.project.model.Telefone;
+import br.com.project.model.Client;
+import br.com.project.model.Phone;
 import br.com.project.repository.ClienteRepository;
 import br.com.project.util.MapperUtils;
 import org.springframework.stereotype.Service;
@@ -27,11 +27,11 @@ public class ClienteService {
 
     @Transactional
     public void salvar(ClientRequestDTO clienteRequestDTO) {
-        Cliente cliente = mapperUtils.map(clienteRequestDTO, Cliente.class);
+        Client cliente = mapperUtils.map(clienteRequestDTO, Client.class);
         clienteRepository.save(cliente);
 
-        List<Telefone> telefones = clienteRequestDTO.getTelefones().stream()
-                .map(numero -> new Telefone(numero, cliente.getIdCliente()))
+        List<Phone> telefones = clienteRequestDTO.getTelefones().stream()
+                .map(numero -> new Phone(numero, cliente.getIdCliente()))
                 .collect(Collectors.toList());
 
         telefones.forEach(telefoneService::salvar);
@@ -39,27 +39,27 @@ public class ClienteService {
 
     @Transactional
     public void atualizar(Integer id, ClientRequestDTO clienteRequestDTO) {
-        Cliente cliente = mapperUtils.map(clienteRequestDTO, Cliente.class);
+        Client cliente = mapperUtils.map(clienteRequestDTO, Client.class);
         cliente.setIdCliente(id);
         clienteRepository.update(cliente);
 
         telefoneService.deletarPorIdPessoa(id);
 
-        List<Telefone> telefones = clienteRequestDTO.getTelefones().stream()
-                .map(numero -> new Telefone(numero, id))
+        List<Phone> telefones = clienteRequestDTO.getTelefones().stream()
+                .map(numero -> new Phone(numero, id))
                 .collect(Collectors.toList());
 
         telefones.forEach(telefoneService::salvar);
     }
 
     public ClientResponseDTO buscarPorId(Integer id) {
-        Cliente cliente = clienteRepository.findById(id)
+        Client cliente = clienteRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
         return mapperUtils.map(cliente, ClientResponseDTO.class);
     }
 
     public List<ClientResponseDTO> listarTodos() {
-        List<Cliente> clientes = clienteRepository.findAll();
+        List<Client> clientes = clienteRepository.findAll();
         return mapperUtils.mapList(clientes, ClientResponseDTO.class);
     }
 

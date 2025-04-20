@@ -1,6 +1,6 @@
 package br.com.project.service;
 
-import br.com.project.model.HistoricoPrecoProduto;
+import br.com.project.model.HistoricPriceProduct;
 import br.com.project.repository.HistoricoPrecoProdutoRepository;
 import org.springframework.stereotype.Service;
 
@@ -16,19 +16,19 @@ public class HistoricoPrecoProdutoService {
         this.historicoPrecoProdutoRepository = historicoPrecoProdutoRepository;
     }
 
-    public void salvar(HistoricoPrecoProduto historico) {
+    public void salvar(HistoricPriceProduct historico) {
         historicoPrecoProdutoRepository.save(historico);
     }
 
-    public Optional<HistoricoPrecoProduto> buscarPorId(Integer id) {
+    public Optional<HistoricPriceProduct> buscarPorId(Integer id) {
         return historicoPrecoProdutoRepository.findById(id);
     }
 
-    public List<HistoricoPrecoProduto> listarTodos() {
+    public List<HistoricPriceProduct> listarTodos() {
         return historicoPrecoProdutoRepository.findAll();
     }
 
-    public void atualizar(HistoricoPrecoProduto historico) {
+    public void atualizar(HistoricPriceProduct historico) {
         historicoPrecoProdutoRepository.update(historico);
     }
 

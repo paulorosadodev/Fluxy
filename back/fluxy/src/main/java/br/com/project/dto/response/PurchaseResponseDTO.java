@@ -2,7 +2,7 @@ package br.com.project.dto.response;
 
 import java.sql.Date;
 
-public record CompraResponseDTO(
+public record PurchaseResponseDTO(
         Integer number,
         Date date,
         Integer hour,
@@ -12,5 +12,5 @@ public record CompraResponseDTO(
 
         Integer fkProductId,
         Integer fkClientId,
-        Integer fkOperationalIdFunctionary
+        Integer fkOperationalIdEmployee
 ) {}

@@ -7,10 +7,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Juridico {
+public class Juridical {
 
-    private Integer fkClienteId; // <-- adiciona isso
-    private String inscrEstadual;
+    private Integer fkClientId; // <-- adiciona isso
+    private String stateRegistration;
     private String cnpj;
-    private String razaoSocial;
+    private String socialName;
 }

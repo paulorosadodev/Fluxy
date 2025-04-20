@@ -2,7 +2,7 @@ package br.com.project.service;
 
 import br.com.project.dto.request.ProductRequestDTO;
 import br.com.project.dto.response.ProductResponseDTO;
-import br.com.project.model.Produto;
+import br.com.project.model.Product;
 import br.com.project.repository.ProdutoRepository;
 import br.com.project.util.MapperUtils;
 import org.springframework.stereotype.Service;
@@ -23,7 +23,7 @@ public class ProdutoService {
     }
 
     public ProductResponseDTO salvar(ProductRequestDTO produtoRequestDTO) {
-        Produto produto = mapperUtils.map(produtoRequestDTO, Produto.class);
+        Product produto = mapperUtils.map(produtoRequestDTO, Product.class);
 
         // Primeiro salva o Produto e captura o ID
         Integer idProduto = produtoRepository.save(produto);
@@ -41,13 +41,13 @@ public class ProdutoService {
     }
 
     public ProductResponseDTO buscarPorId(Integer id) {
-        Produto produto = produtoRepository.findById(id)
+        Product produto = produtoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
         return mapperUtils.map(produto, ProductResponseDTO.class);
     }
 
     public ProductResponseDTO atualizar(Integer id, ProductRequestDTO produtoRequestDTO) {
-        Produto produto = mapperUtils.map(produtoRequestDTO, Produto.class);
+        Product produto = mapperUtils.map(produtoRequestDTO, Product.class);
         produto.setIdProduto(id);
         produtoRepository.update(produto);
         return mapperUtils.map(produto, ProductResponseDTO.class);

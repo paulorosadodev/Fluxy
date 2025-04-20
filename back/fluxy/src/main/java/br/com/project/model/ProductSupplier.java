@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProdutoHistorico {
-    private Integer fkProdutoId;
-    private Integer fkHistoricoPrecoProdutoId;
+public class ProductSupplier {
+    private Integer fkSupplierId;
+    private Integer fkProductId;
 }

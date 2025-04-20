@@ -1,6 +1,6 @@
 package br.com.project.repository;
 
-import br.com.project.model.Compra;
+import br.com.project.model.Purchase;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -19,7 +19,7 @@ public class CompraRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void save(Compra compra) {
+    public void save(Purchase compra) {
         String sql = "INSERT INTO compra (data, hora, parcelas, tipo, qtd_produto, fk_produto_id, fk_cliente_id, fk_operacional_id_funcionario) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         jdbcTemplate.update(sql,
@@ -34,18 +34,18 @@ public class CompraRepository {
         );
     }
 
-    public Optional<Compra> findByNumero(Integer numero) {
+    public Optional<Purchase> findByNumero(Integer numero) {
         String sql = "SELECT * FROM compra WHERE numero = ?";
-        List<Compra> result = jdbcTemplate.query(sql, new CompraRowMapper(), numero);
+        List<Purchase> result = jdbcTemplate.query(sql, new CompraRowMapper(), numero);
         return result.stream().findFirst();
     }
 
-    public List<Compra> findAll() {
+    public List<Purchase> findAll() {
         String sql = "SELECT * FROM compra";
         return jdbcTemplate.query(sql, new CompraRowMapper());
     }
 
-    public void update(Compra compra) {
+    public void update(Purchase compra) {
         String sql = "UPDATE compra SET data = ?, hora = ?, parcelas = ?, tipo = ?, qtd_produto = ?, fk_produto_id = ?, fk_cliente_id = ?, fk_operacional_id_funcionario = ? WHERE numero = ?";
         jdbcTemplate.update(sql,
                 compra.getData(),
@@ -65,10 +65,10 @@ public class CompraRepository {
         jdbcTemplate.update(sql, numero);
     }
 
-    private static class CompraRowMapper implements RowMapper<Compra> {
+    private static class CompraRowMapper implements RowMapper<Purchase> {
         @Override
-        public Compra mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new Compra(
+        public Purchase mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return new Purchase(
                     rs.getInt("numero"),
                     rs.getString("data"),
                     rs.getString("hora"),

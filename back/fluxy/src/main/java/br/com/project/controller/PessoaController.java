@@ -44,7 +44,7 @@ public class PessoaController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Integer id) {
-        pessoaService.deletar(id);
+        pessoaService.delete(id);
         return ResponseEntity.ok().build();
     }
 }

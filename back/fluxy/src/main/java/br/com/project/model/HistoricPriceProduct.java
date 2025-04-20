@@ -4,12 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Fisico {
+public class HistoricPriceProduct {
 
-    private Integer fkClienteId; // <-- precisa adicionar esse!
-    private String nome;
-    private String cpf;
+    private Integer idHistoricPriceProduct;
+    private LocalDate date;
+    private Double price;
 }

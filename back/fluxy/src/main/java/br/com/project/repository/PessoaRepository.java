@@ -1,6 +1,6 @@
 package br.com.project.repository;
 
-import br.com.project.model.Pessoa;
+import br.com.project.model.Person;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -19,7 +19,7 @@ public class PessoaRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void save(Pessoa pessoa) {
+    public void save(Person pessoa) {
         String sql = "INSERT INTO pessoa (id_pessoa, rua, numero, bairro, cidade, cep) VALUES (?, ?, ?, ?, ?, ?)";
         jdbcTemplate.update(sql,
                 pessoa.getIdPessoa(),
@@ -31,18 +31,18 @@ public class PessoaRepository {
         );
     }
 
-    public Optional<Pessoa> findById(Integer id) {
+    public Optional<Person> findById(Integer id) {
         String sql = "SELECT * FROM pessoa WHERE id_pessoa = ?";
-        List<Pessoa> result = jdbcTemplate.query(sql, new PessoaRowMapper(), id);
+        List<Person> result = jdbcTemplate.query(sql, new PessoaRowMapper(), id);
         return result.stream().findFirst();
     }
 
-    public List<Pessoa> findAll() {
+    public List<Person> findAll() {
         String sql = "SELECT * FROM pessoa";
         return jdbcTemplate.query(sql, new PessoaRowMapper());
     }
 
-    public void update(Pessoa pessoa) {
+    public void update(Person pessoa) {
         String sql = "UPDATE pessoa SET rua = ?, numero = ?, bairro = ?, cidade = ?, cep = ? WHERE id_pessoa = ?";
         jdbcTemplate.update(sql,
                 pessoa.getRua(),
@@ -59,10 +59,10 @@ public class PessoaRepository {
         jdbcTemplate.update(sql, id);
     }
 
-    private static class PessoaRowMapper implements RowMapper<Pessoa> {
+    private static class PessoaRowMapper implements RowMapper<Person> {
         @Override
-        public Pessoa mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new Pessoa(
+        public Person mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return new Person(
                     rs.getInt("id_pessoa"),
                     rs.getString("rua"),
                     rs.getString("numero"),

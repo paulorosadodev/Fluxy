@@ -7,14 +7,15 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Compra {
+public class Purchase {
     private Integer number;
     private String date;
     private String hour;
-    private Integer parcelas;
+    private Integer installments;
     private String type;
     private Integer product;
-    private Integer idProduto; // 🔥 FK para Produto
-    private Integer idCliente; // 🔥 FK para Cliente
-    private Integer idFuncionarioOperacional; // 🔥 FK para Funcionario
+
+    private Integer idProduct;
+    private Integer idClient;
+    private Integer idEmployeeOperational;
 }

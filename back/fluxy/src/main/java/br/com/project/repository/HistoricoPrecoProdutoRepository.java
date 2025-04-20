@@ -1,6 +1,6 @@
 package br.com.project.repository;
 
-import br.com.project.model.HistoricoPrecoProduto;
+import br.com.project.model.HistoricPriceProduct;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -19,7 +19,7 @@ public class HistoricoPrecoProdutoRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void save(HistoricoPrecoProduto historico) {
+    public void save(HistoricPriceProduct historico) {
         String sql = "INSERT INTO historico_preco_produto (data, preco) VALUES (?, ?)";
         jdbcTemplate.update(sql,
                 historico.getData(),
@@ -27,18 +27,18 @@ public class HistoricoPrecoProdutoRepository {
         );
     }
 
-    public Optional<HistoricoPrecoProduto> findById(Integer id) {
+    public Optional<HistoricPriceProduct> findById(Integer id) {
         String sql = "SELECT * FROM historico_preco_produto WHERE id_historico_preco_produto = ?";
-        List<HistoricoPrecoProduto> result = jdbcTemplate.query(sql, new HistoricoPrecoProdutoRowMapper(), id);
+        List<HistoricPriceProduct> result = jdbcTemplate.query(sql, new HistoricoPrecoProdutoRowMapper(), id);
         return result.stream().findFirst();
     }
 
-    public List<HistoricoPrecoProduto> findAll() {
+    public List<HistoricPriceProduct> findAll() {
         String sql = "SELECT * FROM historico_preco_produto";
         return jdbcTemplate.query(sql, new HistoricoPrecoProdutoRowMapper());
     }
 
-    public void update(HistoricoPrecoProduto historico) {
+    public void update(HistoricPriceProduct historico) {
         String sql = "UPDATE historico_preco_produto SET data = ?, preco = ? WHERE id_historico_preco_produto = ?";
         jdbcTemplate.update(sql,
                 historico.getData(),
@@ -52,10 +52,10 @@ public class HistoricoPrecoProdutoRepository {
         jdbcTemplate.update(sql, id);
     }
 
-    private static class HistoricoPrecoProdutoRowMapper implements RowMapper<HistoricoPrecoProduto> {
+    private static class HistoricoPrecoProdutoRowMapper implements RowMapper<HistoricPriceProduct> {
         @Override
-        public HistoricoPrecoProduto mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new HistoricoPrecoProduto(
+        public HistoricPriceProduct mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return new HistoricPriceProduct(
                     rs.getInt("id_historico_preco_produto"),
                     rs.getDate("data").toLocalDate(), // <-- Corrige aqui
                     rs.getDouble("preco")

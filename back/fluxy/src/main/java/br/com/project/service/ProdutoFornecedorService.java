@@ -1,6 +1,6 @@
 package br.com.project.service;
 
-import br.com.project.model.ProdutoFornecedor;
+import br.com.project.model.ProductSupplier;
 import br.com.project.repository.ProdutoFornecedorRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,16 +15,16 @@ public class ProdutoFornecedorService {
         this.produtoFornecedorRepository = produtoFornecedorRepository;
     }
 
-    public void salvar(ProdutoFornecedor produtoFornecedor) {
+    public void salvar(ProductSupplier produtoFornecedor) {
         produtoFornecedorRepository.save(produtoFornecedor);
     }
 
-    public ProdutoFornecedor buscar(Integer fornecedorId, Integer produtoId) {
+    public ProductSupplier buscar(Integer fornecedorId, Integer produtoId) {
         return produtoFornecedorRepository.findByIds(fornecedorId, produtoId)
                 .orElseThrow(() -> new RuntimeException("Associação Produto-Fornecedor não encontrada"));
     }
 
-    public List<ProdutoFornecedor> listarTodos() {
+    public List<ProductSupplier> listarTodos() {
         return produtoFornecedorRepository.findAll();
     }
 

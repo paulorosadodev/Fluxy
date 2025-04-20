@@ -1,6 +1,6 @@
 package br.com.project.controller;
 
-import br.com.project.model.HistoricoPrecoProduto;
+import br.com.project.model.HistoricPriceProduct;
 import br.com.project.service.HistoricoPrecoProdutoService;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,22 +18,22 @@ public class HistoricoPrecoProdutoController {
     }
 
     @PostMapping
-    public void salvar(@RequestBody HistoricoPrecoProduto historico) {
+    public void salvar(@RequestBody HistoricPriceProduct historico) {
         historicoPrecoProdutoService.salvar(historico);
     }
 
     @GetMapping("/{id}")
-    public Optional<HistoricoPrecoProduto> buscarPorId(@PathVariable Integer id) {
+    public Optional<HistoricPriceProduct> buscarPorId(@PathVariable Integer id) {
         return historicoPrecoProdutoService.buscarPorId(id);
     }
 
     @GetMapping
-    public List<HistoricoPrecoProduto> listarTodos() {
+    public List<HistoricPriceProduct> listarTodos() {
         return historicoPrecoProdutoService.listarTodos();
     }
 
     @PutMapping("/{id}")
-    public void atualizar(@PathVariable Integer id, @RequestBody HistoricoPrecoProduto historico) {
+    public void atualizar(@PathVariable Integer id, @RequestBody HistoricPriceProduct historico) {
         historico.setIdHistoricoPrecoProduto(id);
         historicoPrecoProdutoService.atualizar(historico);
     }

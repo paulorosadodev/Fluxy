@@ -1,6 +1,6 @@
 package br.com.project.service;
 
-import br.com.project.model.ProdutoHistorico;
+import br.com.project.model.ProductHistoric;
 import br.com.project.repository.ProdutoHistoricoRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,16 +15,16 @@ public class ProdutoHistoricoService {
         this.produtoHistoricoRepository = produtoHistoricoRepository;
     }
 
-    public void salvar(ProdutoHistorico produtoHistorico) {
+    public void salvar(ProductHistoric produtoHistorico) {
         produtoHistoricoRepository.save(produtoHistorico);
     }
 
-    public ProdutoHistorico buscar(Integer produtoId, Integer historicoPrecoProdutoId) {
+    public ProductHistoric buscar(Integer produtoId, Integer historicoPrecoProdutoId) {
         return produtoHistoricoRepository.findByIds(produtoId, historicoPrecoProdutoId)
                 .orElseThrow(() -> new RuntimeException("Associação Produto-Histórico não encontrada"));
     }
 
-    public List<ProdutoHistorico> listarTodos() {
+    public List<ProductHistoric> listarTodos() {
         return produtoHistoricoRepository.findAll();
     }
 

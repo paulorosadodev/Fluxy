@@ -2,8 +2,8 @@ package br.com.project.service;
 
 import br.com.project.dto.request.SupplierRequestDTO;
 import br.com.project.dto.response.SupplierResponseDTO;
-import br.com.project.model.Fornecedor;
-import br.com.project.model.Telefone;
+import br.com.project.model.Supplier;
+import br.com.project.model.Phone;
 import br.com.project.repository.FornecedorRepository;
 import br.com.project.util.MapperUtils;
 import org.springframework.stereotype.Service;
@@ -27,11 +27,11 @@ public class FornecedorService {
 
     @Transactional
     public void salvar(SupplierRequestDTO fornecedorRequestDTO) {
-        Fornecedor fornecedor = mapperUtils.map(fornecedorRequestDTO, Fornecedor.class);
+        Supplier fornecedor = mapperUtils.map(fornecedorRequestDTO, Supplier.class);
         fornecedorRepository.save(fornecedor);
 
-        List<Telefone> telefones = fornecedorRequestDTO.getTelefones().stream()
-                .map(numero -> new Telefone(numero, fornecedor.getIdFornecedor()))
+        List<Phone> telefones = fornecedorRequestDTO.getTelefones().stream()
+                .map(numero -> new Phone(numero, fornecedor.getIdFornecedor()))
                 .collect(Collectors.toList());
 
         telefones.forEach(telefoneService::salvar);
@@ -39,27 +39,27 @@ public class FornecedorService {
 
     @Transactional
     public void atualizar(Integer id, SupplierRequestDTO fornecedorRequestDTO) {
-        Fornecedor fornecedor = mapperUtils.map(fornecedorRequestDTO, Fornecedor.class);
+        Supplier fornecedor = mapperUtils.map(fornecedorRequestDTO, Supplier.class);
         fornecedor.setIdFornecedor(id);
         fornecedorRepository.update(fornecedor);
 
         telefoneService.deletarPorIdPessoa(id);
 
-        List<Telefone> telefones = fornecedorRequestDTO.getTelefones().stream()
-                .map(numero -> new Telefone(numero, id))
+        List<Phone> telefones = fornecedorRequestDTO.getTelefones().stream()
+                .map(numero -> new Phone(numero, id))
                 .collect(Collectors.toList());
 
         telefones.forEach(telefoneService::salvar);
     }
 
     public SupplierResponseDTO buscarPorId(Integer id) {
-        Fornecedor fornecedor = fornecedorRepository.findById(id)
+        Supplier fornecedor = fornecedorRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Fornecedor não encontrado"));
         return mapperUtils.map(fornecedor, SupplierResponseDTO.class);
     }
 
     public List<SupplierResponseDTO> listarTodos() {
-        List<Fornecedor> fornecedores = fornecedorRepository.findAll();
+        List<Supplier> fornecedores = fornecedorRepository.findAll();
         return mapperUtils.mapList(fornecedores, SupplierResponseDTO.class);
     }
 

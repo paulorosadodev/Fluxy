@@ -1,6 +1,6 @@
 package br.com.project.repository;
 
-import br.com.project.model.Produto;
+import br.com.project.model.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -23,7 +23,7 @@ public class ProdutoRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Integer save(Produto produto) {
+    public Integer save(Product produto) {
         String sql = "INSERT INTO produto (qtd_estoque, cod_ea, preco, nome, fk_categoria_codigo) VALUES (?, ?, ?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -40,18 +40,18 @@ public class ProdutoRepository {
         return keyHolder.getKey().intValue();
     }
 
-    public Optional<Produto> findById(Integer id) {
+    public Optional<Product> findById(Integer id) {
         String sql = "SELECT * FROM produto WHERE id_produto = ?";
-        List<Produto> result = jdbcTemplate.query(sql, new ProdutoRowMapper(), id);
+        List<Product> result = jdbcTemplate.query(sql, new ProdutoRowMapper(), id);
         return result.stream().findFirst();
     }
 
-    public List<Produto> findAll() {
+    public List<Product> findAll() {
         String sql = "SELECT * FROM produto";
         return jdbcTemplate.query(sql, new ProdutoRowMapper());
     }
 
-    public void update(Produto produto) {
+    public void update(Product produto) {
         String sql = "UPDATE produto SET qtd_estoque = ?, cod_ea = ?, preco = ?, nome = ?, fk_categoria_codigo = ? WHERE id_produto = ?";
         jdbcTemplate.update(sql,
                 produto.getQtdEstoque(),
@@ -68,10 +68,10 @@ public class ProdutoRepository {
         jdbcTemplate.update(sql, id);
     }
 
-    private static class ProdutoRowMapper implements RowMapper<Produto> {
+    private static class ProdutoRowMapper implements RowMapper<Product> {
         @Override
-        public Produto mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new Produto(
+        public Product mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return new Product(
                     rs.getInt("id_produto"),
                     rs.getInt("qtd_estoque"),
                     rs.getString("cod_ea"),

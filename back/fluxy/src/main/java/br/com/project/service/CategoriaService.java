@@ -2,7 +2,7 @@ package br.com.project.service;
 
 import br.com.project.dto.request.CategoryRequestDTO;
 import br.com.project.dto.response.CategoryResponseDTO;
-import br.com.project.model.Categoria;
+import br.com.project.model.Category;
 import br.com.project.repository.CategoriaRepository;
 import br.com.project.util.MapperUtils;
 import org.springframework.stereotype.Service;
@@ -22,24 +22,24 @@ public class CategoriaService {
     }
 
     public CategoryResponseDTO salvar(CategoryRequestDTO categoriaRequestDTO) {
-        Categoria categoria = mapperUtils.map(categoriaRequestDTO, Categoria.class);
+        Category categoria = mapperUtils.map(categoriaRequestDTO, Category.class);
         categoriaRepository.save(categoria);
         return mapperUtils.map(categoria, CategoryResponseDTO.class);
     }
 
     public List<CategoryResponseDTO> listarTodos() {
-        List<Categoria> categorias = categoriaRepository.findAll();
+        List<Category> categorias = categoriaRepository.findAll();
         return mapperUtils.mapList(categorias, CategoryResponseDTO.class);
     }
 
     public CategoryResponseDTO buscarPorCodigo(String codigo) {
-        Optional<Categoria> categoria = categoriaRepository.findByCodigo(codigo);
-        Categoria entity = categoria.orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
+        Optional<Category> categoria = categoriaRepository.findByCodigo(codigo);
+        Category entity = categoria.orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
         return mapperUtils.map(entity, CategoryResponseDTO.class);
     }
 
     public CategoryResponseDTO atualizar(String codigo, CategoryRequestDTO categoriaRequestDTO) {
-        Categoria categoria = mapperUtils.map(categoriaRequestDTO, Categoria.class);
+        Category categoria = mapperUtils.map(categoriaRequestDTO, Category.class);
         categoria.setCodigo(codigo);
         categoriaRepository.update(categoria);
         return mapperUtils.map(categoria, CategoryResponseDTO.class);

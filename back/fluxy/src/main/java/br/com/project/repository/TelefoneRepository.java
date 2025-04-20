@@ -1,6 +1,6 @@
 package br.com.project.repository;
 
-import br.com.project.model.Telefone;
+import br.com.project.model.Phone;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -19,7 +19,7 @@ public class TelefoneRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void save(Telefone telefone) {
+    public void save(Phone telefone) {
         String sql = "INSERT INTO telefone (numero, id_telefone) VALUES (?, ?)";
         jdbcTemplate.update(sql,
                 telefone.getNumero(),
@@ -27,18 +27,18 @@ public class TelefoneRepository {
         );
     }
 
-    public Optional<Telefone> findByNumero(String numero) {
+    public Optional<Phone> findByNumero(String numero) {
         String sql = "SELECT * FROM telefone WHERE numero = ?";
-        List<Telefone> result = jdbcTemplate.query(sql, new TelefoneRowMapper(), numero);
+        List<Phone> result = jdbcTemplate.query(sql, new TelefoneRowMapper(), numero);
         return result.stream().findFirst();
     }
 
-    public List<Telefone> findAll() {
+    public List<Phone> findAll() {
         String sql = "SELECT * FROM telefone";
         return jdbcTemplate.query(sql, new TelefoneRowMapper());
     }
 
-    public void update(Telefone telefone) {
+    public void update(Phone telefone) {
         String sql = "UPDATE telefone SET id_telefone = ? WHERE numero = ?";
         jdbcTemplate.update(sql,
                 telefone.getIdTelefone(),
@@ -51,10 +51,10 @@ public class TelefoneRepository {
         jdbcTemplate.update(sql, numero);
     }
 
-    private static class TelefoneRowMapper implements RowMapper<Telefone> {
+    private static class TelefoneRowMapper implements RowMapper<Phone> {
         @Override
-        public Telefone mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new Telefone(
+        public Phone mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return new Phone(
                     rs.getString("numero"),
                     rs.getInt("id_telefone")
             );

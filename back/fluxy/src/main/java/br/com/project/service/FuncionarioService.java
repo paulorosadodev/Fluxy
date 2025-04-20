@@ -2,7 +2,7 @@ package br.com.project.service;
 
 import br.com.project.dto.request.EmployeeRequestDTO;
 import br.com.project.dto.response.EmployeeResponseDTO;
-import br.com.project.model.Funcionario;
+import br.com.project.model.Employer;
 import br.com.project.repository.FuncionarioRepository;
 import br.com.project.util.MapperUtils;
 import org.springframework.stereotype.Service;
@@ -21,23 +21,23 @@ public class FuncionarioService {
     }
 
     public void salvar(EmployeeRequestDTO funcionarioRequestDTO) {
-        Funcionario funcionario = mapperUtils.map(funcionarioRequestDTO, Funcionario.class);
+        Employer funcionario = mapperUtils.map(funcionarioRequestDTO, Employer.class);
         funcionarioRepository.save(funcionario);
     }
 
     public EmployeeResponseDTO buscarPorId(Integer id) {
-        Funcionario funcionario = funcionarioRepository.findById(id)
+        Employer funcionario = funcionarioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Funcionário não encontrado"));
         return mapperUtils.map(funcionario, EmployeeResponseDTO.class);
     }
 
     public List<EmployeeResponseDTO> listarTodos() {
-        List<Funcionario> funcionarios = funcionarioRepository.findAll();
+        List<Employer> funcionarios = funcionarioRepository.findAll();
         return mapperUtils.mapList(funcionarios, EmployeeResponseDTO.class);
     }
 
     public void atualizar(Integer id, EmployeeRequestDTO funcionarioRequestDTO) {
-        Funcionario funcionario = mapperUtils.map(funcionarioRequestDTO, Funcionario.class);
+        Employer funcionario = mapperUtils.map(funcionarioRequestDTO, Employer.class);
         funcionario.setIdFuncionario(id);
         funcionarioRepository.update(funcionario);
     }

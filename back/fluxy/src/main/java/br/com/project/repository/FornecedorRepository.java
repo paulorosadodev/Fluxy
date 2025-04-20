@@ -1,6 +1,6 @@
 package br.com.project.repository;
 
-import br.com.project.model.Fornecedor;
+import br.com.project.model.Supplier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -19,7 +19,7 @@ public class FornecedorRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void save(Fornecedor fornecedor) {
+    public void save(Supplier fornecedor) {
         String sql = "INSERT INTO fornecedor (id_fornecedor, cnpj, nome) VALUES (?, ?, ?)";
         jdbcTemplate.update(sql,
                 fornecedor.getIdPessoa(), // O id_fornecedor é o id_pessoa
@@ -28,18 +28,18 @@ public class FornecedorRepository {
         );
     }
 
-    public Optional<Fornecedor> findById(Integer id) {
+    public Optional<Supplier> findById(Integer id) {
         String sql = "SELECT * FROM fornecedor WHERE id_fornecedor = ?";
-        List<Fornecedor> result = jdbcTemplate.query(sql, new FornecedorRowMapper(), id);
+        List<Supplier> result = jdbcTemplate.query(sql, new FornecedorRowMapper(), id);
         return result.stream().findFirst();
     }
 
-    public List<Fornecedor> findAll() {
+    public List<Supplier> findAll() {
         String sql = "SELECT * FROM fornecedor";
         return jdbcTemplate.query(sql, new FornecedorRowMapper());
     }
 
-    public void update(Fornecedor fornecedor) {
+    public void update(Supplier fornecedor) {
         String sql = "UPDATE fornecedor SET cnpj = ?, nome = ? WHERE id_fornecedor = ?";
         jdbcTemplate.update(sql,
                 fornecedor.getCnpj(),
@@ -53,10 +53,10 @@ public class FornecedorRepository {
         jdbcTemplate.update(sql, id);
     }
 
-    private static class FornecedorRowMapper implements RowMapper<Fornecedor> {
+    private static class FornecedorRowMapper implements RowMapper<Supplier> {
         @Override
-        public Fornecedor mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new Fornecedor(
+        public Supplier mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return new Supplier(
                     rs.getInt("id_fornecedor"),
                     rs.getInt("id_fornecedor"), // o id_pessoa é o mesmo id_fornecedor
                     rs.getString("cnpj"),

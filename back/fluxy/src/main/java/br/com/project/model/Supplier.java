@@ -7,9 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Fornecedor {
-    private Integer idFornecedor;
-    private Integer idPessoa; // 🔥 FK para Pessoa
+public class Supplier {
+    private Integer idSupplier;
+    private Integer idPerson; // 🔥 FK para Pessoa
     private String cnpj;
     private String name;
 }

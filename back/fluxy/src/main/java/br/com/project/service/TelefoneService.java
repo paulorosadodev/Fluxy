@@ -1,6 +1,6 @@
 package br.com.project.service;
 
-import br.com.project.model.Telefone;
+import br.com.project.model.Phone;
 import br.com.project.repository.TelefoneRepository;
 import br.com.project.util.MapperUtils;
 import org.springframework.stereotype.Service;
@@ -18,13 +18,13 @@ public class TelefoneService {
         this.mapperUtils = mapperUtils;
     }
 
-    public void salvar(Telefone telefone) {
+    public void salvar(Phone telefone) {
         telefoneRepository.save(telefone);
     }
 
     public void deletarPorIdPessoa(Integer idPessoa) {
         // Busca todos os telefones que pertencem a essa pessoa e deleta um por um
-        List<Telefone> telefones = telefoneRepository.findAll().stream()
+        List<Phone> telefones = telefoneRepository.findAll().stream()
                 .filter(t -> t.getIdTelefone().equals(idPessoa))
                 .toList();
 

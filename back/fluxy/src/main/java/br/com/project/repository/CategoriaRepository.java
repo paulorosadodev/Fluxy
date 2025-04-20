@@ -1,6 +1,6 @@
 package br.com.project.repository;
 
-import br.com.project.model.Categoria;
+import br.com.project.model.Category;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -19,7 +19,7 @@ public class CategoriaRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void save(Categoria categoria) {
+    public void save(Category categoria) {
         String sql = "INSERT INTO categoria (codigo, nome) VALUES (?, ?)";
         jdbcTemplate.update(sql,
                 categoria.getCodigo(),
@@ -27,18 +27,18 @@ public class CategoriaRepository {
         );
     }
 
-    public Optional<Categoria> findByCodigo(String codigo) {
+    public Optional<Category> findByCodigo(String codigo) {
         String sql = "SELECT * FROM categoria WHERE codigo = ?";
-        List<Categoria> result = jdbcTemplate.query(sql, new CategoriaRowMapper(), codigo);
+        List<Category> result = jdbcTemplate.query(sql, new CategoriaRowMapper(), codigo);
         return result.stream().findFirst();
     }
 
-    public List<Categoria> findAll() {
+    public List<Category> findAll() {
         String sql = "SELECT * FROM categoria";
         return jdbcTemplate.query(sql, new CategoriaRowMapper());
     }
 
-    public void update(Categoria categoria) {
+    public void update(Category categoria) {
         String sql = "UPDATE categoria SET nome = ? WHERE codigo = ?";
         jdbcTemplate.update(sql,
                 categoria.getNome(),
@@ -51,10 +51,10 @@ public class CategoriaRepository {
         jdbcTemplate.update(sql, codigo);
     }
 
-    private static class CategoriaRowMapper implements RowMapper<Categoria> {
+    private static class CategoriaRowMapper implements RowMapper<Category> {
         @Override
-        public Categoria mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new Categoria(
+        public Category mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return new Category(
                     rs.getString("codigo"),
                     rs.getString("nome")
             );

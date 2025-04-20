@@ -1,6 +1,6 @@
 package br.com.project.service;
 
-import br.com.project.model.Fisico;
+import br.com.project.model.Physique;
 import br.com.project.repository.FisicoRepository;
 import org.springframework.stereotype.Service;
 
@@ -16,19 +16,19 @@ public class FisicoService {
         this.fisicoRepository = fisicoRepository;
     }
 
-    public void salvar(Fisico fisico) {
+    public void salvar(Physique fisico) {
         fisicoRepository.save(fisico);
     }
 
-    public Optional<Fisico> buscarPorId(Integer id) {
+    public Optional<Physique> buscarPorId(Integer id) {
         return fisicoRepository.findById(id);
     }
 
-    public List<Fisico> listarTodos() {
+    public List<Physique> listarTodos() {
         return fisicoRepository.findAll();
     }
 
-    public void atualizar(Fisico fisico) {
+    public void atualizar(Physique fisico) {
         fisicoRepository.update(fisico);
     }
 
