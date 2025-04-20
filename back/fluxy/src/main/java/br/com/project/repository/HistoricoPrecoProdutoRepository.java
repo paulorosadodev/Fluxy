@@ -57,9 +57,10 @@ public class HistoricoPrecoProdutoRepository {
         public HistoricoPrecoProduto mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new HistoricoPrecoProduto(
                     rs.getInt("id_historico_preco_produto"),
-                    rs.getDate("data"),
-                    rs.getInt("preco")
+                    rs.getDate("data").toLocalDate(), // <-- Corrige aqui
+                    rs.getDouble("preco")
             );
         }
     }
+
 }

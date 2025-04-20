@@ -1,11 +1,12 @@
 package br.com.project.controller;
 
-import br.com.project.model.Pessoa;
+import br.com.project.dto.request.PessoaRequestDTO;
+import br.com.project.dto.response.PessoaResponseDTO;
 import br.com.project.service.PessoaService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/pessoas")
@@ -18,28 +19,32 @@ public class PessoaController {
     }
 
     @PostMapping
-    public void salvar(@RequestBody Pessoa pessoa) {
-        pessoaService.salvar(pessoa);
+    public ResponseEntity<Void> salvar(@RequestBody PessoaRequestDTO pessoaRequestDTO) {
+        pessoaService.salvar(pessoaRequestDTO);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{id}")
-    public Optional<Pessoa> buscarPorId(@PathVariable Integer id) {
-        return pessoaService.buscarPorId(id);
+    public ResponseEntity<PessoaResponseDTO> buscarPorId(@PathVariable Integer id) {
+        PessoaResponseDTO responseDTO = pessoaService.buscarPorId(id);
+        return ResponseEntity.ok(responseDTO);
     }
 
     @GetMapping
-    public List<Pessoa> listarTodos() {
-        return pessoaService.listarTodos();
+    public ResponseEntity<List<PessoaResponseDTO>> listarTodas() {
+        List<PessoaResponseDTO> pessoas = pessoaService.listarTodas();
+        return ResponseEntity.ok(pessoas);
     }
 
     @PutMapping("/{id}")
-    public void atualizar(@PathVariable Integer id, @RequestBody Pessoa pessoa) {
-        pessoa.setIdPessoa(id);
-        pessoaService.atualizar(pessoa);
+    public ResponseEntity<Void> atualizar(@PathVariable Integer id, @RequestBody PessoaRequestDTO pessoaRequestDTO) {
+        pessoaService.atualizar(id, pessoaRequestDTO);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
-    public void deletarPorId(@PathVariable Integer id) {
-        pessoaService.deletarPorId(id);
+    public ResponseEntity<Void> deletar(@PathVariable Integer id) {
+        pessoaService.deletar(id);
+        return ResponseEntity.ok().build();
     }
 }

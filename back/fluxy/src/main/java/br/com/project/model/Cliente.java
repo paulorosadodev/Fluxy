@@ -8,5 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Cliente {
-    private Integer idCliente; // também é idPessoa
+    private Integer idCliente;
+    private Integer idPessoa; // 🔥 FK para Pessoa
 }

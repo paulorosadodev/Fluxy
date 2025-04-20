@@ -11,7 +11,7 @@ public class ProdutoResponseDTO {
     private Integer idProduto;
     private Integer qtdEstoque;
     private String codEa;
-    private Integer preco;
-    private String descricao;
+    private Double preco;
     private String nome;
+    private String codigoCategoria; // 🔥 FK adicionada
 }

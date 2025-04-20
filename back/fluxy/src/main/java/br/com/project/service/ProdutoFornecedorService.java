@@ -19,11 +19,16 @@ public class ProdutoFornecedorService {
         produtoFornecedorRepository.save(produtoFornecedor);
     }
 
+    public ProdutoFornecedor buscar(Integer fornecedorId, Integer produtoId) {
+        return produtoFornecedorRepository.findByIds(fornecedorId, produtoId)
+                .orElseThrow(() -> new RuntimeException("Associação Produto-Fornecedor não encontrada"));
+    }
+
     public List<ProdutoFornecedor> listarTodos() {
         return produtoFornecedorRepository.findAll();
     }
 
-    public void deletarPorIds(Integer fornecedorId, Integer produtoId) {
-        produtoFornecedorRepository.deleteByIds(fornecedorId, produtoId);
+    public void deletar(Integer fornecedorId, Integer produtoId) {
+        produtoFornecedorRepository.delete(fornecedorId, produtoId);
     }
 }

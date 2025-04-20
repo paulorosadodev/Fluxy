@@ -1,9 +1,15 @@
 package br.com.project.dto.request;
 
-public record PessoaRequestDTO(
-        String rua,
-        String numero,
-        String bairro,
-        String cidade,
-        String cep
-) {}
+import lombok.Data;
+
+import java.util.List;
+
+@Data
+public class PessoaRequestDTO {
+    private String rua;
+    private String numero;
+    private String bairro;
+    private String cidade;
+    private String cep;
+    private List<String> telefones; // <-- agora vem uma lista de números!
+}

@@ -1,14 +1,15 @@
 package br.com.project.controller;
 
-import br.com.project.model.Juridico;
+import br.com.project.dto.request.JuridicoRequestDTO;
+import br.com.project.dto.response.JuridicoResponseDTO;
 import br.com.project.service.JuridicoService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/clientes/juridicos")
+@RequestMapping("/juridicos")
 public class JuridicoController {
 
     private final JuridicoService juridicoService;
@@ -18,28 +19,32 @@ public class JuridicoController {
     }
 
     @PostMapping
-    public void salvar(@RequestBody Juridico juridico) {
-        juridicoService.salvar(juridico);
+    public ResponseEntity<Void> salvar(@RequestBody JuridicoRequestDTO juridicoRequestDTO) {
+        juridicoService.salvar(juridicoRequestDTO);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{id}")
-    public Optional<Juridico> buscarPorId(@PathVariable Integer id) {
-        return juridicoService.buscarPorId(id);
+    public ResponseEntity<JuridicoResponseDTO> buscarPorId(@PathVariable Integer id) {
+        JuridicoResponseDTO responseDTO = juridicoService.buscarPorFkClienteId(id);
+        return ResponseEntity.ok(responseDTO);
     }
 
     @GetMapping
-    public List<Juridico> listarTodos() {
-        return juridicoService.listarTodos();
+    public ResponseEntity<List<JuridicoResponseDTO>> listarTodos() {
+        List<JuridicoResponseDTO> juridicos = juridicoService.listarTodos();
+        return ResponseEntity.ok(juridicos);
     }
 
     @PutMapping("/{id}")
-    public void atualizar(@PathVariable Integer id, @RequestBody Juridico juridico) {
-        juridico.setFkClienteId(id);
-        juridicoService.atualizar(juridico);
+    public ResponseEntity<Void> atualizar(@PathVariable Integer id, @RequestBody JuridicoRequestDTO juridicoRequestDTO) {
+        juridicoService.atualizar(id, juridicoRequestDTO);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
-    public void deletarPorId(@PathVariable Integer id) {
-        juridicoService.deletarPorId(id);
+    public ResponseEntity<Void> deletar(@PathVariable Integer id) {
+        juridicoService.deletar(id);
+        return ResponseEntity.ok().build();
     }
 }

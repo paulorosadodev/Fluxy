@@ -1,11 +1,12 @@
 package br.com.project.controller;
 
-import br.com.project.model.Compra;
+import br.com.project.dto.request.CompraRequestDTO;
+import br.com.project.dto.response.CompraResponseDTO;
 import br.com.project.service.CompraService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/compras")
@@ -18,28 +19,32 @@ public class CompraController {
     }
 
     @PostMapping
-    public void salvar(@RequestBody Compra compra) {
-        compraService.salvar(compra);
+    public ResponseEntity<Void> salvar(@RequestBody CompraRequestDTO compraRequestDTO) {
+        compraService.salvar(compraRequestDTO);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{numero}")
-    public Optional<Compra> buscarPorNumero(@PathVariable Integer numero) {
-        return compraService.buscarPorNumero(numero);
+    public ResponseEntity<CompraResponseDTO> buscarPorNumero(@PathVariable Integer numero) {
+        CompraResponseDTO responseDTO = compraService.buscarPorNumero(numero);
+        return ResponseEntity.ok(responseDTO);
     }
 
     @GetMapping
-    public List<Compra> listarTodos() {
-        return compraService.listarTodos();
+    public ResponseEntity<List<CompraResponseDTO>> listarTodas() {
+        List<CompraResponseDTO> compras = compraService.listarTodas();
+        return ResponseEntity.ok(compras);
     }
 
     @PutMapping("/{numero}")
-    public void atualizar(@PathVariable Integer numero, @RequestBody Compra compra) {
-        compra.setNumero(numero);
-        compraService.atualizar(compra);
+    public ResponseEntity<Void> atualizar(@PathVariable Integer numero, @RequestBody CompraRequestDTO compraRequestDTO) {
+        compraService.atualizar(numero, compraRequestDTO);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{numero}")
-    public void deletarPorNumero(@PathVariable Integer numero) {
-        compraService.deletarPorNumero(numero);
+    public ResponseEntity<Void> deletar(@PathVariable Integer numero) {
+        compraService.deletar(numero);
+        return ResponseEntity.ok().build();
     }
 }

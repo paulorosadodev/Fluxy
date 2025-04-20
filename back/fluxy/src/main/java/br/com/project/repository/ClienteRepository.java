@@ -21,7 +21,7 @@ public class ClienteRepository {
 
     public void save(Cliente cliente) {
         String sql = "INSERT INTO cliente (id_cliente) VALUES (?)";
-        jdbcTemplate.update(sql, cliente.getIdCliente());
+        jdbcTemplate.update(sql, cliente.getIdPessoa());
     }
 
     public Optional<Cliente> findById(Integer id) {
@@ -37,7 +37,7 @@ public class ClienteRepository {
 
     public void update(Cliente cliente) {
         String sql = "UPDATE cliente SET id_cliente = ? WHERE id_cliente = ?";
-        jdbcTemplate.update(sql, cliente.getIdCliente(), cliente.getIdCliente());
+        jdbcTemplate.update(sql, cliente.getIdPessoa(), cliente.getIdCliente());
     }
 
     public void deleteById(Integer id) {
@@ -49,7 +49,8 @@ public class ClienteRepository {
         @Override
         public Cliente mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new Cliente(
-                    rs.getInt("id_cliente")
+                    rs.getInt("id_cliente"),
+                    rs.getInt("id_cliente") // O id_pessoa é o mesmo id_cliente (relacionado)
             );
         }
     }

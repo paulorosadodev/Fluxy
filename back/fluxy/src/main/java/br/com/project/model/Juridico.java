@@ -5,10 +5,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class Juridico {
-    private Integer fkClienteId; // PK e FK
+
+    private Integer fkClienteId; // <-- adiciona isso
     private String inscrEstadual;
     private String cnpj;
     private String razaoSocial;

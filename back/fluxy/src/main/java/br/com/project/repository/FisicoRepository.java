@@ -21,12 +21,16 @@ public class FisicoRepository {
 
     public void save(Fisico fisico) {
         String sql = "INSERT INTO fisico (fk_cliente_id, nome, cpf) VALUES (?, ?, ?)";
-        jdbcTemplate.update(sql, fisico.getFkClienteId(), fisico.getNome(), fisico.getCpf());
+        jdbcTemplate.update(sql,
+                fisico.getFkClienteId(),  // <-- Corrigido aqui!
+                fisico.getNome(),
+                fisico.getCpf()
+        );
     }
 
-    public Optional<Fisico> findById(Integer id) {
+    public Optional<Fisico> findById(Integer idCliente) {
         String sql = "SELECT * FROM fisico WHERE fk_cliente_id = ?";
-        List<Fisico> result = jdbcTemplate.query(sql, new FisicoRowMapper(), id);
+        List<Fisico> result = jdbcTemplate.query(sql, new FisicoRowMapper(), idCliente);
         return result.stream().findFirst();
     }
 
@@ -37,12 +41,16 @@ public class FisicoRepository {
 
     public void update(Fisico fisico) {
         String sql = "UPDATE fisico SET nome = ?, cpf = ? WHERE fk_cliente_id = ?";
-        jdbcTemplate.update(sql, fisico.getNome(), fisico.getCpf(), fisico.getFkClienteId());
+        jdbcTemplate.update(sql,
+                fisico.getNome(),
+                fisico.getCpf(),
+                fisico.getFkClienteId()
+        );
     }
 
-    public void deleteById(Integer id) {
+    public void deleteById(Integer idCliente) {
         String sql = "DELETE FROM fisico WHERE fk_cliente_id = ?";
-        jdbcTemplate.update(sql, id);
+        jdbcTemplate.update(sql, idCliente);
     }
 
     private static class FisicoRowMapper implements RowMapper<Fisico> {

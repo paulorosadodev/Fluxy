@@ -1,11 +1,12 @@
 package br.com.project.controller;
 
-import br.com.project.model.Categoria;
+import br.com.project.dto.request.CategoriaRequestDTO;
+import br.com.project.dto.response.CategoriaResponseDTO;
 import br.com.project.service.CategoriaService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/categorias")
@@ -18,28 +19,28 @@ public class CategoriaController {
     }
 
     @PostMapping
-    public void salvar(@RequestBody Categoria categoria) {
-        categoriaService.salvar(categoria);
-    }
-
-    @GetMapping("/{codigo}")
-    public Optional<Categoria> buscarPorCodigo(@PathVariable String codigo) {
-        return categoriaService.buscarPorCodigo(codigo);
+    public ResponseEntity<CategoriaResponseDTO> salvar(@RequestBody CategoriaRequestDTO categoriaRequestDTO) {
+        return ResponseEntity.ok(categoriaService.salvar(categoriaRequestDTO));
     }
 
     @GetMapping
-    public List<Categoria> listarTodos() {
-        return categoriaService.listarTodos();
+    public ResponseEntity<List<CategoriaResponseDTO>> listarTodos() {
+        return ResponseEntity.ok(categoriaService.listarTodos());
+    }
+
+    @GetMapping("/{codigo}")
+    public ResponseEntity<CategoriaResponseDTO> buscarPorCodigo(@PathVariable String codigo) {
+        return ResponseEntity.ok(categoriaService.buscarPorCodigo(codigo));
     }
 
     @PutMapping("/{codigo}")
-    public void atualizar(@PathVariable String codigo, @RequestBody Categoria categoria) {
-        categoria.setCodigo(codigo);
-        categoriaService.atualizar(categoria);
+    public ResponseEntity<CategoriaResponseDTO> atualizar(@PathVariable String codigo, @RequestBody CategoriaRequestDTO categoriaRequestDTO) {
+        return ResponseEntity.ok(categoriaService.atualizar(codigo, categoriaRequestDTO));
     }
 
     @DeleteMapping("/{codigo}")
-    public void deletarPorCodigo(@PathVariable String codigo) {
-        categoriaService.deletarPorCodigo(codigo);
+    public ResponseEntity<Void> deletar(@PathVariable String codigo) {
+        categoriaService.deletar(codigo);
+        return ResponseEntity.ok().build();
     }
 }

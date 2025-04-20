@@ -1,7 +1,13 @@
 package br.com.project.dto.response;
 
-public record CategoriaResponseDTO(
-        String codigo,
-        String nome,
-        String descricao
-) {}
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class CategoriaResponseDTO {
+    private String codigo;
+    private String nome;
+}

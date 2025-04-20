@@ -1,16 +1,17 @@
 package br.com.project.dto.request;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class ProdutoRequestDTO {
+
     private Integer qtdEstoque;
     private String codEa;
-    private Integer preco;
-    private String descricao;
+    private Double preco;
     private String nome;
+
+    // Adicionados para relações:
+    private String codigoCategoria;
+    private Integer idFornecedor;
+    private Integer idHistoricoPrecoProduto;
 }

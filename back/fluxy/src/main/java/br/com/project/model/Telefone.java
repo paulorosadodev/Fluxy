@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Telefone {
     private String numero;
-    private Integer idTelefone; // FK para Pessoa (id_pessoa)
+    private Integer idTelefone; // 🔥 FK para Pessoa
 }

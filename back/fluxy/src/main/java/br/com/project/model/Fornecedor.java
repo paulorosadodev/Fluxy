@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Fornecedor {
-    private Integer idFornecedor; // também é idPessoa
+    private Integer idFornecedor;
+    private Integer idPessoa; // 🔥 FK para Pessoa
     private String cnpj;
     private String nome;
 }

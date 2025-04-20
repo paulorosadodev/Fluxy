@@ -5,10 +5,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class Fisico {
-    private Integer fkClienteId; // PK e FK
+
+    private Integer fkClienteId; // <-- precisa adicionar esse!
     private String nome;
     private String cpf;
 }

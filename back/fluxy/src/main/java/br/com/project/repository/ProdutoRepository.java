@@ -3,10 +3,14 @@ package br.com.project.repository;
 import br.com.project.model.Produto;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,15 +23,21 @@ public class ProdutoRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void save(Produto produto) {
-        String sql = "INSERT INTO produto (qtd_estoque, cod_ea, preco, descricao, nome) VALUES (?, ?, ?, ?, ?)";
-        jdbcTemplate.update(sql,
-                produto.getQtdEstoque(),
-                produto.getCodEa(),
-                produto.getPreco(),
-                produto.getDescricao(),
-                produto.getNome()
-        );
+    public Integer save(Produto produto) {
+        String sql = "INSERT INTO produto (qtd_estoque, cod_ea, preco, nome, fk_categoria_codigo) VALUES (?, ?, ?, ?, ?)";
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setInt(1, produto.getQtdEstoque());
+            ps.setString(2, produto.getCodEa());
+            ps.setDouble(3, produto.getPreco());
+            ps.setString(4, produto.getNome());
+            ps.setString(5, produto.getCodigoCategoria());
+            return ps;
+        }, keyHolder);
+
+        return keyHolder.getKey().intValue();
     }
 
     public Optional<Produto> findById(Integer id) {
@@ -42,13 +52,13 @@ public class ProdutoRepository {
     }
 
     public void update(Produto produto) {
-        String sql = "UPDATE produto SET qtd_estoque = ?, cod_ea = ?, preco = ?, descricao = ?, nome = ? WHERE id_produto = ?";
+        String sql = "UPDATE produto SET qtd_estoque = ?, cod_ea = ?, preco = ?, nome = ?, fk_categoria_codigo = ? WHERE id_produto = ?";
         jdbcTemplate.update(sql,
                 produto.getQtdEstoque(),
                 produto.getCodEa(),
                 produto.getPreco(),
-                produto.getDescricao(),
                 produto.getNome(),
+                produto.getCodigoCategoria(),
                 produto.getIdProduto()
         );
     }
@@ -65,9 +75,9 @@ public class ProdutoRepository {
                     rs.getInt("id_produto"),
                     rs.getInt("qtd_estoque"),
                     rs.getString("cod_ea"),
-                    rs.getInt("preco"),
-                    rs.getString("descricao"),
-                    rs.getString("nome")
+                    rs.getDouble("preco"),
+                    rs.getString("nome"),
+                    rs.getString("fk_categoria_codigo")
             );
         }
     }

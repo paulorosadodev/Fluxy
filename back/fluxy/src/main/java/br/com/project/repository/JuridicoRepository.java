@@ -21,12 +21,17 @@ public class JuridicoRepository {
 
     public void save(Juridico juridico) {
         String sql = "INSERT INTO juridico (fk_cliente_id, inscr_estadual, cnpj, razao_social) VALUES (?, ?, ?, ?)";
-        jdbcTemplate.update(sql, juridico.getFkClienteId(), juridico.getInscrEstadual(), juridico.getCnpj(), juridico.getRazaoSocial());
+        jdbcTemplate.update(sql,
+                juridico.getFkClienteId(),
+                juridico.getInscrEstadual(),
+                juridico.getCnpj(),
+                juridico.getRazaoSocial()
+        );
     }
 
-    public Optional<Juridico> findById(Integer id) {
+    public Optional<Juridico> findByFkClienteId(Integer fkClienteId) {
         String sql = "SELECT * FROM juridico WHERE fk_cliente_id = ?";
-        List<Juridico> result = jdbcTemplate.query(sql, new JuridicoRowMapper(), id);
+        List<Juridico> result = jdbcTemplate.query(sql, new JuridicoRowMapper(), fkClienteId);
         return result.stream().findFirst();
     }
 
@@ -37,23 +42,28 @@ public class JuridicoRepository {
 
     public void update(Juridico juridico) {
         String sql = "UPDATE juridico SET inscr_estadual = ?, cnpj = ?, razao_social = ? WHERE fk_cliente_id = ?";
-        jdbcTemplate.update(sql, juridico.getInscrEstadual(), juridico.getCnpj(), juridico.getRazaoSocial(), juridico.getFkClienteId());
+        jdbcTemplate.update(sql,
+                juridico.getInscrEstadual(),
+                juridico.getCnpj(),
+                juridico.getRazaoSocial(),
+                juridico.getFkClienteId()
+        );
     }
 
-    public void deleteById(Integer id) {
+    public void deleteByFkClienteId(Integer fkClienteId) {
         String sql = "DELETE FROM juridico WHERE fk_cliente_id = ?";
-        jdbcTemplate.update(sql, id);
+        jdbcTemplate.update(sql, fkClienteId);
     }
 
     private static class JuridicoRowMapper implements RowMapper<Juridico> {
         @Override
         public Juridico mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new Juridico(
-                    rs.getInt("fk_cliente_id"),
-                    rs.getString("inscr_estadual"),
-                    rs.getString("cnpj"),
-                    rs.getString("razao_social")
-            );
+            Juridico juridico = new Juridico();
+            juridico.setFkClienteId(rs.getInt("fk_cliente_id"));
+            juridico.setInscrEstadual(rs.getString("inscr_estadual"));
+            juridico.setCnpj(rs.getString("cnpj"));
+            juridico.setRazaoSocial(rs.getString("razao_social"));
+            return juridico;
         }
     }
 }

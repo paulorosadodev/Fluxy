@@ -8,10 +8,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Funcionario {
-    private Integer idFuncionario; // também é idPessoa
+    private Integer idFuncionario;
+    private Integer idPessoa; // 🔥 FK para Pessoa
     private String matricula;
-    private String cpf;
     private String nome;
-    private Integer salario;
-    private Integer idSupervisor; // pode ser nulo
+    private String cpf;
+    private Double salario;
+    private String setor;
+    private String turno;
+    private String funcao;
+    private Integer idSupervisor; // 🔥 FK para outro Funcionário
 }

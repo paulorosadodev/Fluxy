@@ -4,19 +4,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Date;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Compra {
     private Integer numero;
-    private Date data;
-    private Integer hora; // Está como INT no banco
+    private String data;
+    private String hora;
     private Integer parcelas;
-    private String tipo; // forma de pagamento
+    private String tipo;
     private Integer qtdProduto;
-    private Integer fkProdutoId;
-    private Integer fkClienteId;
-    private Integer fkOperacionalIdFuncionario;
+    private Integer idProduto; // 🔥 FK para Produto
+    private Integer idCliente; // 🔥 FK para Cliente
+    private Integer idFuncionarioOperacional; // 🔥 FK para Funcionario
 }

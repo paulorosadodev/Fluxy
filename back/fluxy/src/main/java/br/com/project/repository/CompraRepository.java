@@ -5,7 +5,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -21,16 +20,17 @@ public class CompraRepository {
     }
 
     public void save(Compra compra) {
-        String sql = "INSERT INTO compra (data, hora, parcelas, tipo, qtd_produto, fk_produto_id, fk_cliente_id, fk_operacional_id_funcionario) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO compra (data, hora, parcelas, tipo, qtd_produto, fk_produto_id, fk_cliente_id, fk_operacional_id_funcionario) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         jdbcTemplate.update(sql,
                 compra.getData(),
                 compra.getHora(),
                 compra.getParcelas(),
                 compra.getTipo(),
                 compra.getQtdProduto(),
-                compra.getFkProdutoId(),
-                compra.getFkClienteId(),
-                compra.getFkOperacionalIdFuncionario()
+                compra.getIdProduto(),
+                compra.getIdCliente(),
+                compra.getIdFuncionarioOperacional()
         );
     }
 
@@ -53,9 +53,9 @@ public class CompraRepository {
                 compra.getParcelas(),
                 compra.getTipo(),
                 compra.getQtdProduto(),
-                compra.getFkProdutoId(),
-                compra.getFkClienteId(),
-                compra.getFkOperacionalIdFuncionario(),
+                compra.getIdProduto(),
+                compra.getIdCliente(),
+                compra.getIdFuncionarioOperacional(),
                 compra.getNumero()
         );
     }
@@ -70,8 +70,8 @@ public class CompraRepository {
         public Compra mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new Compra(
                     rs.getInt("numero"),
-                    rs.getDate("data"),
-                    rs.getInt("hora"),
+                    rs.getString("data"),
+                    rs.getString("hora"),
                     rs.getInt("parcelas"),
                     rs.getString("tipo"),
                     rs.getInt("qtd_produto"),

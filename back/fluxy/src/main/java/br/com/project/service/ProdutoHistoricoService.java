@@ -19,11 +19,16 @@ public class ProdutoHistoricoService {
         produtoHistoricoRepository.save(produtoHistorico);
     }
 
+    public ProdutoHistorico buscar(Integer produtoId, Integer historicoPrecoProdutoId) {
+        return produtoHistoricoRepository.findByIds(produtoId, historicoPrecoProdutoId)
+                .orElseThrow(() -> new RuntimeException("Associação Produto-Histórico não encontrada"));
+    }
+
     public List<ProdutoHistorico> listarTodos() {
         return produtoHistoricoRepository.findAll();
     }
 
-    public void deletarPorIds(Integer produtoId, Integer historicoId) {
-        produtoHistoricoRepository.deleteByIds(produtoId, historicoId);
+    public void deletar(Integer produtoId, Integer historicoPrecoProdutoId) {
+        produtoHistoricoRepository.delete(produtoId, historicoPrecoProdutoId);
     }
 }

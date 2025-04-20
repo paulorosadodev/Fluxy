@@ -21,7 +21,14 @@ public class PessoaRepository {
 
     public void save(Pessoa pessoa) {
         String sql = "INSERT INTO pessoa (id_pessoa, rua, numero, bairro, cidade, cep) VALUES (?, ?, ?, ?, ?, ?)";
-        jdbcTemplate.update(sql, pessoa.getIdPessoa(), pessoa.getRua(), pessoa.getNumero(), pessoa.getBairro(), pessoa.getCidade(), pessoa.getCep());
+        jdbcTemplate.update(sql,
+                pessoa.getIdPessoa(),
+                pessoa.getRua(),
+                pessoa.getNumero(),
+                pessoa.getBairro(),
+                pessoa.getCidade(),
+                pessoa.getCep()
+        );
     }
 
     public Optional<Pessoa> findById(Integer id) {
@@ -37,7 +44,14 @@ public class PessoaRepository {
 
     public void update(Pessoa pessoa) {
         String sql = "UPDATE pessoa SET rua = ?, numero = ?, bairro = ?, cidade = ?, cep = ? WHERE id_pessoa = ?";
-        jdbcTemplate.update(sql, pessoa.getRua(), pessoa.getNumero(), pessoa.getBairro(), pessoa.getCidade(), pessoa.getCep(), pessoa.getIdPessoa());
+        jdbcTemplate.update(sql,
+                pessoa.getRua(),
+                pessoa.getNumero(),
+                pessoa.getBairro(),
+                pessoa.getCidade(),
+                pessoa.getCep(),
+                pessoa.getIdPessoa()
+        );
     }
 
     public void deleteById(Integer id) {

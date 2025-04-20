@@ -20,11 +20,10 @@ public class CategoriaRepository {
     }
 
     public void save(Categoria categoria) {
-        String sql = "INSERT INTO categoria (codigo, nome, descricao) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO categoria (codigo, nome) VALUES (?, ?)";
         jdbcTemplate.update(sql,
                 categoria.getCodigo(),
-                categoria.getNome(),
-                categoria.getDescricao()
+                categoria.getNome()
         );
     }
 
@@ -40,10 +39,9 @@ public class CategoriaRepository {
     }
 
     public void update(Categoria categoria) {
-        String sql = "UPDATE categoria SET nome = ?, descricao = ? WHERE codigo = ?";
+        String sql = "UPDATE categoria SET nome = ? WHERE codigo = ?";
         jdbcTemplate.update(sql,
                 categoria.getNome(),
-                categoria.getDescricao(),
                 categoria.getCodigo()
         );
     }
@@ -58,8 +56,7 @@ public class CategoriaRepository {
         public Categoria mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new Categoria(
                     rs.getString("codigo"),
-                    rs.getString("nome"),
-                    rs.getString("descricao")
+                    rs.getString("nome")
             );
         }
     }

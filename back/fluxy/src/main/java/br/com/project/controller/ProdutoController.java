@@ -19,32 +19,32 @@ public class ProdutoController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> salvar(@RequestBody ProdutoRequestDTO requestDTO) {
-        produtoService.salvar(requestDTO);
+    public ResponseEntity<Void> salvar(@RequestBody ProdutoRequestDTO produtoRequestDTO) {
+        produtoService.salvar(produtoRequestDTO);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ProdutoResponseDTO> buscarPorId(@PathVariable Integer id) {
-        return produtoService.buscarPorId(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        ProdutoResponseDTO produto = produtoService.buscarPorId(id);
+        return ResponseEntity.ok(produto);
     }
 
     @GetMapping
     public ResponseEntity<List<ProdutoResponseDTO>> listarTodos() {
-        return ResponseEntity.ok(produtoService.listarTodos());
+        List<ProdutoResponseDTO> produtos = produtoService.listarTodos();
+        return ResponseEntity.ok(produtos);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> atualizar(@PathVariable Integer id, @RequestBody ProdutoRequestDTO requestDTO) {
-        produtoService.atualizar(id, requestDTO);
+    public ResponseEntity<Void> atualizar(@PathVariable Integer id, @RequestBody ProdutoRequestDTO produtoRequestDTO) {
+        produtoService.atualizar(id, produtoRequestDTO);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Integer id) {
-        produtoService.deletarPorId(id);
+        produtoService.deletar(id);
         return ResponseEntity.ok().build();
     }
 }

@@ -20,13 +20,16 @@ public class FuncionarioRepository {
     }
 
     public void save(Funcionario funcionario) {
-        String sql = "INSERT INTO funcionario (id_funcionario, matricula, cpf, nome, salario, id_supervisor) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO funcionario (id_funcionario, matricula, nome, cpf, salario, setor, turno, funcao, id_supervisor) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         jdbcTemplate.update(sql,
-                funcionario.getIdFuncionario(),
+                funcionario.getIdPessoa(), // O id_funcionario é o id_pessoa
                 funcionario.getMatricula(),
-                funcionario.getCpf(),
                 funcionario.getNome(),
+                funcionario.getCpf(),
                 funcionario.getSalario(),
+                funcionario.getSetor(),
+                funcionario.getTurno(),
+                funcionario.getFuncao(),
                 funcionario.getIdSupervisor()
         );
     }
@@ -43,12 +46,15 @@ public class FuncionarioRepository {
     }
 
     public void update(Funcionario funcionario) {
-        String sql = "UPDATE funcionario SET matricula = ?, cpf = ?, nome = ?, salario = ?, id_supervisor = ? WHERE id_funcionario = ?";
+        String sql = "UPDATE funcionario SET matricula = ?, nome = ?, cpf = ?, salario = ?, setor = ?, turno = ?, funcao = ?, id_supervisor = ? WHERE id_funcionario = ?";
         jdbcTemplate.update(sql,
                 funcionario.getMatricula(),
-                funcionario.getCpf(),
                 funcionario.getNome(),
+                funcionario.getCpf(),
                 funcionario.getSalario(),
+                funcionario.getSetor(),
+                funcionario.getTurno(),
+                funcionario.getFuncao(),
                 funcionario.getIdSupervisor(),
                 funcionario.getIdFuncionario()
         );
@@ -64,10 +70,14 @@ public class FuncionarioRepository {
         public Funcionario mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new Funcionario(
                     rs.getInt("id_funcionario"),
+                    rs.getInt("id_funcionario"), // id_pessoa é o mesmo id_funcionario
                     rs.getString("matricula"),
-                    rs.getString("cpf"),
                     rs.getString("nome"),
-                    rs.getInt("salario"),
+                    rs.getString("cpf"),
+                    rs.getDouble("salario"),
+                    rs.getString("setor"),
+                    rs.getString("turno"),
+                    rs.getString("funcao"),
                     rs.getObject("id_supervisor") != null ? rs.getInt("id_supervisor") : null
             );
         }

@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Categoria {
-    private String codigo; // PK
+    private String codigo;
     private String nome;
-    private String descricao;
 }
