@@ -21,6 +21,7 @@ public class FuncionarioController {
     @PostMapping
     public ResponseEntity<Void> salvar(@RequestBody EmployeeRequestDTO funcionarioRequestDTO) {
         funcionarioService.salvar(funcionarioRequestDTO);
+
         return ResponseEntity.ok().build();
     }
 

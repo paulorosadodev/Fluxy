@@ -31,7 +31,7 @@ public class ClienteService {
         clienteRepository.save(cliente);
 
         List<Phone> telefones = clienteRequestDTO.getPhone().stream()
-                .map(numero -> new Phone(numero, cliente.getIdClient()))
+                .map(numero -> new Phone(cliente.getIdClient(), numero))
                 .collect(Collectors.toList());
 
         telefones.forEach(telefoneService::salvar);
@@ -46,7 +46,7 @@ public class ClienteService {
         telefoneService.deletarPorIdPessoa(id);
 
         List<Phone> telefones = clienteRequestDTO.getPhone().stream()
-                .map(numero -> new Phone(numero, id))
+                .map(numero -> new Phone(id, numero))
                 .collect(Collectors.toList());
 
         telefones.forEach(telefoneService::salvar);

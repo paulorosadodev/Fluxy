@@ -1,7 +1,8 @@
 package br.com.project.service;
 
 import br.com.project.model.Phone;
-import br.com.project.repository.TelefoneRepository;
+import br.com.project.repository.PhoneRepository;
+
 import br.com.project.util.MapperUtils;
 import org.springframework.stereotype.Service;
 
@@ -10,10 +11,10 @@ import java.util.List;
 @Service
 public class TelefoneService {
 
-    private final TelefoneRepository telefoneRepository;
+    private final PhoneRepository telefoneRepository;
     private final MapperUtils mapperUtils;
 
-    public TelefoneService(TelefoneRepository telefoneRepository, MapperUtils mapperUtils) {
+    public TelefoneService(PhoneRepository telefoneRepository, MapperUtils mapperUtils) {
         this.telefoneRepository = telefoneRepository;
         this.mapperUtils = mapperUtils;
     }

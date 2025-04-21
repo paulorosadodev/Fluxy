@@ -4,7 +4,7 @@ import br.com.project.dto.request.PersonRequestDTO;
 import br.com.project.dto.response.PersonResponseDTO;
 import br.com.project.model.Person;
 import br.com.project.model.Phone;
-import br.com.project.repository.PessoaRepository;
+import br.com.project.repository.PersonRepository;
 import br.com.project.util.MapperUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,11 +14,11 @@ import java.util.List;
 @Service
 public class PessoaService {
 
-    private final PessoaRepository pessoaRepository;
+    private final PersonRepository pessoaRepository;
     private final TelefoneService telefoneService;
     private final MapperUtils mapperUtils;
 
-    public PessoaService(PessoaRepository pessoaRepository, TelefoneService telefoneService, MapperUtils mapperUtils) {
+    public PessoaService(PersonRepository pessoaRepository, TelefoneService telefoneService, MapperUtils mapperUtils) {
         this.pessoaRepository = pessoaRepository;
         this.telefoneService = telefoneService;
         this.mapperUtils = mapperUtils;
@@ -27,11 +27,11 @@ public class PessoaService {
     @Transactional
     public void save(PersonRequestDTO personRequestDTO) {
         Person person = mapperUtils.map(personRequestDTO, Person.class);
-        pessoaRepository.save(person);
+        pessoaRepository.saveAndReturnId(person);
 
         // Salva todos os telefones vinculados
         List<Phone> phones = personRequestDTO.getPhone().stream()
-                .map(number -> new Phone(number, person.getIdPerson()))
+                .map(number -> new Phone(person.getIdPerson(), number))
                 .toList();
 
         phones.forEach(telefoneService::salvar);
@@ -48,7 +48,7 @@ public class PessoaService {
 
         // Depois salva os novos telefones
         List<Phone> phones = pessoaRequestDTO.getPhone().stream()
-                .map(number -> new Phone(number, id))
+                .map(number -> new Phone(id, number))
                 .toList();
 
         phones.forEach(telefoneService::salvar);

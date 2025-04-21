@@ -1,11 +1,20 @@
 package br.com.project.dto.response;
 
-public record EmployeeResponseDTO(
-        Integer idFunctionary,
-        String employeeNumber,
-        String cpf,
-        String name,
-        Integer salary,
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-        Integer idSupervisor
-) {}
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class EmployeeResponseDTO {
+    private Integer idEmployee;        // agora o nome combina com o da entidade
+    private String employeeNumber;
+    private String cpf;
+    private String name;
+    private Integer salary;
+    private String sectorOfActivity;
+    private String workShift;
+    private String role;
+    private Integer idSupervisor;
+}

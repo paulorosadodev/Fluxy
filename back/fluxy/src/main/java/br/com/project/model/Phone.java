@@ -8,6 +8,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Phone {
+    private Integer idPhone;
+    private Integer idPerson; // FK para Pessoa
     private String number;
-    private Integer idPhone; // 🔥 FK para Pessoa
+    public Phone(Integer idPerson, String number) {
+        this.idPerson = idPerson;
+        this.number = number;
+    }
+
 }
