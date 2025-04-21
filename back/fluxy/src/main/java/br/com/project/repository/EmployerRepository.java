@@ -31,7 +31,7 @@ public class EmployerRepository {
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setInt(1, employer.getIdPerson()); // id_funcionario é o id_pessoa (não gerado aqui, já vem)
+            ps.setInt(1, employer.getIdPerson());
             ps.setString(2, employer.getEmployeeNumber());
             ps.setString(3, employer.getName());
             ps.setString(4, employer.getCpf());
@@ -47,7 +47,6 @@ public class EmployerRepository {
             return ps;
         }, keyHolder);
 
-        // Retorna o id_funcionario se quiser usar depois
         return keyHolder.getKey() != null ? keyHolder.getKey().intValue() : null;
     }
 
@@ -149,7 +148,6 @@ public class EmployerRepository {
                     ? rs.getInt("id_supervisor")
                     : null );
 
-            // popula o Person
             Person p = new Person();
             p.setStreet       ( rs.getString("rua") );
             p.setNumber       ( rs.getString("numero") );
@@ -171,6 +169,12 @@ public class EmployerRepository {
                 (rs, rn) -> rs.getString("numero"),
                 idPerson
         );
+    }
+
+    public boolean existsByCpf(String cpf) {
+        String sql = "SELECT COUNT(*) FROM funcionario WHERE cpf = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, cpf);
+        return count != null && count > 0;
     }
 
 }

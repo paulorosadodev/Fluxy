@@ -30,7 +30,11 @@ public class FuncionarioService {
 
     @Transactional
     public void salvar(EmployeeRequestDTO dto) {
-        // 1) Salva a pessoa e captura o ID
+
+        if (employerRepository.existsByCpf(dto.cpf())) {
+            throw new IllegalArgumentException("CPF já cadastrado");
+        }
+
         Person person = new Person();
         person.setStreet(dto.street());
         person.setNumber(dto.number());
@@ -39,7 +43,6 @@ public class FuncionarioService {
         person.setCep(dto.cep());
         Integer idPessoa = personRepository.saveAndReturnId(person);
 
-        // 2) Salva o funcionário
         Employer employer = new Employer();
         employer.setIdPerson(idPessoa);
         employer.setEmployeeNumber(gerarMatriculaAleatoria());
@@ -52,7 +55,6 @@ public class FuncionarioService {
         employer.setIdSupervisor(dto.fkSupervisor());
         employerRepository.save(employer);
 
-        // 3) Salva os telefones vinculados
         if (dto.phone() != null && !dto.phone().isEmpty()) {
             for (String num : dto.phone()) {
                 if (num != null && !num.isBlank()) {
@@ -78,7 +80,14 @@ public class FuncionarioService {
     @Transactional
     public void atualizar(Integer id, EmployeeRequestDTO dto) {
         Employer existing = employerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Funcionário não encontrado para atualizar"));
+                .orElseThrow(() -> new RuntimeException("Funcionário não encontrado"));
+
+        if (dto.cpf() != null && !dto.cpf().equals(existing.getCpf())) {
+            if (employerRepository.existsByCpf(dto.cpf())) {
+                throw new IllegalArgumentException("CPF já cadastrado para outro funcionário");
+            }
+            existing.setCpf(dto.cpf());
+        }
 
         if (dto.cpf() != null) existing.setCpf(dto.cpf());
         if (dto.name() != null) existing.setName(dto.name());
@@ -88,9 +97,15 @@ public class FuncionarioService {
         if (dto.role() != null) existing.setRole(dto.role());
         if (dto.fkSupervisor() != null) existing.setIdSupervisor(dto.fkSupervisor());
 
+        Person person = existing.getPerson();
+        if (dto.street() != null) person.setStreet(dto.street());
+        if (dto.number() != null) person.setNumber(dto.number());
+        if (dto.neighborhood() != null) person.setNeighborhood(dto.neighborhood());
+        if (dto.city() != null) person.setCity(dto.city());
+        if (dto.cep() != null) person.setCep(dto.cep());
+
         employerRepository.update(existing);
 
-        // Atualiza telefones
         phoneRepository.deleteByIdPerson(existing.getIdPerson());
         if (dto.phone() != null && !dto.phone().isEmpty()) {
             for (String num : dto.phone()) {
@@ -102,7 +117,7 @@ public class FuncionarioService {
     @Transactional
     public void deletar(Integer id) {
         Employer existing = employerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Funcionário não encontrado para deletar"));
+                .orElseThrow(() -> new RuntimeException("Funcionário não encontrado"));
         phoneRepository.deleteByIdPerson(existing.getIdPerson());
         employerRepository.deleteById(id);
     }
@@ -136,4 +151,5 @@ public class FuncionarioService {
         int num = (int) (Math.random() * 1_000_000);
         return String.format("EMP%06d", num);
     }
+
 }

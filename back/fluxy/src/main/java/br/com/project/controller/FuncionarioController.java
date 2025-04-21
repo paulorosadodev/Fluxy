@@ -3,6 +3,7 @@ package br.com.project.controller;
 import br.com.project.dto.request.EmployeeRequestDTO;
 import br.com.project.dto.response.EmployeeResponseDTO;
 import br.com.project.service.FuncionarioService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,10 +20,13 @@ public class FuncionarioController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> salvar(@RequestBody EmployeeRequestDTO funcionarioRequestDTO) {
-        funcionarioService.salvar(funcionarioRequestDTO);
-
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> salvar(@RequestBody EmployeeRequestDTO funcionarioRequestDTO) {
+        try {
+            funcionarioService.salvar(funcionarioRequestDTO);
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/{id}")
@@ -38,14 +42,31 @@ public class FuncionarioController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> atualizar(@PathVariable Integer id, @RequestBody EmployeeRequestDTO funcionarioRequestDTO) {
-        funcionarioService.atualizar(id, funcionarioRequestDTO);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> atualizar(@PathVariable Integer id, @RequestBody EmployeeRequestDTO funcionarioRequestDTO) {
+        try {
+            funcionarioService.atualizar(id, funcionarioRequestDTO);
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (RuntimeException e) {
+            if (e.getMessage().contains("Funcionário não encontrado") || e.getMessage().contains("Pessoa não encontrada")) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            }
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro interno: " + e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable Integer id) {
-        funcionarioService.deletar(id);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> deletar(@PathVariable Integer id) {
+        try {
+            funcionarioService.deletar(id);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            if (e.getMessage().contains("Funcionário não encontrado")) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            }
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao deletar funcionário: " + e.getMessage());
+        }
     }
+
 }
