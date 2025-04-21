@@ -725,8 +725,8 @@ export const fetchData = async () => {
         ]
     };
 
-    data["products"] = (await fetchProducts()).data;
-    data["employees"] = (await fetchEmployees()).data;
+    data["products"] = (await fetchProducts());
+    data["employees"] = (await fetchEmployees());
 
     return data;
 };

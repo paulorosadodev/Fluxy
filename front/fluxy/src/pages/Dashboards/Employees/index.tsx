@@ -20,7 +20,6 @@ export default function EmployeesDashboard() {
     const [deletePopUpMessage, setDeletePopUpMessage] = useState("");
     const [deletePopUpType, setDeletePopUpType] = useState<"success" | "error">("error");
 
-    console.log(employees);
     const columns: Column<Employee>[] = [
         { header: "Matrícula", accessor: "employeeNumber" },
         { header: "Nome", accessor: "name" },
@@ -180,13 +179,11 @@ export default function EmployeesDashboard() {
     let editData = [""];
 
     if (selectedRow.length > 1) {
-        const selectedEmployee = employees.filter((employee) => employee.employeeNumber === selectedRow.split(",")[0])[0];
-    
+        const selectedEmployee = employees.filter((employee) => employee.employeeNumber === selectedRow.split(",")[1])[0];
+        console.log(selectedEmployee);
         editData = [
-            selectedEmployee.name, selectedEmployee.cpf, ...selectedEmployee.phone, selectedEmployee.address.cep, 
-            selectedEmployee.address.city, selectedEmployee.address.neighborhood, selectedEmployee.address.street, 
-            selectedEmployee.address.number, selectedEmployee.role, selectedEmployee.sectorOfActivity, selectedEmployee.workShift,
-            String(selectedEmployee.salary)
+            String(selectedEmployee.id), selectedEmployee.name, selectedEmployee.cpf, ...selectedEmployee.phone, 
+            selectedEmployee.address.cep, selectedEmployee.address.city, selectedEmployee.address.neighborhood, selectedEmployee.address.street, selectedEmployee.address.number, selectedEmployee.role, selectedEmployee.sectorOfActivity, selectedEmployee.workShift, String(selectedEmployee.salary)
         ];
     }
 
