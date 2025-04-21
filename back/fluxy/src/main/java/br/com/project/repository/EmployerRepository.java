@@ -101,32 +101,45 @@ public class EmployerRepository {
         jdbcTemplate.update(sql, id);
     }
 
-    public class FuncionarioRowMapper implements RowMapper<Employer> {
+    private class FuncionarioRowMapper implements RowMapper<Employer> {
         @Override
         public Employer mapRow(ResultSet rs, int rowNum) throws SQLException {
-            Employer employer = new Employer();
+            Employer e = new Employer();
+            e.setIdEmployee   ( rs.getInt("id_funcionario") );
+            e.setIdPerson     ( rs.getInt("id_funcionario") );
+            e.setEmployeeNumber( rs.getString("matricula") );
+            e.setName         ( rs.getString("nome") );
+            e.setCpf          ( rs.getString("cpf") );
+            e.setSalary       ( rs.getDouble("salario") );
+            e.setSectorOfActivity( rs.getString("setor") );
+            e.setWorkShift    ( rs.getString("turno") );
+            e.setRole         ( rs.getString("funcao") );
+            e.setIdSupervisor ( rs.getObject("id_supervisor") != null
+                    ? rs.getInt("id_supervisor")
+                    : null );
 
-            employer.setIdPerson(rs.getInt("id_funcionario"));
-            employer.setEmployeeNumber(rs.getString("matricula"));
-            employer.setName(rs.getString("nome"));
-            employer.setCpf(rs.getString("cpf"));
-            employer.setSalary(rs.getDouble("salario"));
-            employer.setSectorOfActivity(rs.getString("setor"));
-            employer.setWorkShift(rs.getString("turno"));
-            employer.setRole(rs.getString("funcao"));
-            employer.setIdSupervisor(rs.getObject("id_supervisor") != null ? rs.getInt("id_supervisor") : null);
+            // popula o Person
+            Person p = new Person();
+            p.setStreet       ( rs.getString("rua") );
+            p.setNumber       ( rs.getString("numero") );
+            p.setNeighborhood ( rs.getString("bairro") );
+            p.setCity         ( rs.getString("cidade") );
+            p.setCep          ( rs.getString("cep") );
+            e.setPerson(p);
 
-            Person person = new Person();
-            person.setStreet(rs.getString("rua"));
-            person.setNumber(rs.getString("numero"));
-            person.setNeighborhood(rs.getString("bairro"));
-            person.setCity(rs.getString("cidade"));
-            person.setCep(rs.getString("cep"));
+            // busca e popula os telefones
+            e.setPhones( findPhonesByIdPerson(e.getIdPerson()) );
 
-            employer.setPerson(person);
-
-            return employer;
+            return e;
         }
+    }
+    private List<String> findPhonesByIdPerson(Integer idPerson) {
+        String sql = "SELECT numero FROM telefone WHERE id_telefone = ?";
+        return jdbcTemplate.query(
+                sql,
+                (rs, rn) -> rs.getString("numero"),
+                idPerson
+        );
     }
 
 }

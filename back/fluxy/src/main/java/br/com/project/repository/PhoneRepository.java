@@ -18,35 +18,75 @@ public class PhoneRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    /**
+     * Salva um telefone associado a uma pessoa.
+     */
     public void save(Phone phone) {
-        String sql = "INSERT INTO telefone (id_telefone, numero) VALUES (?, ?)";
-        jdbcTemplate.update(sql,
-                phone.getIdPerson(),  // Aqui é o id da pessoa (preenchendo o id_telefone como FK para pessoa)
-                phone.getNumber()
-        );
+        try {
+            if (phone.getNumber() != null && !phone.getNumber().isBlank()) {
+                String sql = "INSERT INTO telefone (numero, id_telefone) VALUES (?, ?)";
+                jdbcTemplate.update(sql, phone.getNumber(), phone.getIdPerson());
+                System.out.println("Telefone salvo com sucesso: " + phone.getNumber());
+            }
+        } catch (Exception e) {
+            System.out.println("Erro ao salvar telefone: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
+
+    /**
+     * Atualiza um número de telefone de uma pessoa.
+     */
+    public void update(Integer idPerson, String oldNumber, String newNumber) {
+        String sql = "UPDATE telefone SET numero = ? WHERE numero = ? AND id_telefone = ?";
+        jdbcTemplate.update(sql, newNumber, oldNumber, idPerson);
+    }
+
+    /**
+     * Deleta todos os telefones vinculados a uma pessoa.
+     */
     public void deleteByIdPerson(Integer idPerson) {
         String sql = "DELETE FROM telefone WHERE id_telefone = ?";
         jdbcTemplate.update(sql, idPerson);
     }
 
-    public void deleteByNumero(String number) {
+    /**
+     * Deleta um telefone específico pelo número.
+     */
+    public void deleteByNumber(String number) {
         String sql = "DELETE FROM telefone WHERE numero = ?";
         jdbcTemplate.update(sql, number);
     }
 
+    /**
+     * Busca todos os registros da tabela telefone.
+     */
     public List<Phone> findAll() {
-        String sql = "SELECT * FROM telefone";
+        String sql = "SELECT id_telefone, numero FROM telefone";
         return jdbcTemplate.query(sql, new PhoneRowMapper());
     }
 
+    /**
+     * Busca todos os números de telefone associados a uma pessoa específica.
+     */
+    public List<String> findByPersonId(Integer idPerson) {
+        String sql = "SELECT numero FROM telefone WHERE id_telefone = ?";
+        return jdbcTemplate.query(
+                sql,
+                (rs, rowNum) -> rs.getString("numero"),
+                idPerson
+        );
+    }
+
+    /**
+     * RowMapper interno para mapear registros de telefone.
+     */
     private static class PhoneRowMapper implements RowMapper<Phone> {
         @Override
         public Phone mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new Phone(
-                    rs.getInt("id_telefone"), // Aqui você preenche o id da pessoa
-                    rs.getInt("id_telefone"), // (id_pessoa == id_telefone nesse mapeamento meio "incomum" que você fez)
+                    rs.getInt("id_telefone"),
                     rs.getString("numero")
             );
         }

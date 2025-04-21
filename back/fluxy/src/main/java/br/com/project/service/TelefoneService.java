@@ -29,6 +29,6 @@ public class TelefoneService {
                 .filter(t -> t.getIdPhone().equals(idPessoa))
                 .toList();
 
-        telefones.forEach(t -> telefoneRepository.deleteByNumero(t.getNumber()));
+        telefones.forEach(t -> telefoneRepository.deleteByNumber(t.getNumber()));
     }
 }

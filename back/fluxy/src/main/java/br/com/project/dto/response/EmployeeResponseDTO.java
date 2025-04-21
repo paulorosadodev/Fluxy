@@ -22,4 +22,5 @@ public class EmployeeResponseDTO {
     private String neighborhood;
     private String city;
     private String cep;
+    private String[] phones;
 }
