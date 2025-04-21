@@ -1,8 +1,11 @@
 package br.com.project.dto.request;
 
-import java.sql.Date;
+import lombok.Data;
 
-public record HistoricPriceProductRequestDTO(
-        Date date,
-        Integer price
-) {}
+import java.time.LocalDate;
+
+@Data
+public class HistoricPriceProductRequestDTO {
+    private LocalDate date;
+    private Double price;
+}

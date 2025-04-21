@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductSupplier {
-    private Integer fkSupplierId;
-    private Integer fkProductId;
+    private Integer supplierId;
+    private Integer productId;
 }

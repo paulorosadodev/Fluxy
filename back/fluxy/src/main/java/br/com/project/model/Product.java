@@ -13,5 +13,4 @@ public class Product {
     private String codEa;
     private Double price;
     private String name;
-    private String category;
 }

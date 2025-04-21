@@ -3,10 +3,11 @@ package br.com.project.dto.response;
 import lombok.Data;
 
 @Data
-public class SupplierResponseDTO {
-    private Integer idSupplier;
+public class LegalClientResponseDTO {
+    private Integer id;
+    private String corporateName;
     private String cnpj;
-    private String name;
+    private String stateRegistration;
     private String street;
     private String number;
     private String neighborhood;

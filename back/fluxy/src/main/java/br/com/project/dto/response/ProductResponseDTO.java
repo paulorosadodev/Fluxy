@@ -1,17 +1,23 @@
 package br.com.project.dto.response;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class ProductResponseDTO {
     private Integer idProduct;
     private Integer stockQuantity;
     private String codEa;
     private Double price;
     private String name;
-    private String FKCategory; // FK adicionada
+    private String categoryCode;
+    private List<Integer> supplierIds;
+    private List<PriceHistoryDTO> priceHistories;
+
+    @Data
+    public static class PriceHistoryDTO {
+        private String date;
+        private Double price;
+    }
 }

@@ -7,10 +7,9 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class HistoricPriceProduct {
-
     private Integer idHistoricPriceProduct;
     private LocalDate date;
     private Double price;

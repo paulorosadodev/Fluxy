@@ -38,7 +38,7 @@ public class FuncionarioService {
 
     public void atualizar(Integer id, EmployeeRequestDTO funcionarioRequestDTO) {
         Employer funcionario = mapperUtils.map(funcionarioRequestDTO, Employer.class);
-        funcionario.setIdFuncionario(id);
+        funcionario.setIdEmployee(id);
         funcionarioRepository.update(funcionario);
     }
 

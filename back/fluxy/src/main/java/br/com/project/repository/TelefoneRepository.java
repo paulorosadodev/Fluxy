@@ -22,8 +22,8 @@ public class TelefoneRepository {
     public void save(Phone telefone) {
         String sql = "INSERT INTO telefone (numero, id_telefone) VALUES (?, ?)";
         jdbcTemplate.update(sql,
-                telefone.getNumero(),
-                telefone.getIdTelefone()
+                telefone.getNumber(),
+                telefone.getIdPhone()
         );
     }
 
@@ -41,8 +41,8 @@ public class TelefoneRepository {
     public void update(Phone telefone) {
         String sql = "UPDATE telefone SET id_telefone = ? WHERE numero = ?";
         jdbcTemplate.update(sql,
-                telefone.getIdTelefone(),
-                telefone.getNumero()
+                telefone.getIdPhone(),
+                telefone.getNumber()
         );
     }
 
