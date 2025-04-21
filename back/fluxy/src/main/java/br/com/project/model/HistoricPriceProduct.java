@@ -11,6 +11,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class HistoricPriceProduct {
     private Integer idHistoricPriceProduct;
+    private Integer productId;
     private LocalDate date;
     private Double price;
 }

@@ -1,6 +1,5 @@
 package br.com.project.repository;
 
-import br.com.project.dto.request.ProductRequestDTO;
 import br.com.project.model.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -25,15 +24,16 @@ public class ProductRepository {
     }
 
     public Integer save(Product product) {
-        String sql = "INSERT INTO produto (qtd_estoque, cod_ea, preco, nome) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO produto (codigo_categoria, qtd_estoque, cod_ea, preco, nome) VALUES (?, ?, ?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setInt(1, product.getStockQuantity());
-            ps.setString(2, product.getCodEa());
-            ps.setDouble(3, product.getPrice());
-            ps.setString(4, product.getName());
+            ps.setString(1, product.getCategoryCode());
+            ps.setInt(2, product.getStockQuantity());
+            ps.setString(3, product.getCodEa());
+            ps.setDouble(4, product.getPrice());
+            ps.setString(5, product.getName());
             return ps;
         }, keyHolder);
 
@@ -52,8 +52,9 @@ public class ProductRepository {
     }
 
     public void update(Product product) {
-        String sql = "UPDATE produto SET qtd_estoque = ?, cod_ea = ?, preco = ?, nome = ? WHERE id_produto = ?";
+        String sql = "UPDATE produto SET codigo_categoria = ?, qtd_estoque = ?, cod_ea = ?, preco = ?, nome = ? WHERE id_produto = ?";
         jdbcTemplate.update(sql,
+                product.getCategoryCode(),
                 product.getStockQuantity(),
                 product.getCodEa(),
                 product.getPrice(),
@@ -72,6 +73,7 @@ public class ProductRepository {
         public Product mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new Product(
                     rs.getInt("id_produto"),
+                    rs.getString("codigo_categoria"),
                     rs.getInt("qtd_estoque"),
                     rs.getString("cod_ea"),
                     rs.getDouble("preco"),

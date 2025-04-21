@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Product {
     private Integer idProduct;
+    private String categoryCode; // novo campo
     private Integer stockQuantity;
     private String codEa;
     private Double price;

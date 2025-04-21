@@ -2,16 +2,23 @@ package br.com.project.dto.request;
 
 import lombok.Data;
 
-import java.time.LocalDate;
-
 @Data
 public class ProductRequestDTO {
-    private Integer stockQuantity;
     private String codEa;
-    private Double price;
     private String name;
-    private String categoryCode;
-    private Integer supplierId;
-    private LocalDate priceDate;
+    private Integer stockQuantity;
+    private Double price;
+    private CategoryDTO category;
+    private HistoricDTO historic;
 
+    @Data
+    public static class CategoryDTO {
+        private String code;
+    }
+
+    @Data
+    public static class HistoricDTO {
+        private String date;   // Em String mesmo, parseamos depois
+        private Double price;
+    }
 }

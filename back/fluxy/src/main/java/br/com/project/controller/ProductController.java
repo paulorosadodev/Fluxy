@@ -3,7 +3,6 @@ package br.com.project.controller;
 import br.com.project.dto.request.ProductRequestDTO;
 import br.com.project.dto.response.ProductResponseDTO;
 import br.com.project.service.ProductService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,32 +18,27 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<ProductResponseDTO> save(@RequestBody ProductRequestDTO requestDTO) {
-        ProductResponseDTO responseDTO = productService.save(requestDTO);
-        return ResponseEntity.ok(responseDTO);
+    public ProductResponseDTO save(@RequestBody ProductRequestDTO requestDTO) {
+        return productService.save(requestDTO);
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponseDTO>> findAll() {
-        List<ProductResponseDTO> products = productService.findAll();
-        return ResponseEntity.ok(products);
+    public List<ProductResponseDTO> findAll() {
+        return productService.findAll();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductResponseDTO> findById(@PathVariable Integer id) {
-        ProductResponseDTO product = productService.findById(id);
-        return ResponseEntity.ok(product);
+    public ProductResponseDTO findById(@PathVariable Integer id) {
+        return productService.findById(id);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductResponseDTO> update(@PathVariable Integer id, @RequestBody ProductRequestDTO requestDTO) {
-        ProductResponseDTO updatedProduct = productService.update(id, requestDTO);
-        return ResponseEntity.ok(updatedProduct);
+    public ProductResponseDTO update(@PathVariable Integer id, @RequestBody ProductRequestDTO requestDTO) {
+        return productService.update(id, requestDTO);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+    public void delete(@PathVariable Integer id) {
         productService.delete(id);
-        return ResponseEntity.noContent().build();
     }
 }

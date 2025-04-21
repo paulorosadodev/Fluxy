@@ -25,13 +25,14 @@ public class HistoricPriceProductRepository {
     }
 
     public Integer save(HistoricPriceProduct historic) {
-        String sql = "INSERT INTO historico_preco_produto (data, preco) VALUES (?, ?)";
+        String sql = "INSERT INTO historico_preco_produto (codigo_produto, data, preco) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setDate(1, Date.valueOf(historic.getDate()));
-            ps.setDouble(2, historic.getPrice());
+            ps.setInt(1, historic.getProductId());
+            ps.setDate(2, Date.valueOf(historic.getDate()));
+            ps.setDouble(3, historic.getPrice());
             return ps;
         }, keyHolder);
 
@@ -39,8 +40,9 @@ public class HistoricPriceProductRepository {
     }
 
     public void update(HistoricPriceProduct historic) {
-        String sql = "UPDATE historico_preco_produto SET data = ?, preco = ? WHERE id_historico_preco_produto = ?";
+        String sql = "UPDATE historico_preco_produto SET codigo_produto = ?, data = ?, preco = ? WHERE id_historico_preco_produto = ?";
         jdbcTemplate.update(sql,
+                historic.getProductId(),
                 Date.valueOf(historic.getDate()),
                 historic.getPrice(),
                 historic.getIdHistoricPriceProduct()
@@ -63,11 +65,17 @@ public class HistoricPriceProductRepository {
         jdbcTemplate.update(sql, id);
     }
 
+    public void deleteByProductId(Integer productId) {
+        String sql = "DELETE FROM historico_preco_produto WHERE codigo_produto = ?";
+        jdbcTemplate.update(sql, productId);
+    }
+
     private static class HistoricPriceProductRowMapper implements RowMapper<HistoricPriceProduct> {
         @Override
         public HistoricPriceProduct mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new HistoricPriceProduct(
                     rs.getInt("id_historico_preco_produto"),
+                    rs.getInt("codigo_produto"),
                     rs.getDate("data").toLocalDate(),
                     rs.getDouble("preco")
             );
