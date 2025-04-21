@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Employee } from "../../../@types";
 import { Column, DataTable } from "../../../components/DataTable";
 import { useData } from "../../../hooks/useData";
-import { formatMoney, formatCPF, isValidCPF } from "../../../utils";
+import { formatMoney, formatCPF, isValidCPF, formatAddress, formatPhoneNumber, isValidPhoneNumber } from "../../../utils";
 import { EntityForm } from "../../../components/EntityForm";
 import { z } from "zod";
 import { PopUp } from "../../../components/PopUp";
@@ -20,6 +20,8 @@ export default function EmployeesDashboard() {
         { header: "Matrícula", accessor: "employeeNumber" },
         { header: "Nome", accessor: "name" },
         { header: "CPF", accessor: "cpf", formatter: formatCPF },
+        { header: "Endereço", accessor: "address", formatter: formatAddress },
+        { header: "Telefone", accessor: "phone", formatter: formatPhoneNumber },
         { header: "Cargo", accessor: "role" },
         { header: "Setor", accessor: "sectorOfActivity" },
         { header: "Turno", accessor: "workShift" },
@@ -82,42 +84,47 @@ export default function EmployeesDashboard() {
                 type: "text",
                 value: "phone",
                 placeholder: "Digite o número de telefone",
-                validation: z.array(z.string().min(10, { message: "Número de telefone inválido" })),
+                validation: z.array(z.string().refine(isValidPhoneNumber, {
+                    message: "Telefone inválido",
+                })),
             },
             {
                 label: "CEP",
                 type: "text",
-                value: "address.cep",
+                value: "cep",
                 placeholder: "Digite o CEP",
-                validation: z.string().length(8, { message: "CEP deve ter 8 caracteres" }).regex(/^\d+$/, { message: "CEP deve conter apenas números" }),
+                validation: z
+                    .string()
+                    .transform((val) => val.replace(/\D/g, "")) 
+                    .refine((val) => /^\d{8}$/.test(val), { message: "CEP deve conter exatamente 8 números" }),
             },
         ],
         [
             {
                 label: "Cidade",
                 type: "text",
-                value: "address.city",
+                value: "city",
                 placeholder: "Digite a cidade",
                 validation: z.string().min(2, { message: "Cidade deve ter pelo menos 2 caracteres" }),
             },
             {
                 label: "Bairro",
                 type: "text",
-                value: "address.neighborhood",
+                value: "neighborhood",
                 placeholder: "Digite o bairro",
                 validation: z.string().min(2, { message: "Bairro deve ter pelo menos 2 caracteres" }),
             },
             {
                 label: "Endereço",
                 type: "text",
-                value: "address.street",
+                value: "street",
                 placeholder: "Digite a rua",
                 validation: z.string().min(2, { message: "Rua deve ter pelo menos 2 caracteres" }),
             },
             {
                 label: "Número",
                 type: "text",
-                value: "address.number",
+                value: "number",
                 placeholder: "Digite o número",
                 validation: z.string().min(1, { message: "Número não pode ser vazio" }),
             },
@@ -165,11 +172,25 @@ export default function EmployeesDashboard() {
         edit: setIsEditFormOpened
     };
 
+    let editData = [""];
+
+    if (selectedRow.length > 1) {
+        const selectedEmployee = employees.filter((employee) => employee.employeeNumber === selectedRow.split(",")[0])[0];
+    
+        editData = [
+            selectedEmployee.name, selectedEmployee.cpf, ...selectedEmployee.phone, selectedEmployee.address.cep, 
+            selectedEmployee.address.city, selectedEmployee.address.neighborhood, selectedEmployee.address.street, 
+            selectedEmployee.address.number, selectedEmployee.role, selectedEmployee.sectorOfActivity, selectedEmployee.workShift,
+            String(selectedEmployee.salary)
+        ];
+    }
 
     return (
         <>  
             <EntityForm type="Adicionar" title="Funcionário" fields={fields} open={isAddFormOpened} formControllers={formControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} />
-            <EntityForm type="Editar" title="Funcionário" fields={fields} open={isEditFormOpened} formControllers={formControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} data={selectedRow.split(",").slice(1)} />
+            {editData.length > 1 && 
+                <EntityForm type="Editar" title="Funcionário" fields={fields} open={isEditFormOpened} formControllers={formControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} data={editData} />
+            }
             <div id="main">
                 <h1>Funcionários</h1>
                 <DataTable data={employees} columns={columns} entityName="funcionários" popUpController={setShowPopUp} formControllers={formControllers} selectedRowController={setSelectedRow}/>

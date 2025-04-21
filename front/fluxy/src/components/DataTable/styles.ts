@@ -99,6 +99,15 @@ export const DataTableWrapper = styled.div`
     width: 100%; 
     transition: all 3s;
     margin-bottom: 3rem;
+
+    #not-found {
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        left: 50%;
+        transform: translate(-50%, 1rem);
+        color: grey;
+    }
     
     table {
         border-collapse: collapse;

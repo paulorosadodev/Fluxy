@@ -112,14 +112,19 @@ export function DataTable<T extends Record<string, any>>({ data, columns, entity
                                 {columns.map((column, colIndex) => {
                                     const cellValue = row[column.accessor];
                                     const formattedValue = column.formatter
-                                        ? column.formatter(cellValue) ?? "?"
-                                        : cellValue ?? "?";
+                                        ? column.accessor == "date" ? column.formatter(row["time"] + row["date"]) : column.formatter(cellValue) ?? "?"
+                                        : (typeof cellValue === "object" && cellValue !== null)
+                                            ? cellValue[Object.keys(cellValue)[1]]
+                                            : cellValue ?? "?";
                                     return <td className={selectedsRow?.includes(Object.values(row).toString()) ? "selected" : ""}  data-label={columns[colIndex].header + ":"} key={colIndex}>{formattedValue}</td>;
                                 })}
                             </tr>
                         ))}
                     </tbody>
                 </table>
+                {filteredData.length < 1 &&
+                            <h3 id="not-found">Nenhum registro foi encontrado</h3>
+                }
             </DataTableWrapper>
         </>
     );

@@ -1,5 +1,52 @@
 import { Address, Customer, Employee, PaymentMethod, Product, Supplier } from "../@types";
 
+export function removeNonDigits(value: string)  {
+    return value.replace(/\D/g, "");
+}
+
+export function isValidPhoneNumber(phone: string): boolean {
+    const cleanedPhone = phone.replace(/\D/g, ""); 
+    const phoneRegex = /^[1-9]{2}9[0-9]{8}$/;
+    return phoneRegex.test(cleanedPhone) && !isValidCEP(cleanedPhone);
+}
+
+export function isValidStateRegistration(ie: string): boolean {
+    const cleaned = ie.replace(/\D/g, "");
+
+    if (!/^\d{9}$/.test(cleaned)) {
+        return false;
+    }
+
+    if (/^(\d)\1+$/.test(cleaned)) {
+        return false;
+    }
+
+    return true;
+}
+
+
+export function isValidCNPJ(cnpj: string): boolean {
+    cnpj = cnpj.replace(/[^\d]+/g, "");
+
+    if (cnpj.length !== 14 || /^(\d)\1+$/.test(cnpj)) return false;
+
+    const calcCheckDigit = (base: string, weights: number[]) => {
+        let sum = 0;
+        for (let i = 0; i < weights.length; i++) {
+            sum += parseInt(base.charAt(i)) * weights[i];
+        }
+        const rest = sum % 11;
+        return rest < 2 ? 0 : 11 - rest;
+    };
+
+    const base = cnpj.slice(0, 12);
+    const firstDigit = calcCheckDigit(base, [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]);
+    const secondDigit = calcCheckDigit(base + firstDigit, [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]);
+
+    return cnpj === base + firstDigit.toString() + secondDigit.toString();
+}
+
+
 export function isValidCPF(cpf: string): boolean {
     cpf = cpf.replace(/[^\d]+/g, "");
 
@@ -24,6 +71,12 @@ export function isValidCPF(cpf: string): boolean {
     if (rev !== parseInt(cpf.charAt(10))) return false;
 
     return true;
+}
+
+export function isValidCEP(cep: string): boolean {
+    cep = cep.replace(/[^\d]+/g, "");
+
+    return /^\d{8}$/.test(cep);
 }
 
 export function formatMoney(value: number) {
@@ -55,11 +108,18 @@ export function formatCNPJ(cnpj: string) {
     );
 }
 
-export function formatPhoneNumber(phone: string[]) {
+export function formatPhoneNumber(phone: unknown): string {
 
-    const cleaned = phone[0].replace(/\D/g, "");
+    if (String(phone).includes(",")) {
+        return String(phone)
+            .split(",") 
+            .map((num) => formatPhoneNumber(num.trim())) 
+            .join(", "); 
+    }
 
-    if (cleaned.length !== 11) return phone; 
+    const cleaned = String(phone).replace(/\D/g, "");
+
+    if (cleaned.length !== 11) return String(phone); 
 
     return cleaned.replace(
         /(\d{2})(\d{1})(\d{4})(\d{4})/,
@@ -77,7 +137,7 @@ export function formatCEP(cep: string) {
 }
 
 export function formatAddress(address: Address) {
-    return `${address.street}, ${address.number} |  ${address.city} - ${address.neighborhood} | ${formatCEP(address.cep)} `;
+    return `${address.street}, ${address.number} `;
 }
 
 export function formatSupplier(supplier: Supplier) {
@@ -113,6 +173,12 @@ export function formatStateRegistration(ie: string) {
 }
 
 export function formatDate(date: string | Date) {
+    if (typeof date === "string") {
+        const timePart = date.slice(0, 5);  
+        const datePart = date.slice(5);     
+        
+        date = `${datePart}T${timePart}`;
+    }
 
     const d = new Date(date);
 
@@ -127,3 +193,4 @@ export function formatDate(date: string | Date) {
 
     return hasTime ? `${hours}:${minutes} - ${day}/${month}/${year}` : `${day}/${month}/${year}`;
 }
+

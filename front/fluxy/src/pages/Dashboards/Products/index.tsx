@@ -56,7 +56,7 @@ export default function ProductsDashboard() {
                 value: "category",
                 placeholder: "Selecione a categoria",
                 validation: z.string().min(1, { message: "Categoria é obrigatória" }),
-                options: categories.map((category) => category.name) 
+                options: categories.map((categories) => categories.name),
             }
         ],
         [
@@ -82,10 +82,20 @@ export default function ProductsDashboard() {
         edit: setIsEditFormOpened
     };
 
+    let editData = [""];
+
+    if (selectedRow.length > 1) {
+        const selectedProduct = products.filter((product) => product.codEa === selectedRow.split(",")[0])[0];
+    
+        editData = [selectedProduct.codEa, selectedProduct.name, selectedProduct.category.name, String(selectedProduct.price), String(selectedProduct.stockQuantity)];
+    }
+
     return (
         <>  
             <EntityForm type="Adicionar" title="Produto" fields={fields} open={isAddFormOpened} formControllers={formControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} />
-            <EntityForm type="Editar" title="Produto" fields={fields} open={isEditFormOpened} formControllers={formControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} data={selectedRow.split(",")} />
+            {editData.length > 1 && 
+                <EntityForm type="Editar" title="Produto" fields={fields} open={isEditFormOpened} formControllers={formControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} data={editData} />
+            }
             <div id="main">
                 <h1>Produtos</h1>
                 <DataTable data={products} columns={columns} entityName="produtos" popUpController={setShowPopUp} formControllers={formControllers} selectedRowController={setSelectedRow}/>

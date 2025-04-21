@@ -27,9 +27,9 @@ export interface Employee extends Person {
     cpf: string;
     name: string;
     salary: number
-    role?: string
-    sectorOfActivity?: string
-    workShift?: string
+    role: string
+    sectorOfActivity: string
+    workShift: string
 }
 
 export interface Customer extends Person {
@@ -43,17 +43,15 @@ export interface Customer extends Person {
 
 export interface Category extends Entity {
     code: string;
-    description: string;
     name: string
 }
 
 export interface Product extends Entity {
     name: string;
-    description?: string;
     price: number;
     codEa: string;
     stockQuantity: number;
-    category: string;
+    category: Category;
 }
 
 export interface ProductPriceHistory extends Entity {
@@ -82,5 +80,6 @@ export interface ProductSupply extends Entity {
     product: Product;
     productAmount: number;
     price: number;
-    date: Date
+    time: string;
+    date: string
 }
