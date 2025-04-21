@@ -31,7 +31,7 @@ export default function SuppliersDashboard() {
         { header: "Produto", accessor: "product", formatter: formatProduct },
         { header: "Quantidade", accessor: "productAmount", formatter: formatStock },
         { header: "Preço", accessor: "price", formatter: formatMoney },
-        { header: "Hora e Data", accessor: "date", formatter: formatDate },
+        { header: "Data", accessor: "date", formatter: formatDate },
     ];
 
     const supplierFields = [
@@ -189,10 +189,10 @@ export default function SuppliersDashboard() {
         const formatedRow = supplySelectedRow.split(",");
 
         const selectedSupply = productSupplies.filter((Supply) => 
-            String(Supply.productAmount) === formatedRow[2] && String(Supply.price) === formatedRow[3] && Supply.time === formatedRow[4] && Supply.date === formatedRow[5])[0];
+            String(Supply.productAmount) === formatedRow[2] && String(Supply.price) === formatedRow[3] && Supply.date === formatedRow[5])[0];
     
         editSupplyData = [
-            selectedSupply.supplier.name, selectedSupply.product.name, String(selectedSupply.productAmount), String(selectedSupply.price), selectedSupply.time, selectedSupply.date
+            selectedSupply.supplier.name, selectedSupply.product.name, String(selectedSupply.productAmount), String(selectedSupply.price), selectedSupply.date
         ];
 
     }

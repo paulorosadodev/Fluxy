@@ -4,6 +4,10 @@ import { SearchFilterInput } from "../SearchFilterInput";
 
 import { Square, CheckSquare, Trash, Pencil } from "phosphor-react";
 
+import { AxiosResponse } from "axios";
+import { useData } from "../../hooks/useData";
+import Loading from "../Loading";
+
 export type FormControllers = {
     add: React.Dispatch<React.SetStateAction<boolean>>;
     edit: React.Dispatch<React.SetStateAction<boolean>>;
@@ -16,6 +20,7 @@ type DataTableProps<T extends Record<string, any>> = {
     formControllers: FormControllers;
     popUpController: React.Dispatch<React.SetStateAction<boolean>>;
     selectedRowController: React.Dispatch<React.SetStateAction<string>>
+    deleteRow: (data: any) => Promise<AxiosResponse<any>>;
 };
 
 export type Column<T> = {
@@ -24,10 +29,12 @@ export type Column<T> = {
     formatter?: (value: any) => string | string[];
 };
 
-export function DataTable<T extends Record<string, any>>({ data, columns, entityName, formControllers, selectedRowController, popUpController }: DataTableProps<T>) {
+export function DataTable<T extends Record<string, any>>({ data, columns, entityName, formControllers, selectedRowController, popUpController, deleteRow }: DataTableProps<T>) {
 
     const [filteredData, setFilteredData] = useState<any[]>([]);
     const [selectedsRow, setSelectedsRow] = useState<string[]>([]);
+
+    const {setMadeRequest, isLoading} = useData();
 
     useEffect(() => {
         if (selectedsRow) {
@@ -75,13 +82,25 @@ export function DataTable<T extends Record<string, any>>({ data, columns, entity
         }
     };
 
+    const handleDeleteClick = () => {
+        selectedsRow.forEach(async (row) => {
+            try {
+                await deleteRow(row.split(",")[0]);
+                setMadeRequest((prev) => !prev); 
+            } catch (error: any) {
+                console.error(error.message);
+            }
+        }
+        );
+    };
+
     return (
         <>
             <InputWrapper>
                 <ActionsWrapper>
                     <button onClick={handleClick}>Adicionar</button>
                     <Pencil id="edit" onClick={() => handleEditClick("")} className={selectedsRow.length === 1 ? "active" : ""} size={25} />
-                    <Trash id="delete" className={selectedsRow.length >= 1 ? "active" : ""} size={25} />
+                    <Trash id="delete" onClick={() => handleDeleteClick()} className={selectedsRow.length >= 1 ? "active" : ""} size={25} />
                 </ActionsWrapper>
                 <SearchFilterInput data={data} columns={columns} filteredData={filteredData} setFilteredData={setFilteredData} entityName={entityName}/>
             </InputWrapper>
@@ -122,8 +141,11 @@ export function DataTable<T extends Record<string, any>>({ data, columns, entity
                         ))}
                     </tbody>
                 </table>
-                {filteredData.length < 1 &&
-                            <h3 id="not-found">Nenhum registro foi encontrado</h3>
+                { isLoading ?
+                    <Loading />
+                    :
+                    filteredData.length < 1 &&
+                        <h3 id="not-found">Nenhum registro foi encontrado</h3>
                 }
             </DataTableWrapper>
         </>

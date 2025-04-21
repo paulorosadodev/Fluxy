@@ -4,10 +4,11 @@ import { formatMoney, formatStock } from "../../../utils";
 
 import { useData } from "../../../hooks/useData";
 import { EntityForm } from "../../../components/EntityForm";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { z } from "zod";
 import { PopUp } from "../../../components/PopUp";
-import { addProduct } from "../../../services/endpoints/data";
+
+import { addProduct, deleteProduct, editProduct } from "../../../services/endpoints/addData";
 
 export default function ProductsDashboard() {
 
@@ -17,10 +18,6 @@ export default function ProductsDashboard() {
     const [showPopUp, setShowPopUp] = useState(false);
     const [popUpMessage, setPopUpMessage] = useState("");
     const [selectedRow, setSelectedRow] = useState("");
-
-    useEffect(() => {
-        addProduct({});
-    });
 
     const columns: Column<Product>[] = [
         { header: "Código EA", accessor: "codEa" },
@@ -37,7 +34,7 @@ export default function ProductsDashboard() {
                 type: "text",
                 value: "codEa",
                 placeholder: "Digite o código EA",
-                validation: z.string().min(5, { message: "Código EA deve ter pelo menos 5 caracteres" }),
+                validation: z.string().min(5, { message: "Código EA deve ter pelo menos 5 caracteres" }).max(13, { message: "Código EA deve ter até 13 caracteres" }),
             }
         ],
         [
@@ -53,7 +50,7 @@ export default function ProductsDashboard() {
             {
                 label: "Categoria",
                 type: "select",
-                value: "category",
+                value: "categoryCode",
                 placeholder: "Selecione a categoria",
                 validation: z.string().min(1, { message: "Categoria é obrigatória" }),
                 options: categories.map((categories) => categories.name),
@@ -84,21 +81,25 @@ export default function ProductsDashboard() {
 
     let editData = [""];
 
-    if (selectedRow.length > 1) {
-        const selectedProduct = products.filter((product) => product.codEa === selectedRow.split(",")[0])[0];
-    
-        editData = [selectedProduct.codEa, selectedProduct.name, selectedProduct.category.name, String(selectedProduct.price), String(selectedProduct.stockQuantity)];
+    if (selectedRow.length > 1 && products) {
+
+        const selectedProduct = products.filter((product) => String(product.id) === selectedRow.split(",")[0])[0];
+
+        if (selectedProduct) {
+            editData = [String(selectedProduct.id), selectedProduct.codEa, selectedProduct.name, selectedProduct.category.name, String(selectedProduct.price), String(selectedProduct.stockQuantity)];
+        }
+        
     }
 
     return (
         <>  
-            <EntityForm type="Adicionar" title="Produto" fields={fields} open={isAddFormOpened} formControllers={formControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} />
+            <EntityForm type="Adicionar" title="Produto" fields={fields} open={isAddFormOpened} formControllers={formControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} onSubmitAPI={addProduct} />
             {editData.length > 1 && 
-                <EntityForm type="Editar" title="Produto" fields={fields} open={isEditFormOpened} formControllers={formControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} data={editData} />
+                <EntityForm type="Editar" title="Produto" fields={fields} open={isEditFormOpened} formControllers={formControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} data={editData} onSubmitAPI={editProduct} />
             }
             <div id="main">
                 <h1>Produtos</h1>
-                <DataTable data={products} columns={columns} entityName="produtos" popUpController={setShowPopUp} formControllers={formControllers} selectedRowController={setSelectedRow}/>
+                <DataTable deleteRow={deleteProduct} data={products} columns={columns} entityName="produtos" popUpController={setShowPopUp} formControllers={formControllers} selectedRowController={setSelectedRow}/>
                 {showPopUp &&
                     <PopUp type="success" message={popUpMessage} show={showPopUp} onClose={() => setShowPopUp(false)} />
                 }

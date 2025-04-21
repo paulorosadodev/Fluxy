@@ -1,36 +1,25 @@
 import { api } from "../api";
 
-interface RegisterPayload {
-    name: string;
-    password: string;
-    confirmPassword: string;
-}
-
-export const addProduct = async (data: any) => {
-    const response = await api.post("/produtos", {
-        "qtdEstoque": 50,
-        "codEa": "9876543210987",
-        "preco": 1200,
-        "nome": "Pepsi 2L"
-    });
-    console.log(response);
+export const fetchProducts = async () => {
+    const response = await api.get("/products", );
     return response;
 };
 
 export const fetchData = async () => {
     const data = {
-        products: [
-            { codEa: "001", name: "Maçã", category: { code: 1, name: "Hortifruti" }, price: 5, stockQuantity: 304 },
-            { codEa: "002", name: "Arroz Tipo 1", category: { code: 2, name: "Grãos" }, price: 22.5, stockQuantity: 120 },
-            { codEa: "003", name: "Feijão Carioca", category: { code: 2, name: "Grãos" }, price: 8.99, stockQuantity: 75 },
-            { codEa: "004", name: "Leite Integral", category: { code: 3, name: "Laticínios" }, price: 4.79, stockQuantity: 260 },
-            { codEa: "005", name: "Queijo Mussarela", category: { code: 3, name: "Laticínios" }, price: 34.9, stockQuantity: 58 },
-            { codEa: "006", name: "Pão de Forma", category: { code: 4, name: "Padaria" }, price: 7.5, stockQuantity: 130 },
-            { codEa: "007", name: "Detergente Neutro", category: { code: 5, name: "Limpeza" }, price: 2.99, stockQuantity: 180 },
-            { codEa: "008", name: "Sabonete", category: { code: 6, name: "Higiene" }, price: 3.25, stockQuantity: 200 },
-            { codEa: "009", name: "Refrigerante Cola 2L", category: { code: 7, name: "Bebidas" }, price: 6.99, stockQuantity: 95 },
-            { codEa: "010", name: "Cerveja Pilsen Lata", category: { code: 7, name: "Bebidas" }, price: 3.79, stockQuantity: 210 }
-        ],
+        products: [],
+        /* products: [
+            { codEa: "001", name: "Maçã", category: { code: "Hortifruti", name: "Hortifruti" }, price: 5, stockQuantity: 304 },
+            { codEa: "002", name: "Arroz Tipo 1", category: { code: "Grãos", name: "Grãos" }, price: 22.5, stockQuantity: 120 },
+            { codEa: "003", name: "Feijão Carioca", category: { code: "Grãos", name: "Grãos" }, price: 8.99, stockQuantity: 75 },
+            { codEa: "004", name: "Leite Integral", category: { code: "Laticínios", name: "Laticínios" }, price: 4.79, stockQuantity: 260 },
+            { codEa: "005", name: "Queijo Mussarela", category: { code: "Laticínios", name: "Laticínios" }, price: 34.9, stockQuantity: 58 },
+            { codEa: "006", name: "Pão de Forma", category: { code: "Padaria", name: "Padaria" }, price: 7.5, stockQuantity: 130 },
+            { codEa: "007", name: "Detergente Neutro", category: { code: "Limpeza", name: "Limpeza" }, price: 2.99, stockQuantity: 180 },
+            { codEa: "008", name: "Sabonete", category: { code: "Higiene", name: "Higiene" }, price: 3.25, stockQuantity: 200 },
+            { codEa: "009", name: "Refrigerante Cola 2L", category: { code: "Bebidas", name: "Bebidas" }, price: 6.99, stockQuantity: 95 },
+            { codEa: "010", name: "Cerveja Pilsen Lata", category: { code: "Bebidas", name: "Bebidas" }, price: 3.79, stockQuantity: 210 }
+        ], */
         suppliers: [
             {
                 cnpj: "67015726000179",
@@ -216,7 +205,7 @@ export const fetchData = async () => {
                 product: {
                     codEa: "002",
                     name: "Banana",
-                    category: "Hortifruti",
+                    category: { code: "Hortifruti", name: "Hortifruti" },
                     price: 3,
                     stockQuantity: 120
                 },
@@ -259,7 +248,7 @@ export const fetchData = async () => {
                 product: {
                     codEa: "003",
                     name: "Arroz",
-                    category: "Mercearia",
+                    category: { code: "Mercearia", name: "Mercearia" },
                     price: 25,
                     stockQuantity: 200
                 },
@@ -303,7 +292,7 @@ export const fetchData = async () => {
                 product: {
                     codEa: "004",
                     name: "Notebook",
-                    category: "Eletrônicos",
+                    category: { code: "Eletrônicos", name: "Eletrônicos" },
                     price: 3500,
                     stockQuantity: 15
                 },
@@ -346,7 +335,7 @@ export const fetchData = async () => {
                 product: {
                     codEa: "005",
                     name: "Detergente",
-                    category: "Limpeza",
+                    category: { code: "Limpeza", name: "Limpeza" },
                     price: 2.5,
                     stockQuantity: 500
                 },
@@ -389,7 +378,7 @@ export const fetchData = async () => {
                 product: {
                     codEa: "006",
                     name: "Sabonete",
-                    category: "Higiene",
+                    category: { code: "Higiene", name: "Higiene" },
                     price: 1.8,
                     stockQuantity: 300
                 },
@@ -433,7 +422,7 @@ export const fetchData = async () => {
                 product: {
                     codEa: "007",
                     name: "Café em pó",
-                    category: "Alimentos",
+                    category: { code: "Alimentos", name: "Alimentos" },
                     price: 8,
                     stockQuantity: 100
                 },
@@ -476,7 +465,7 @@ export const fetchData = async () => {
                 product: {
                     codEa: "008",
                     name: "Papel Higiênico",
-                    category: "Higiene",
+                    category: { code: "Higiene", name: "Higiene" },
                     price: 12,
                     stockQuantity: 150
                 },
@@ -519,7 +508,7 @@ export const fetchData = async () => {
                 product: {
                     codEa: "009",
                     name: "Leite Integral",
-                    category: "Alimentos",
+                    category: { code: "Alimentos", name: "Alimentos" },
                     price: 6.5,
                     stockQuantity: 180
                 },
@@ -562,7 +551,7 @@ export const fetchData = async () => {
                 product: {
                     codEa: "010",
                     name: "Biscoito Recheado",
-                    category: "Alimentos",
+                    category: { code: "Alimentos", name: "Alimentos" },
                     price: 4.2,
                     stockQuantity: 220
                 },
@@ -591,64 +580,52 @@ export const fetchData = async () => {
         ],        
         categories: [
             { 
-                code: "01",
+                code: "Hortifruti",
                 name: "Hortifruti",
-                description: "Frutas e verduras" 
             },
             { 
-                code: "02",
+                code: "Limpeza",
                 name: "Limpeza",
-                description: "Produtos de limpeza doméstica" 
             },
             { 
-                code: "03",
+                code: "Eletrodomésticos",
                 name: "Eletrodomésticos",
-                description: "Celulares, televisores e eletros em geral" 
             },
             { 
-                code: "04",
+                code: "Grãos",
                 name: "Grãos",
-                description: "Arroz, feijão, lentilhas, cereais e afins"
             },
             { 
-                code: "05",
+                code: "Laticínios",
                 name: "Laticínios",
-                description: "Leite, queijos, iogurtes e derivados"
             },
             { 
-                code: "06",
+                code: "Padaria",
                 name: "Padaria",
-                description: "Pães, bolos, doces e salgados"
             },
             { 
-                code: "07",
+                code: "Higiene",
                 name: "Higiene",
-                description: "Produtos de uso pessoal como sabonetes, cremes dentais e absorventes"
             },
             { 
-                code: "08",
+                code: "Bebidas",
                 name: "Bebidas",
-                description: "Água, refrigerantes, sucos e bebidas alcoólicas"
             },
             { 
-                code: "09",
+                code: "Carnes",
                 name: "Carnes",
-                description: "Carnes bovinas, suínas, aves e pescados"
             },
             { 
-                code: "10",
+                code: "Congelados",
                 name: "Congelados",
-                description: "Produtos congelados como pizzas, lasanhas e vegetais"
             },
             { 
-                code: "11",
+                code: "Mercearia",
                 name: "Mercearia",
-                description: "Produtos embalados e secos, como massas, molhos e enlatados"
             },
             { 
-                code: "12",
+                code: "Pet Shop",
                 name: "Pet Shop",
-                description: "Produtos para animais de estimação"
             }
         ],        
         productSupplies: [
@@ -668,13 +645,12 @@ export const fetchData = async () => {
                 product: {
                     codEa: "001",
                     name: "Maçã",
-                    category: "Hortifruti",
+                    category: { code: "Hortifruti", name: "Hortifruti" },
                     price: 5,
                     stockQuantity: 304
                 },
                 productAmount: 580,
                 price: 250,
-                time: "16:30",
                 date: "2025-03-15"
             },
             {
@@ -693,13 +669,12 @@ export const fetchData = async () => {
                 product: {
                     codEa: "002",
                     name: "Arroz Tipo 1",
-                    category: "Grãos",
+                    category: { code: "Grãos", name: "Grãos" },
                     price: 22.5,
                     stockQuantity: 120
                 },
                 productAmount: 300,
                 price: 120,
-                time: "06:30",
                 date: "2025-04-10"
             },
             {
@@ -718,13 +693,12 @@ export const fetchData = async () => {
                 product: {
                     codEa: "003",
                     name: "Feijão Carioca",
-                    category: "Grãos",
+                    category: { code: "Grãos", name: "Grãos" },
                     price: 8.99,
                     stockQuantity: 75
                 },
                 productAmount: 400,
                 price: 160,
-                time: "16:30",
                 date: "2025-04-20"
             },
             {
@@ -743,17 +717,18 @@ export const fetchData = async () => {
                 product: {
                     codEa: "004",
                     name: "Leite Integral",
-                    category: "Laticínios",
+                    category: { code: "Laticínios", name: "Laticínios" },
                     price: 4.79,
                     stockQuantity: 260
                 },
                 productAmount: 350,
                 price: 87.5,
-                time: "15:30",
                 date: "2025-04-20"
             }
         ]
     };
+
+    data["products"] = (await fetchProducts()).data;
 
     return data;
 };

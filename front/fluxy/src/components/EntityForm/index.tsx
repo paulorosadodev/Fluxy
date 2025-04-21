@@ -4,9 +4,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FormControllers } from "../DataTable";
 import { EntityFormWrapper, FormWrapper } from "./styles";
 import { X, Plus, Trash } from "phosphor-react";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 import { PopUp } from "../PopUp";
 import { formatCEP, formatCNPJ, formatCPF, formatPhoneNumber, formatStateRegistration, isValidPhoneNumber, removeNonDigits } from "../../utils";
+import { AxiosResponse } from "axios";
+
+import { useData } from "../../hooks/useData";
 
 export type Field = {
     label: string;
@@ -26,9 +29,13 @@ type EntityFormProps = {
     formControllers: FormControllers;
     popUpMessage: Dispatch<SetStateAction<string>>;
     popUpController: Dispatch<SetStateAction<boolean>>;
+    onSubmitAPI: (data: any) => Promise<AxiosResponse<any>>;
 }
 
-export function EntityForm({open, type, title, fields, formControllers, data, popUpMessage, popUpController}: EntityFormProps) {
+export function EntityForm({open, type, title, fields, formControllers, data, popUpMessage, popUpController, onSubmitAPI}: EntityFormProps) {
+
+    const id = Number(data?.[0]);
+    const rawData = useMemo(() => data?.slice(1), [data]);
 
     const createValidationSchema = (fields: Field[][]) => {
         const shape: Record<string, z.ZodTypeAny> = {};
@@ -44,6 +51,8 @@ export function EntityForm({open, type, title, fields, formControllers, data, po
 
     const [showErrorPopUp, setShowErrorPopUp] = useState(true);
 
+    const {setMadeRequest} = useData();
+
     const validationSchema = createValidationSchema(fields);
     const { register, watch, control, handleSubmit, formState: { errors }, reset } = useForm({
         resolver: zodResolver(validationSchema),
@@ -52,8 +61,18 @@ export function EntityForm({open, type, title, fields, formControllers, data, po
         control,
         name: "phone",
     });
+    
+    const firstKey = Object.keys(errors)[0];
+    const firstError = firstKey ? errors[firstKey] : undefined;
+    let firstErrorMessage = Array.isArray(firstError) ? "Telefone(s) inválido(s)" : firstError?.message ?? "";
 
-    const onSubmit: SubmitHandler<any> = (formData) => {
+    if (firstErrorMessage && !showErrorPopUp) {
+        setShowErrorPopUp(true);
+    }
+
+    const [submitError, setSubmitError] = useState("");  
+
+    const onSubmit: SubmitHandler<any> = async (formData) => {
 
         const cleanedData = {
             ...formData,
@@ -62,6 +81,8 @@ export function EntityForm({open, type, title, fields, formControllers, data, po
             cnpj: formData.cnpj ? removeNonDigits(formData.cnpj) : undefined,
             stateRegistration: formData.stateRegistration ? removeNonDigits(formData.stateRegistration) : undefined,
         };
+
+        cleanedData["id"] = id;
 
         const filteredData = Object.fromEntries(
             Object.entries(cleanedData).filter((entry) => {
@@ -76,11 +97,20 @@ export function EntityForm({open, type, title, fields, formControllers, data, po
 
         console.log(filteredData);
 
-        reset();
-        popUpMessage(type === "Adicionar" ? "Adicionado com sucesso" : "Editado com sucesso");
-        popUpController(true);
-        formControllers.add(false);
-        formControllers.edit(false);
+        try {
+            await onSubmitAPI(filteredData); 
+            setMadeRequest((prev) => !prev); 
+            popUpMessage(type === "Adicionar" ? "Adicionado com sucesso" : "Editado com sucesso");
+            popUpController(true);
+            formControllers.add(false);
+            formControllers.edit(false);
+            reset();
+            setSubmitError("");
+            firstErrorMessage = "";
+        } catch (error: any) {
+            setShowErrorPopUp(true);
+            setSubmitError(error.message || "Erro desconhecido");
+        }
     };
 
     const watchedValues = watch();
@@ -94,9 +124,6 @@ export function EntityForm({open, type, title, fields, formControllers, data, po
 
     const isSubmitDisabled = !isFormFilled;
 
-    const firstKey = Object.keys(errors)[0];
-    const firstError = firstKey ? errors[firstKey] : undefined;
-    const errorMessage = Array.isArray(firstError) ? "Telefone(s) inválido(s)" : firstError?.message;    
 
     const handleClose = () => {
         reset();
@@ -113,7 +140,7 @@ export function EntityForm({open, type, title, fields, formControllers, data, po
             append("");
         }
 
-        if (open && type === "Editar" && data) {
+        if (open && type === "Editar" && rawData) {
             const defaultValues: Record<string, string> = {};
 
             phoneFields.forEach((_, idx) => remove(idx));
@@ -124,31 +151,31 @@ export function EntityForm({open, type, title, fields, formControllers, data, po
             fields.flat().forEach((field) => {
                 if (field.value === "phone") {
 
-                    while (isValidPhoneNumber(data[fieldIndex])) {
-                        append(data[fieldIndex]);
-                        defaultValues[`phone.${phoneIndex++}`] = formatPhoneNumber(data[fieldIndex]);
+                    while (isValidPhoneNumber(rawData[fieldIndex])) {
+                        append(rawData[fieldIndex]);
+                        defaultValues[`phone.${phoneIndex++}`] = formatPhoneNumber(rawData[fieldIndex]);
                         fieldIndex++; 
                     }
                 } else {
                     switch (field.value) {
                     case "cpf":
-                        defaultValues[field.value] = formatCPF(data[fieldIndex]); 
+                        defaultValues[field.value] = formatCPF(rawData[fieldIndex]); 
                         break;
                 
                     case "cep":
-                        defaultValues[field.value] = formatCEP(data[fieldIndex]);
+                        defaultValues[field.value] = formatCEP(rawData[fieldIndex]);
                         break;
 
                     case "cnpj":
-                        defaultValues[field.value] = formatCNPJ(data[fieldIndex]); 
+                        defaultValues[field.value] = formatCNPJ(rawData[fieldIndex]); 
                         break;
                     
                     case "stateRegistration":
-                        defaultValues[field.value] = formatStateRegistration(data[fieldIndex]); 
+                        defaultValues[field.value] = formatStateRegistration(rawData[fieldIndex]); 
                         break;
 
                     default:
-                        defaultValues[field.value] = data[fieldIndex];
+                        defaultValues[field.value] = rawData[fieldIndex];
                         break;
                     }
                     fieldIndex++; 
@@ -158,12 +185,13 @@ export function EntityForm({open, type, title, fields, formControllers, data, po
             reset(defaultValues);
 
         }
-    }, [open, type, data, fields, reset]);
+    }, [open, type, rawData, fields, reset]);
 
     return (
         <EntityFormWrapper className={open ? "active" : ""} onClick={() => formControllers.add(false)}>
-            {errorMessage && showErrorPopUp &&
-                <PopUp onClick={(e) => e.stopPropagation()} type="error" message={String(errorMessage)} show={showErrorPopUp} onClose={() => setShowErrorPopUp(false)} />
+            {(String(firstErrorMessage).length > 1 || String(submitError).length > 1) && showErrorPopUp &&
+                <PopUp onClick={(e) => e.stopPropagation()} type="error" message={String(firstErrorMessage).length > 1 ? 
+                    String(firstErrorMessage) : String(submitError)} show={showErrorPopUp} onClose={() => setShowErrorPopUp(false)} />
             }
             <FormWrapper onClick={(e) => e.stopPropagation()} >
                 <X size={25} id="close" onClick={handleClose} />

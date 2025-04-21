@@ -173,12 +173,18 @@ export function formatStateRegistration(ie: string) {
 }
 
 export function formatDate(date: string | Date) {
+
+    
     if (typeof date === "string") {
+        
+        if (date.includes("undefined")) {
+            return date.slice(9);
+        }
         const timePart = date.slice(0, 5);  
         const datePart = date.slice(5);     
         
         date = `${datePart}T${timePart}`;
-    }
+    } 
 
     const d = new Date(date);
 

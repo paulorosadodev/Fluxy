@@ -1,8 +1,8 @@
-import { createContext, ReactNode, useEffect, useState } from "react";
+import { createContext, Dispatch, ReactNode, SetStateAction, useEffect, useState } from "react";
 
 import { Category, Customer, Employee, Product, ProductSupply, Purchase, Supplier } from "../@types";
 
-import { fetchData } from "../services/endpoints/data";
+import { fetchData } from "../services/endpoints/fetchData";
 
 interface DataContextData {
     data: FetchDataResponse;
@@ -13,6 +13,8 @@ interface DataContextData {
     purchases: Purchase[];
     categories: Category[];
     productSupplies: ProductSupply[];
+    setMadeRequest: Dispatch<SetStateAction<boolean>>;
+    isLoading: boolean
 }
 
 export const DataContext = createContext({} as DataContextData);
@@ -50,15 +52,18 @@ export const DataProvider = ({ children }: DataProviderProps) => {
     const [purchases, setPurchases] = useState<Purchase[]>([]);
     const [categories, setCategories] = useState<Category[]>([]);
     const [productSupplies, setProductSupplies] = useState<ProductSupply[]>([]);
+    const [madeRequest, setMadeRequest] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         loadData();
-    }, []);
+    }, [madeRequest]);
 
     const loadData = async () => {
+        setIsLoading(true);
+
         const result = await fetchData();
         setData(result);
-
         setProducts(result.products);
         setSuppliers(result.suppliers);
         setEmployees(result.employees);
@@ -66,10 +71,12 @@ export const DataProvider = ({ children }: DataProviderProps) => {
         setPurchases(result.purchases);
         setCategories(result.categories);
         setProductSupplies(result.productSupplies);
+
+        setIsLoading(false);
     };
 
     return (
-        <DataContext.Provider value={{data, products, suppliers, employees, customers, purchases, categories, productSupplies}}>
+        <DataContext.Provider value={{data, products, suppliers, employees, customers, purchases, categories, productSupplies, setMadeRequest, isLoading}}>
             {children}
         </DataContext.Provider>
     );

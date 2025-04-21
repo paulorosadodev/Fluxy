@@ -80,6 +80,5 @@ export interface ProductSupply extends Entity {
     product: Product;
     productAmount: number;
     price: number;
-    time: string;
     date: string
 }
