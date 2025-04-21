@@ -6,6 +6,7 @@ import { formatMoney, formatCPF, isValidCPF, formatAddress, formatPhoneNumber, i
 import { EntityForm } from "../../../components/EntityForm";
 import { z } from "zod";
 import { PopUp } from "../../../components/PopUp";
+import { addEmployee, deleteEmployee, editEmployee } from "../../../services/endpoints/employee";
 
 export default function EmployeesDashboard() {
 
@@ -15,7 +16,11 @@ export default function EmployeesDashboard() {
     const [showPopUp, setShowPopUp] = useState(false);
     const [popUpMessage, setPopUpMessage] = useState("");
     const [selectedRow, setSelectedRow] = useState("");
+    const [showDeletePopUp, setShowDeletePopUp] = useState(false);
+    const [deletePopUpMessage, setDeletePopUpMessage] = useState("");
+    const [deletePopUpType, setDeletePopUpType] = useState<"success" | "error">("error");
 
+    console.log(employees);
     const columns: Column<Employee>[] = [
         { header: "Matrícula", accessor: "employeeNumber" },
         { header: "Nome", accessor: "name" },
@@ -187,15 +192,18 @@ export default function EmployeesDashboard() {
 
     return (
         <>  
-            <EntityForm type="Adicionar" title="Funcionário" fields={fields} open={isAddFormOpened} formControllers={formControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} />
+            <EntityForm type="Adicionar" title="Funcionário" fields={fields} open={isAddFormOpened} formControllers={formControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} onSubmitAPI={addEmployee} />
             {editData.length > 1 && 
-                <EntityForm type="Editar" title="Funcionário" fields={fields} open={isEditFormOpened} formControllers={formControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} data={editData} />
+                <EntityForm type="Editar" title="Funcionário" fields={fields} open={isEditFormOpened} formControllers={formControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} data={editData} onSubmitAPI={editEmployee} />
             }
             <div id="main">
                 <h1>Funcionários</h1>
-                <DataTable data={employees} columns={columns} entityName="funcionários" popUpController={setShowPopUp} formControllers={formControllers} selectedRowController={setSelectedRow}/>
+                <DataTable deleteRow={deleteEmployee} data={employees} columns={columns} entityName="funcionários" popUpController={setShowPopUp} deletePopUpController={setShowDeletePopUp} setDeletePopUpMessage={setDeletePopUpMessage} setDeletePopUpType={setDeletePopUpType} formControllers={formControllers} selectedRowController={setSelectedRow}/>
                 {showPopUp &&
                     <PopUp type="success" message={popUpMessage} show={showPopUp} onClose={() => setShowPopUp(false)} />
+                }
+                {showDeletePopUp &&
+                    <PopUp type={deletePopUpType} message={deletePopUpMessage} show={showDeletePopUp} onClose={() => setShowDeletePopUp(false)} />
                 }
             </div>
         </>

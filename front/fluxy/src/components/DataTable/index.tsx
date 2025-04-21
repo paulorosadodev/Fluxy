@@ -10,7 +10,7 @@ import Loading from "../Loading";
 
 export type FormControllers = {
     add: React.Dispatch<React.SetStateAction<boolean>>;
-    edit: React.Dispatch<React.SetStateAction<boolean>>;
+    edit: React.Dispatch<React.SetStateAction<boolean>>
 };
 
 type DataTableProps<T extends Record<string, any>> = {
@@ -19,8 +19,11 @@ type DataTableProps<T extends Record<string, any>> = {
     entityName: string;
     formControllers: FormControllers;
     popUpController: React.Dispatch<React.SetStateAction<boolean>>;
-    selectedRowController: React.Dispatch<React.SetStateAction<string>>
-    deleteRow: (data: any) => Promise<AxiosResponse<any>>;
+    deletePopUpController: React.Dispatch<React.SetStateAction<boolean>>;
+    setDeletePopUpType: React.Dispatch<React.SetStateAction<"success" | "error">>;
+    setDeletePopUpMessage: React.Dispatch<React.SetStateAction<string>>;
+    selectedRowController: React.Dispatch<React.SetStateAction<string>>;
+    deleteRow: (data: any) => Promise<AxiosResponse<any>>
 };
 
 export type Column<T> = {
@@ -29,7 +32,7 @@ export type Column<T> = {
     formatter?: (value: any) => string | string[];
 };
 
-export function DataTable<T extends Record<string, any>>({ data, columns, entityName, formControllers, selectedRowController, popUpController, deleteRow }: DataTableProps<T>) {
+export function DataTable<T extends Record<string, any>>({ data, columns, entityName, formControllers, selectedRowController, popUpController, deletePopUpController, setDeletePopUpMessage, deleteRow, setDeletePopUpType }: DataTableProps<T>) {
 
     const [filteredData, setFilteredData] = useState<any[]>([]);
     const [selectedsRow, setSelectedsRow] = useState<string[]>([]);
@@ -67,6 +70,7 @@ export function DataTable<T extends Record<string, any>>({ data, columns, entity
     const handleClick = () => {
         setSelectedsRow([]);
         popUpController(false);
+        deletePopUpController(false);
         formControllers.add(true);
     };
 
@@ -74,24 +78,48 @@ export function DataTable<T extends Record<string, any>>({ data, columns, entity
         if (data.length > 0) {
             selectedRowController(data);
             formControllers.edit(true);
+            popUpController(false);
+            deletePopUpController(false);
         } else {
             if (selectedsRow.length === 1) {
                 selectedRowController(selectedsRow[0]);
                 formControllers.edit(true);
+                popUpController(false);
+                deletePopUpController(false);
             }
         }
     };
 
-    const handleDeleteClick = () => {
-        selectedsRow.forEach(async (row) => {
+    const handleDeleteClick = async (data: string) => {
+        if (data) {
             try {
-                await deleteRow(row.split(",")[0]);
+                console.log(data.split(",")[0]);
+                await deleteRow(data.split(",")[0]);
                 setMadeRequest((prev) => !prev); 
+                setDeletePopUpType("success");
+                setDeletePopUpMessage("Excluído com sucesso");
+                deletePopUpController(true);
             } catch (error: any) {
-                console.error(error.message);
+                setDeletePopUpType("error");
+                setDeletePopUpMessage(error.message);
+                deletePopUpController(true);
             }
+        } else {
+            selectedsRow.forEach(async (row) => {
+                try {
+                    await deleteRow(row.split(",")[0]);
+                    setMadeRequest((prev) => !prev); 
+                    setDeletePopUpType("success");
+                    setDeletePopUpMessage("Excluído com sucesso");
+                    deletePopUpController(true);
+                } catch (error: any) {
+                    setDeletePopUpType("error");
+                    setDeletePopUpMessage(error.message);
+                    deletePopUpController(true);
+                }
+            }
+            );
         }
-        );
     };
 
     return (
@@ -100,7 +128,7 @@ export function DataTable<T extends Record<string, any>>({ data, columns, entity
                 <ActionsWrapper>
                     <button onClick={handleClick}>Adicionar</button>
                     <Pencil id="edit" onClick={() => handleEditClick("")} className={selectedsRow.length === 1 ? "active" : ""} size={25} />
-                    <Trash id="delete" onClick={() => handleDeleteClick()} className={selectedsRow.length >= 1 ? "active" : ""} size={25} />
+                    <Trash id="delete" onClick={() => handleDeleteClick("")} className={selectedsRow.length >= 1 ? "active" : ""} size={25} />
                 </ActionsWrapper>
                 <SearchFilterInput data={data} columns={columns} filteredData={filteredData} setFilteredData={setFilteredData} entityName={entityName}/>
             </InputWrapper>
@@ -120,7 +148,7 @@ export function DataTable<T extends Record<string, any>>({ data, columns, entity
                                 <td className={`selector ${selectedsRow?.includes(Object.values(row).toString()) ? "selected" : ""}`}>
                                     <ActionsWrapper className="mobile inactive">
                                         <Pencil id="edit" onClick={() => handleEditClick(Object.values(row).toString())} className={selectedsRow ? "active" : ""} size={25} />
-                                        <Trash id="delete" className={selectedsRow ? "active" : ""} size={25} />
+                                        <Trash id="delete" onClick={() => handleDeleteClick(Object.values(row).toString())} className={selectedsRow ? "active" : ""} size={25} />
                                     </ActionsWrapper>
                                     {selectedsRow?.includes(Object.values(row).toString()) ?
                                         <CheckSquare className="square" weight="bold" width={16} height={18}/>

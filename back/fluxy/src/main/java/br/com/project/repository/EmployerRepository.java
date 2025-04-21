@@ -82,8 +82,19 @@ public class EmployerRepository {
     }
 
     public void update(Employer employer) {
-        String sql = "UPDATE funcionario SET matricula = ?, nome = ?, cpf = ?, salario = ?, setor = ?, turno = ?, funcao = ?, id_supervisor = ? WHERE id_funcionario = ?";
-        jdbcTemplate.update(sql,
+
+        String updatePersonSql = "UPDATE pessoa SET rua = ?, numero = ?, bairro = ?, cidade = ?, cep = ? WHERE id_pessoa = ?";
+        jdbcTemplate.update(updatePersonSql,
+                employer.getPerson().getStreet(),
+                employer.getPerson().getNumber(),
+                employer.getPerson().getNeighborhood(),
+                employer.getPerson().getCity(),
+                employer.getPerson().getCep(),
+                employer.getIdPerson()
+        );
+
+        String updateFuncionarioSql = "UPDATE funcionario SET matricula = ?, nome = ?, cpf = ?, salario = ?, setor = ?, turno = ?, funcao = ?, id_supervisor = ? WHERE id_funcionario = ?";
+        jdbcTemplate.update(updateFuncionarioSql,
                 employer.getEmployeeNumber(),
                 employer.getName(),
                 employer.getCpf(),

@@ -1,9 +1,6 @@
 import { api } from "../api";
-
-export const fetchProducts = async () => {
-    const response = await api.get("/products", );
-    return response;
-};
+import { fetchEmployees } from "./employee";
+import { fetchProducts } from "./product";
 
 export const fetchData = async () => {
     const data = {
@@ -729,6 +726,7 @@ export const fetchData = async () => {
     };
 
     data["products"] = (await fetchProducts()).data;
+    data["employees"] = (await fetchEmployees()).data;
 
     return data;
 };
@@ -739,3 +737,4 @@ yesterday.setHours(8);                      // define a hora como 08
 yesterday.setMinutes(30);                   // define os minutos como 30
 yesterday.setSeconds(0);                    // zera os segundos
 yesterday.setMilliseconds(0);               // zera os milissegundos
+
