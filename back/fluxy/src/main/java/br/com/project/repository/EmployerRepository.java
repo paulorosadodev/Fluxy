@@ -53,7 +53,27 @@ public class EmployerRepository {
 
 
     public Optional<Employer> findById(Integer id) {
-        String sql = "SELECT * FROM funcionario WHERE id_funcionario = ?";
+        String sql = """
+        SELECT 
+            f.id_funcionario,
+            f.matricula,
+            f.nome,
+            f.cpf,
+            f.salario,
+            f.setor,
+            f.turno,
+            f.funcao,
+            f.id_supervisor,
+            p.rua,
+            p.numero,
+            p.bairro,
+            p.cidade,
+            p.cep
+        FROM funcionario f
+        JOIN pessoa p ON f.id_funcionario = p.id_pessoa
+        WHERE f.id_funcionario = ?
+    """;
+
         List<Employer> result = jdbcTemplate.query(sql, new FuncionarioRowMapper(), id);
         return result.stream().findFirst();
     }
