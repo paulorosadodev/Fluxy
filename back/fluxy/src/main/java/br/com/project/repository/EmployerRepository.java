@@ -1,6 +1,7 @@
 package br.com.project.repository;
 
 import br.com.project.model.Employer;
+import br.com.project.model.Person;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -58,7 +59,25 @@ public class EmployerRepository {
     }
 
     public List<Employer> findAll() {
-        String sql = "SELECT * FROM funcionario";
+        String sql = """
+        SELECT 
+            f.id_funcionario,
+            f.matricula,
+            f.nome,
+            f.cpf,
+            f.salario,
+            f.setor,
+            f.turno,
+            f.funcao,
+            f.id_supervisor,
+            p.rua,
+            p.numero,
+            p.bairro,
+            p.cidade,
+            p.cep
+        FROM funcionario f
+        JOIN pessoa p ON f.id_funcionario = p.id_pessoa
+    """;
         return jdbcTemplate.query(sql, new FuncionarioRowMapper());
     }
 
@@ -82,21 +101,32 @@ public class EmployerRepository {
         jdbcTemplate.update(sql, id);
     }
 
-    private static class FuncionarioRowMapper implements RowMapper<Employer> {
+    public class FuncionarioRowMapper implements RowMapper<Employer> {
         @Override
         public Employer mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new Employer(
-                    rs.getInt("id_funcionario"),
-                    rs.getInt("id_funcionario"), // id_pessoa = id_funcionario
-                    rs.getString("matricula"),
-                    rs.getString("nome"),
-                    rs.getString("cpf"),
-                    rs.getDouble("salario"),
-                    rs.getString("setor"),
-                    rs.getString("turno"),
-                    rs.getString("funcao"),
-                    rs.getObject("id_supervisor") != null ? rs.getInt("id_supervisor") : null
-            );
+            Employer employer = new Employer();
+
+            employer.setIdPerson(rs.getInt("id_funcionario"));
+            employer.setEmployeeNumber(rs.getString("matricula"));
+            employer.setName(rs.getString("nome"));
+            employer.setCpf(rs.getString("cpf"));
+            employer.setSalary(rs.getDouble("salario"));
+            employer.setSectorOfActivity(rs.getString("setor"));
+            employer.setWorkShift(rs.getString("turno"));
+            employer.setRole(rs.getString("funcao"));
+            employer.setIdSupervisor(rs.getObject("id_supervisor") != null ? rs.getInt("id_supervisor") : null);
+
+            Person person = new Person();
+            person.setStreet(rs.getString("rua"));
+            person.setNumber(rs.getString("numero"));
+            person.setNeighborhood(rs.getString("bairro"));
+            person.setCity(rs.getString("cidade"));
+            person.setCep(rs.getString("cep"));
+
+            employer.setPerson(person);
+
+            return employer;
         }
     }
+
 }

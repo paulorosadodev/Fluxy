@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EmployeeResponseDTO {
-    private Integer idEmployee;        // agora o nome combina com o da entidade
+    private Integer idEmployee;
     private String employeeNumber;
     private String cpf;
     private String name;
@@ -17,4 +17,9 @@ public class EmployeeResponseDTO {
     private String workShift;
     private String role;
     private Integer idSupervisor;
+    private String street;
+    private String number;
+    private String neighborhood;
+    private String city;
+    private String cep;
 }

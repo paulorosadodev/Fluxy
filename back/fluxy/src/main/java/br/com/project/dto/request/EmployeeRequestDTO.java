@@ -11,7 +11,6 @@ public record EmployeeRequestDTO(
         String cep,
 
         // Dados de funcionário
-        String employeeNumber,
         String cpf,
         String name,
         Integer salary,

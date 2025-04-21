@@ -48,7 +48,7 @@ public class FuncionarioService {
         // 2. Agora salva o FUNCIONÁRIO manualmente
         Employer employer = new Employer();
         employer.setIdPerson(idPessoa); // seta o id_pessoa como FK
-        employer.setEmployeeNumber(funcionarioRequestDTO.employeeNumber());
+        employer.setEmployeeNumber(gerarMatriculaAleatoria());
         employer.setCpf(funcionarioRequestDTO.cpf());
         employer.setName(funcionarioRequestDTO.name());
         employer.setSalary(funcionarioRequestDTO.salary() != null ? funcionarioRequestDTO.salary().doubleValue() : null);
@@ -70,7 +70,6 @@ public class FuncionarioService {
         }
     }
 
-
     public EmployeeResponseDTO buscarPorId(Integer id) {
         Employer employer = employerRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Funcionário não encontrado"));
@@ -88,10 +87,6 @@ public class FuncionarioService {
         Employer funcionarioExistente = employerRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Funcionário não encontrado para atualizar"));
 
-        // Atualiza manualmente cada campo se necessário
-        if (funcionarioRequestDTO.employeeNumber() != null) {
-            funcionarioExistente.setEmployeeNumber(funcionarioRequestDTO.employeeNumber());
-        }
         if (funcionarioRequestDTO.cpf() != null) {
             funcionarioExistente.setCpf(funcionarioRequestDTO.cpf());
         }
@@ -128,7 +123,6 @@ public class FuncionarioService {
         }
     }
 
-
     @Transactional
     public void deletar(Integer id) {
         Employer employer = employerRepository.findById(id)
@@ -136,5 +130,10 @@ public class FuncionarioService {
 
         phoneRepository.deleteByIdPerson(employer.getIdPerson());
         employerRepository.deleteById(id);
+    }
+
+    private String gerarMatriculaAleatoria() {
+        int numeroAleatorio = (int) (Math.random() * 1_000_000);
+        return String.format("EMP%06d", numeroAleatorio);
     }
 }

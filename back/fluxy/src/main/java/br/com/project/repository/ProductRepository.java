@@ -1,6 +1,7 @@
 package br.com.project.repository;
 
 import br.com.project.model.Product;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -61,6 +62,24 @@ public class ProductRepository {
                 product.getName(),
                 product.getIdProduct()
         );
+    }
+
+    public Product findByCodEa(String codEa) {
+        String sql = "SELECT * FROM produto WHERE cod_ea = ?";
+        try {
+            return jdbcTemplate.queryForObject(sql, new Object[]{codEa}, (rs, rowNum) -> {
+                Product product = new Product();
+                product.setIdProduct(rs.getInt("id_produto"));
+                product.setCodEa(rs.getString("cod_ea"));
+                product.setName(rs.getString("nome"));
+                product.setStockQuantity(rs.getInt("qtd_estoque"));
+                product.setPrice(rs.getDouble("preco"));
+                product.setCategoryCode(rs.getString("codigo_categoria"));
+                return product;
+            });
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     public void deleteById(Integer id) {

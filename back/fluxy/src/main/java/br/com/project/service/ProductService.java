@@ -33,13 +33,18 @@ public class ProductService {
     }
 
     public ProductResponseDTO save(ProductRequestDTO requestDTO) {
+        Product existing = productRepository.findByCodEa(requestDTO.getCodEa());
+        if (existing != null) {
+            throw new RuntimeException("Já existe um produto com este código EA");
+        }
+
         // Criar o produto
         Product product = new Product();
         product.setCodEa(requestDTO.getCodEa());
         product.setName(requestDTO.getName());
         product.setStockQuantity(requestDTO.getStockQuantity());
         product.setPrice(requestDTO.getPrice());
-        product.setCategoryCode(requestDTO.getCategory().getCode());
+        product.setCategoryCode(requestDTO.getCategoryCode());
 
         Integer productId = productRepository.save(product);
         product.setIdProduct(productId);
@@ -47,12 +52,12 @@ public class ProductService {
         // Criar histórico de preço inicial
         HistoricPriceProduct historic = new HistoricPriceProduct();
         historic.setProductId(productId);
-        historic.setDate(LocalDate.parse(requestDTO.getHistoric().getDate()));
-        historic.setPrice(requestDTO.getHistoric().getPrice());
+        historic.setDate(LocalDate.now());
+        historic.setPrice(requestDTO.getPrice());
         historicPriceProductRepository.save(historic);
 
         // Buscar nome da categoria para retorno
-        Category category = categoryRepository.findByCode(requestDTO.getCategory().getCode())
+        Category category = categoryRepository.findByCode(requestDTO.getCategoryCode())
                 .orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
 
         ProductResponseDTO.CategoryDTO categoryDTO = new ProductResponseDTO.CategoryDTO(
@@ -69,25 +74,29 @@ public class ProductService {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
 
+        Product existing = productRepository.findByCodEa(requestDTO.getCodEa());
+        if (existing != null && !existing.getIdProduct().equals(id)) {
+            throw new RuntimeException("Já existe um produto com este código EA");
+        }
         // Atualizar informações do produto
         product.setName(requestDTO.getName());
         product.setStockQuantity(requestDTO.getStockQuantity());
         product.setCodEa(requestDTO.getCodEa());
         product.setPrice(requestDTO.getPrice());
-        product.setCategoryCode(requestDTO.getCategory().getCode());
+        product.setCategoryCode(requestDTO.getCategoryCode());
 
         productRepository.update(product);
 
         // Atualizar histórico de preço
         HistoricPriceProduct historic = new HistoricPriceProduct();
         historic.setProductId(id);
-        historic.setDate(LocalDate.parse(requestDTO.getHistoric().getDate()));
-        historic.setPrice(requestDTO.getHistoric().getPrice());
+        historic.setDate(LocalDate.now());
+        historic.setPrice(requestDTO.getPrice());
 
         historicPriceProductRepository.save(historic);
 
         // Buscar nome da categoria para retorno
-        Category category = categoryRepository.findByCode(requestDTO.getCategory().getCode())
+        Category category = categoryRepository.findByCode(requestDTO.getCategoryCode())
                 .orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
 
         ProductResponseDTO.CategoryDTO categoryDTO = new ProductResponseDTO.CategoryDTO(
@@ -129,6 +138,8 @@ public class ProductService {
     }
 
     public void delete(Integer id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
         productRepository.deleteById(id);
     }
 }
