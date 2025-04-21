@@ -38,14 +38,22 @@ export const FormWrapper = styled.div`
     justify-content: center;
     text-align: center;
     padding: 5rem;
+    padding-top: 0rem;
     z-index: 999;
 
-    width: fit-content;
-
+    width: 90%;  
+    max-width: 1200px;  
     background-color: white;
     border-radius: 8px;
 
-    svg {
+    max-height: 100dvh;
+    overflow-y: auto;
+
+    h2 {
+        margin-top: 5rem;
+    }
+
+    svg#close {
         position: absolute;
         right: 30px;
         top: 30px;
@@ -55,10 +63,25 @@ export const FormWrapper = styled.div`
     form {
         display: flex;
         flex-direction: column;
+        width: 90%;
 
+        .inputs-wrapper {
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            gap: 1rem;
+            overflow-y: auto;
+            max-height: 350px;
+            flex: 1;
+            padding: 0rem 0.2rem;
+            padding-bottom: 0.2rem;
+        }
+        
         .fields-wrapper {
             display: flex;
+            flex: 1;
             gap: 1rem;
+            width: 100%;
         }
 
         display: flex;
@@ -67,8 +90,29 @@ export const FormWrapper = styled.div`
         margin: auto;
         margin-top: 2.5rem;
 
-        strong {
-            color: ${(props) => props.theme["purple-300"]};
+        label {
+            display: flex;
+            align-items: center;
+
+            svg {
+                margin-left: 0.2rem;
+            }
+        }
+
+        .phone-controller {
+            z-index: 999;
+            cursor: pointer;
+            color: ${(props) => props.theme["purple-500"]};
+        }
+
+        .phone-input-group {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+
+            input {
+                flex: 1;
+            }
         }
 
         *:focus {
@@ -86,7 +130,7 @@ export const FormWrapper = styled.div`
             flex-direction: column;
             gap: 0.4rem;
             text-align: left;
-            width: 100%;
+            flex: 1;
     
             input, select {
                 padding: 0.5rem;
@@ -95,6 +139,7 @@ export const FormWrapper = styled.div`
                 background-color: ${(props) => props.theme["gray-200"]};
                 font-size: 1rem;
                 appearance: none; 
+                width: 100%;
             }
 
             select {
@@ -140,6 +185,7 @@ export const FormWrapper = styled.div`
     @media (max-width: 880px) {
         padding: 2rem;
         box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+        width: 100%;
     
         form {
             margin-top: 1rem;

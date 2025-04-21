@@ -20,16 +20,16 @@ export const addProduct = async (data: any) => {
 export const fetchData = async () => {
     const data = {
         products: [
-            { codEa: "001", name: "Maçã", category: "Hortifruti", price: 5, stockQuantity: 304 },
-            { codEa: "002", name: "Arroz Tipo 1", category: "Grãos", price: 22.5, stockQuantity: 120 },
-            { codEa: "003", name: "Feijão Carioca", category: "Grãos", price: 8.99, stockQuantity: 75 },
-            { codEa: "004", name: "Leite Integral", category: "Laticínios", price: 4.79, stockQuantity: 260 },
-            { codEa: "005", name: "Queijo Mussarela", category: "Laticínios", price: 34.9, stockQuantity: 58 },
-            { codEa: "006", name: "Pão de Forma", category: "Padaria", price: 7.5, stockQuantity: 130 },
-            { codEa: "007", name: "Detergente Neutro", category: "Limpeza", price: 2.99, stockQuantity: 180 },
-            { codEa: "008", name: "Sabonete", category: "Higiene", price: 3.25, stockQuantity: 200 },
-            { codEa: "009", name: "Refrigerante Cola 2L", category: "Bebidas", price: 6.99, stockQuantity: 95 },
-            { codEa: "010", name: "Cerveja Pilsen Lata", category: "Bebidas", price: 3.79, stockQuantity: 210 }
+            { codEa: "001", name: "Maçã", category: { code: 1, name: "Hortifruti" }, price: 5, stockQuantity: 304 },
+            { codEa: "002", name: "Arroz Tipo 1", category: { code: 2, name: "Grãos" }, price: 22.5, stockQuantity: 120 },
+            { codEa: "003", name: "Feijão Carioca", category: { code: 2, name: "Grãos" }, price: 8.99, stockQuantity: 75 },
+            { codEa: "004", name: "Leite Integral", category: { code: 3, name: "Laticínios" }, price: 4.79, stockQuantity: 260 },
+            { codEa: "005", name: "Queijo Mussarela", category: { code: 3, name: "Laticínios" }, price: 34.9, stockQuantity: 58 },
+            { codEa: "006", name: "Pão de Forma", category: { code: 4, name: "Padaria" }, price: 7.5, stockQuantity: 130 },
+            { codEa: "007", name: "Detergente Neutro", category: { code: 5, name: "Limpeza" }, price: 2.99, stockQuantity: 180 },
+            { codEa: "008", name: "Sabonete", category: { code: 6, name: "Higiene" }, price: 3.25, stockQuantity: 200 },
+            { codEa: "009", name: "Refrigerante Cola 2L", category: { code: 7, name: "Bebidas" }, price: 6.99, stockQuantity: 95 },
+            { codEa: "010", name: "Cerveja Pilsen Lata", category: { code: 7, name: "Bebidas" }, price: 3.79, stockQuantity: 210 }
         ],
         suppliers: [
             {
@@ -42,7 +42,7 @@ export const fetchData = async () => {
                     city: "Recife",
                     cep: "51020270"
                 },
-                phone: ["81999972730"]
+                phone: ["81999972730", "81996376659"]
             },
             {
                 cnpj: "00457891000123",
@@ -674,7 +674,8 @@ export const fetchData = async () => {
                 },
                 productAmount: 580,
                 price: 250,
-                date: new Date(new Date().setDate(new Date().getDate() - 1))
+                time: "16:30",
+                date: "2025-03-15"
             },
             {
                 supplier: {
@@ -691,14 +692,15 @@ export const fetchData = async () => {
                 },
                 product: {
                     codEa: "002",
-                    name: "Banana",
-                    category: "Hortifruti",
-                    price: 3,
-                    stockQuantity: 450
+                    name: "Arroz Tipo 1",
+                    category: "Grãos",
+                    price: 22.5,
+                    stockQuantity: 120
                 },
                 productAmount: 300,
                 price: 120,
-                date: new Date()
+                time: "06:30",
+                date: "2025-04-10"
             },
             {
                 supplier: {
@@ -715,14 +717,15 @@ export const fetchData = async () => {
                 },
                 product: {
                     codEa: "003",
-                    name: "Manga",
-                    category: "Hortifruti",
-                    price: 4,
-                    stockQuantity: 500
+                    name: "Feijão Carioca",
+                    category: "Grãos",
+                    price: 8.99,
+                    stockQuantity: 75
                 },
                 productAmount: 400,
                 price: 160,
-                date: new Date(new Date().setDate(new Date().getDate() - 2))
+                time: "16:30",
+                date: "2025-04-20"
             },
             {
                 supplier: {
@@ -739,16 +742,17 @@ export const fetchData = async () => {
                 },
                 product: {
                     codEa: "004",
-                    name: "Cenoura",
-                    category: "Hortifruti",
-                    price: 2.5,
-                    stockQuantity: 600
+                    name: "Leite Integral",
+                    category: "Laticínios",
+                    price: 4.79,
+                    stockQuantity: 260
                 },
                 productAmount: 350,
                 price: 87.5,
-                date: yesterday
+                time: "15:30",
+                date: "2025-04-20"
             }
-        ]        
+        ]
     };
 
     return data;
