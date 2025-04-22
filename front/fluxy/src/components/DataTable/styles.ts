@@ -16,57 +16,6 @@ export const InputWrapper = styled.div`
     }
 `;
 
-export const DeleteConfirmationWrapper = styled.div`
-    position: absolute;
-    flex: 1;
-    z-index: 998;
-    height: 100dvh;
-    width: 100%;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    overflow-y: hidden;
-
-    backdrop-filter: blur(2px);
-    background-color: rgba(0, 0, 0, 0.2);
-
-    #delete-confirmation {
-        background-color: white;
-        padding: 5rem;
-        display: flex;
-        flex-direction: column;
-        border-radius: 8px;
-        gap: 2rem;
-
-        #button-wrapper {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-
-            button {
-                padding: 1rem;
-                border: none;
-                border-radius: 8px;
-                font-weight: bold;
-                background-color: ${(props) => props.theme["gray-200"]};
-                transition: all .1s;
-            }
-
-            button:first-child {
-                background-color: ${(props) => props.theme["red-500"]};
-                color: white;
-            }
-
-            button:hover {
-                cursor: pointer;
-                filter: brightness(1.1);
-            }
-        }
-    }
-`;
-
 export const ActionsWrapper = styled.div`
 
     display: flex;

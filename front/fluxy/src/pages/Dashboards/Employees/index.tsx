@@ -180,18 +180,19 @@ export default function EmployeesDashboard() {
 
     if (selectedRow.length > 1) {
         const selectedEmployee = employees.filter((employee) => employee.employeeNumber === selectedRow.split(",")[1])[0];
-        console.log(selectedEmployee);
+
         editData = [
             String(selectedEmployee.id), selectedEmployee.name, selectedEmployee.cpf, ...selectedEmployee.phone, 
             selectedEmployee.address.cep, selectedEmployee.address.city, selectedEmployee.address.neighborhood, selectedEmployee.address.street, selectedEmployee.address.number, selectedEmployee.role, selectedEmployee.sectorOfActivity, selectedEmployee.workShift, String(selectedEmployee.salary)
         ];
+
     }
 
     return (
         <>  
             <EntityForm type="Adicionar" title="Funcionário" fields={fields} open={isAddFormOpened} formControllers={formControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} onSubmitAPI={addEmployee} />
             {editData.length > 1 && 
-                <EntityForm type="Editar" title="Funcionário" fields={fields} open={isEditFormOpened} formControllers={formControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} data={editData} onSubmitAPI={editEmployee} />
+                <EntityForm type="Editar" title="Funcionário" fields={fields} open={isEditFormOpened} formControllers={formControllers} selectedRowController={setSelectedRow} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} data={editData} onSubmitAPI={editEmployee} />
             }
             <div id="main">
                 <h1>Funcionários</h1>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Customer } from "../../../@types";
 import { Column, DataTable } from "../../../components/DataTable";
 import { useData } from "../../../hooks/useData";
@@ -6,13 +6,12 @@ import { formatAddress, formatCNPJ, formatCPF, formatPhoneNumber, formatStateReg
 import { z } from "zod";
 import { EntityForm } from "../../../components/EntityForm";
 import { PopUp } from "../../../components/PopUp";
+import { addNaturalPersonCustomer, deleteNaturalPersonCustomer, editNaturalPersonCustomer } from "../../../services/endpoints/naturalPersonCustomer";
+import { addLegalEntityCustomer, deleteLegalEntityCustomer, editLegalEntityCustomer } from "../../../services/endpoints/legalEntityCustomer";
 
 export default function CustomersDashboard() {
 
-    const {customers} = useData();
-
-    const [naturalPersonCustomers, setNaturalPersonCustumers] = useState<Customer[]>([]);
-    const [legalEntityCustomers, setLegalEntityCustomers] = useState<Customer[]>([]);
+    const {naturalPersonCustomers, legalEntityCustomers} = useData();
     const [isNaturalPersonAddFormOpened, setIsNaturalPersonAddFormOpened] = useState(false);
     const [isNaturalPersonEditFormOpened, setIsNaturalPersonEditFormOpened] = useState(false);
     const [isLegalEntityAddFormOpened, setIsLegalEntityAddFormOpened] = useState(false);
@@ -21,15 +20,10 @@ export default function CustomersDashboard() {
     const [popUpMessage, setPopUpMessage] = useState("");
     const [naturalPersonSelectedRow, setNaturalPersonSelectedRow] = useState("");
     const [legalEntitySelectedRow, setLegalEntitySelectedRow] = useState("");
+    const [showDeletePopUp, setShowDeletePopUp] = useState(false);
+    const [deletePopUpMessage, setDeletePopUpMessage] = useState("");
+    const [deletePopUpType, setDeletePopUpType] = useState<"success" | "error">("error");
 
-    useEffect(() => {
-        const naturalPerson = customers.filter(customer => customer.cpf);
-        const legalEntity = customers.filter(customer => customer.cnpj);
-    
-        setNaturalPersonCustumers(naturalPerson);
-        setLegalEntityCustomers(legalEntity);
-    }, [customers]);
-    
     const columnsNaturalPerson: Column<Customer>[] = [
         { header: "CPF", accessor: "cpf", formatter: formatCPF },
         { header: "Nome", accessor: "name" },
@@ -218,19 +212,21 @@ export default function CustomersDashboard() {
     let editLegalEntityData = [""];
 
     if (naturalPersonSelectedRow.length > 1) {
-        const selectedNaturalPerson = naturalPersonCustomers.filter((Customer) => Customer.cpf === naturalPersonSelectedRow.split(",")[0])[0];
+
+        const selectedNaturalPerson = naturalPersonCustomers.filter((Customer) => Customer.cpf === naturalPersonSelectedRow.split(",")[2])[0];
     
         editNaturalPersonData = [
-            selectedNaturalPerson.name ?? "", selectedNaturalPerson.cpf ?? "", ...selectedNaturalPerson.phone, 
+            String(selectedNaturalPerson.id), selectedNaturalPerson.name ?? "", selectedNaturalPerson.cpf ?? "", ...selectedNaturalPerson.phone, 
             selectedNaturalPerson.address.cep, selectedNaturalPerson.address.city, selectedNaturalPerson.address.neighborhood, selectedNaturalPerson.address.street, selectedNaturalPerson.address.number
         ];
     }
 
     if (legalEntitySelectedRow.length > 1) {
-        const selectedLegalEntity = legalEntityCustomers.filter((Customer) => Customer.cnpj === legalEntitySelectedRow.split(",")[0])[0];
-    
+
+        const selectedLegalEntity = legalEntityCustomers.filter((Customer) => Customer.cnpj === legalEntitySelectedRow.split(",")[2])[0];
+        
         editLegalEntityData = [
-            selectedLegalEntity.legalName ?? "", selectedLegalEntity.cnpj ?? "", selectedLegalEntity.stateRegistration ?? "", 
+            String(selectedLegalEntity.id), selectedLegalEntity.legalName ?? "", selectedLegalEntity.cnpj ?? "", selectedLegalEntity.stateRegistration ?? "", 
             ...selectedLegalEntity.phone, selectedLegalEntity.address.cep, selectedLegalEntity.address.city, 
             selectedLegalEntity.address.neighborhood, selectedLegalEntity.address.street, selectedLegalEntity.address.number
         ];
@@ -238,23 +234,26 @@ export default function CustomersDashboard() {
 
     return (
         <>  
-            <EntityForm type="Adicionar" title="Pessoa Física" fields={naturalPersonFields} open={isNaturalPersonAddFormOpened} formControllers={naturalPersonFormControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} />
+            <EntityForm type="Adicionar" title="Pessoa Física" fields={legalEntityFields} open={isNaturalPersonAddFormOpened} formControllers={naturalPersonFormControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} onSubmitAPI={addNaturalPersonCustomer}/>
             {editNaturalPersonData.length > 1 && 
-                <EntityForm type="Editar" title="Pessoa Física" fields={naturalPersonFields} open={isNaturalPersonEditFormOpened} formControllers={naturalPersonFormControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} data={editNaturalPersonData} />
+                <EntityForm type="Editar" title="Pessoa Física" fields={naturalPersonFields} open={isNaturalPersonEditFormOpened} formControllers={naturalPersonFormControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} data={editNaturalPersonData} onSubmitAPI={editNaturalPersonCustomer}/>
             }
-            <EntityForm type="Adicionar" title="Pessoa Jurídica" fields={legalEntityFields} open={isLegalEntityAddFormOpened} formControllers={legalEntityFormControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} />
+            <EntityForm type="Adicionar" title="Pessoa Jurídica" fields={legalEntityFields} open={isLegalEntityAddFormOpened} formControllers={legalEntityFormControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} onSubmitAPI={addLegalEntityCustomer} />
             {editLegalEntityData.length > 1 && 
-                <EntityForm type="Editar" title="Pessoa Jurídica" fields={legalEntityFields} open={isLegalEntityEditFormOpened} formControllers={legalEntityFormControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} data={editLegalEntityData} />
+                <EntityForm type="Editar" title="Pessoa Jurídica" fields={legalEntityFields} open={isLegalEntityEditFormOpened} formControllers={legalEntityFormControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} data={editLegalEntityData} onSubmitAPI={editLegalEntityCustomer} />
             }
             <div id="main">
                 <h1>Clientes Pessoas Físicas</h1>
-                <DataTable data={naturalPersonCustomers} columns={columnsNaturalPerson} entityName="pessoas físicas" popUpController={setShowPopUp} formControllers={naturalPersonFormControllers} selectedRowController={setNaturalPersonSelectedRow} />
+                <DataTable deleteRow={deleteNaturalPersonCustomer} deletePopUpController={setShowDeletePopUp} setDeletePopUpMessage={setDeletePopUpMessage} setDeletePopUpType={setDeletePopUpType} data={naturalPersonCustomers} columns={columnsNaturalPerson} entityName="pessoas físicas" popUpController={setShowPopUp} formControllers={naturalPersonFormControllers} selectedRowController={setNaturalPersonSelectedRow} />
 
                 <h1>Clientes Pessoas Jurídicas</h1>
-                <DataTable data={legalEntityCustomers} columns={columnsLegalEntity} entityName="pessoas jurídicas" popUpController={setShowPopUp} formControllers={legalEntityFormControllers} selectedRowController={setLegalEntitySelectedRow} />
+                <DataTable deleteRow={deleteLegalEntityCustomer} deletePopUpController={setShowDeletePopUp} setDeletePopUpMessage={setDeletePopUpMessage} setDeletePopUpType={setDeletePopUpType} data={legalEntityCustomers} columns={columnsLegalEntity} entityName="pessoas jurídicas" popUpController={setShowPopUp} formControllers={legalEntityFormControllers} selectedRowController={setLegalEntitySelectedRow} />
 
                 {showPopUp &&
                     <PopUp type="success" message={popUpMessage} show={showPopUp} onClose={() => setShowPopUp(false)} />
+                }
+                {showDeletePopUp &&
+                    <PopUp type={deletePopUpType} message={deletePopUpMessage} show={showDeletePopUp} onClose={() => setShowDeletePopUp(false)} />
                 }
             </div>
         </>

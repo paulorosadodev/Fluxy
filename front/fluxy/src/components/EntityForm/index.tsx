@@ -29,10 +29,11 @@ type EntityFormProps = {
     formControllers: FormControllers;
     popUpMessage: Dispatch<SetStateAction<string>>;
     popUpController: Dispatch<SetStateAction<boolean>>;
+    selectedRowController?: Dispatch<SetStateAction<string>>;
     onSubmitAPI: (data: any) => Promise<AxiosResponse<any>>;
 }
 
-export function EntityForm({open, type, title, fields, formControllers, data, popUpMessage, popUpController, onSubmitAPI}: EntityFormProps) {
+export function EntityForm({open, type, title, fields, formControllers, data, selectedRowController, popUpMessage, popUpController, onSubmitAPI}: EntityFormProps) {
 
     const id = Number(data?.[0]);
     const rawData = useMemo(() => data?.slice(1), [data]);
@@ -99,6 +100,9 @@ export function EntityForm({open, type, title, fields, formControllers, data, po
 
         try {
             await onSubmitAPI(filteredData); 
+            if (selectedRowController) {
+                selectedRowController("");
+            }
             setMadeRequest((prev) => !prev); 
             popUpMessage(type === "Adicionar" ? "Adicionado com sucesso" : "Editado com sucesso");
             popUpController(true);

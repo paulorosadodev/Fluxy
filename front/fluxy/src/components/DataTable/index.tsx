@@ -93,7 +93,6 @@ export function DataTable<T extends Record<string, any>>({ data, columns, entity
     const handleDeleteClick = async (data: string) => {
         if (data) {
             try {
-                console.log(data.split(",")[0]);
                 await deleteRow(data.split(",")[0]);
                 setMadeRequest((prev) => !prev); 
                 setDeletePopUpType("success");

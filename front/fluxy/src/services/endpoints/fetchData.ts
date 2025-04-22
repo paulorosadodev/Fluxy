@@ -1,22 +1,14 @@
-import { api } from "../api";
-import { fetchEmployees } from "./employee";
 import { fetchProducts } from "./product";
+import { fetchEmployees } from "./employee";
+import { fetchLegalEntityCustomers } from "./legalEntityCustomer";
+import { fetchNaturalPersonCustomers } from "./naturalPersonCustomer";
 
 export const fetchData = async () => {
     const data = {
         products: [],
-        /* products: [
-            { codEa: "001", name: "Maçã", category: { code: "Hortifruti", name: "Hortifruti" }, price: 5, stockQuantity: 304 },
-            { codEa: "002", name: "Arroz Tipo 1", category: { code: "Grãos", name: "Grãos" }, price: 22.5, stockQuantity: 120 },
-            { codEa: "003", name: "Feijão Carioca", category: { code: "Grãos", name: "Grãos" }, price: 8.99, stockQuantity: 75 },
-            { codEa: "004", name: "Leite Integral", category: { code: "Laticínios", name: "Laticínios" }, price: 4.79, stockQuantity: 260 },
-            { codEa: "005", name: "Queijo Mussarela", category: { code: "Laticínios", name: "Laticínios" }, price: 34.9, stockQuantity: 58 },
-            { codEa: "006", name: "Pão de Forma", category: { code: "Padaria", name: "Padaria" }, price: 7.5, stockQuantity: 130 },
-            { codEa: "007", name: "Detergente Neutro", category: { code: "Limpeza", name: "Limpeza" }, price: 2.99, stockQuantity: 180 },
-            { codEa: "008", name: "Sabonete", category: { code: "Higiene", name: "Higiene" }, price: 3.25, stockQuantity: 200 },
-            { codEa: "009", name: "Refrigerante Cola 2L", category: { code: "Bebidas", name: "Bebidas" }, price: 6.99, stockQuantity: 95 },
-            { codEa: "010", name: "Cerveja Pilsen Lata", category: { code: "Bebidas", name: "Bebidas" }, price: 3.79, stockQuantity: 210 }
-        ], */
+        employees: [],
+        naturalPersonCustomers: [],
+        legalEntityCustomers: [],
         suppliers: [
             {
                 cnpj: "67015726000179",
@@ -66,60 +58,7 @@ export const fetchData = async () => {
                 },
                 phone: ["19933445566"]
             }
-        ],        
-        employees: [
-            {
-                employeeNumber: "001",
-                name: "Paulo Rosado",
-                cpf: "14383252400",
-                role: "Caixa",
-                salary: 3040.50,
-                workShift: "Integral",
-                sectorOfActivity: "Estoque",
-                address: {
-                    street: "Rua Faustino Porto",
-                    number: "200",
-                    neighborhood: "Boa Viagem",
-                    city: "Recife",
-                    cep: "51020270"
-                },
-                phone: ["81999972730"]
-            },
-            {
-                employeeNumber: "002",
-                name: "Francisco",
-                cpf: "14483252400",
-                role: "Repositor",
-                salary: 1300.50,
-                workShift: "Manhã",
-                sectorOfActivity: "Hortifruti",
-                address: {
-                    street: "Rua Faustino Porto",
-                    number: "200",
-                    neighborhood: "Boa Viagem",
-                    city: "Recife",
-                    cep: "51020270"
-                },
-                phone: ["81999972730"]
-            },
-            {
-                employeeNumber: "003",
-                name: "Jonathan Lemos",
-                cpf: "14083252400",
-                role: "Gerente de Setor",
-                salary: 4200.00,
-                workShift: "Tarde",
-                sectorOfActivity: "Administração",
-                address: {
-                    street: "Rua Faustino Porto",
-                    number: "200",
-                    neighborhood: "Boa Viagem",
-                    city: "Recife",
-                    cep: "51020270"
-                },
-                phone: ["81999972730"]
-            }
-        ],        
+        ],              
         customers: [
             {
                 cpf: "23456789012",
@@ -727,14 +666,8 @@ export const fetchData = async () => {
 
     data["products"] = (await fetchProducts());
     data["employees"] = (await fetchEmployees());
+    data["naturalPersonCustomers"] = (await fetchNaturalPersonCustomers());
+    data["legalEntityCustomers"] = (await fetchLegalEntityCustomers());
 
     return data;
 };
-
-const yesterday = new Date();
-yesterday.setDate(yesterday.getDate() - 1); // subtrai um dia (ontem)
-yesterday.setHours(8);                      // define a hora como 08
-yesterday.setMinutes(30);                   // define os minutos como 30
-yesterday.setSeconds(0);                    // zera os segundos
-yesterday.setMilliseconds(0);               // zera os milissegundos
-

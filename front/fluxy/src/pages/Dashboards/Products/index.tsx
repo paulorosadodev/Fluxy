@@ -9,7 +9,6 @@ import { z } from "zod";
 import { PopUp } from "../../../components/PopUp";
 
 import { addProduct, deleteProduct, editProduct } from "../../../services/endpoints/product";
-import { DeleteConfirmationWrapper } from "../../../components/DataTable/styles";
 
 export default function ProductsDashboard() {
 
@@ -22,7 +21,6 @@ export default function ProductsDashboard() {
     const [deletePopUpMessage, setDeletePopUpMessage] = useState("");
     const [deletePopUpType, setDeletePopUpType] = useState<"success" | "error">("error");
     const [selectedRow, setSelectedRow] = useState(""); 
-    const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false); 
 
     const columns: Column<Product>[] = [
         { header: "Código EA", accessor: "codEa" },
@@ -93,7 +91,6 @@ export default function ProductsDashboard() {
         if (selectedProduct) {
             editData = [String(selectedProduct.id), selectedProduct.codEa, selectedProduct.name, selectedProduct.category.name, String(selectedProduct.price), String(selectedProduct.stockQuantity)];
         }
-        
     }
 
     return (
@@ -101,17 +98,6 @@ export default function ProductsDashboard() {
             <EntityForm type="Adicionar" title="Produto" fields={fields} open={isAddFormOpened} formControllers={formControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} onSubmitAPI={addProduct} />
             {editData.length > 1 && 
                 <EntityForm type="Editar" title="Produto" fields={fields} open={isEditFormOpened} formControllers={formControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} data={editData} onSubmitAPI={editProduct} />
-            }
-            {showDeleteConfirmation && 
-                <DeleteConfirmationWrapper>
-                    <div id="delete-confirmation">
-                        <h2>Tem certeza que deseja excluir?</h2>
-                        <div id="button-wrapper">
-                            <button>Excluir</button>
-                            <button>Cancelar</button>
-                        </div>
-                    </div>
-                </DeleteConfirmationWrapper>
             }
             <div id="main">
                 <h1>Produtos</h1>

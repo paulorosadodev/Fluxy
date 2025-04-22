@@ -9,7 +9,8 @@ interface DataContextData {
     products: Product[];
     suppliers: Supplier[];
     employees: Employee[];
-    customers: Customer[];
+    naturalPersonCustomers: Customer[],
+    legalEntityCustomers: Customer[],
     purchases: Purchase[];
     categories: Category[];
     productSupplies: ProductSupply[];
@@ -27,7 +28,8 @@ export interface FetchDataResponse {
     products: Product[],
     suppliers: Supplier[],
     employees: Employee[],
-    customers: Customer[],
+    naturalPersonCustomers: Customer[],
+    legalEntityCustomers: Customer[],
     purchases: Purchase[],
     categories: Category[],
     productSupplies: ProductSupply[],
@@ -39,7 +41,8 @@ export const DataProvider = ({ children }: DataProviderProps) => {
         products: [],
         suppliers: [],
         employees: [],
-        customers: [],
+        naturalPersonCustomers: [],
+        legalEntityCustomers: [],
         purchases: [],
         categories: [],
         productSupplies: []
@@ -48,7 +51,8 @@ export const DataProvider = ({ children }: DataProviderProps) => {
     const [products, setProducts] = useState<Product[]>([]);
     const [suppliers, setSuppliers] = useState<Supplier[]>([]);
     const [employees, setEmployees] = useState<Employee[]>([]);
-    const [customers, setCustomers] = useState<Customer[]>([]);
+    const [naturalPersonCustomers, setNaturalPersonCustomers] = useState<Customer[]>([]);
+    const [legalEntityCustomers, setLegalEntityCustomers] = useState<Customer[]>([]);
     const [purchases, setPurchases] = useState<Purchase[]>([]);
     const [categories, setCategories] = useState<Category[]>([]);
     const [productSupplies, setProductSupplies] = useState<ProductSupply[]>([]);
@@ -67,7 +71,8 @@ export const DataProvider = ({ children }: DataProviderProps) => {
         setProducts(result.products);
         setSuppliers(result.suppliers);
         setEmployees(result.employees);
-        setCustomers(result.customers);
+        setNaturalPersonCustomers(result.naturalPersonCustomers);
+        setLegalEntityCustomers(result.legalEntityCustomers);
         setPurchases(result.purchases);
         setCategories(result.categories);
         setProductSupplies(result.productSupplies);
@@ -76,7 +81,7 @@ export const DataProvider = ({ children }: DataProviderProps) => {
     };
 
     return (
-        <DataContext.Provider value={{data, products, suppliers, employees, customers, purchases, categories, productSupplies, setMadeRequest, isLoading}}>
+        <DataContext.Provider value={{data, products, suppliers, employees, naturalPersonCustomers, legalEntityCustomers, purchases, categories, productSupplies, setMadeRequest, isLoading}}>
             {children}
         </DataContext.Provider>
     );
