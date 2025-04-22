@@ -98,26 +98,38 @@ public class PhysicalClientRepository {
         return jdbcTemplate.query(sql, new PhysicalClientRowMapper());
     }
 
-    public void update(Integer id, PhysicalClient client) {
-        String sqlPessoa = "UPDATE pessoa SET rua = ?, numero = ?, bairro = ?, cidade = ?, cep = ? WHERE id_pessoa = ?";
-        jdbcTemplate.update(sqlPessoa,
-                client.getStreet(), client.getNumber(), client.getNeighborhood(), client.getCity(), client.getZipCode(), id);
+    private void deletePhonesByIdPerson(Integer idPerson) {
+        String sql = "DELETE FROM telefone WHERE id_telefone = ?";
+        jdbcTemplate.update(sql, idPerson);
+    }
 
-        String sqlFisico = "UPDATE fisico SET nome = ?, cpf = ? WHERE fk_cliente_id = ?";
-        jdbcTemplate.update(sqlFisico,
-                client.getName(), client.getCpf(), id);
-
-        // Atualiza telefones: apaga e insere novamente
-        deletePhonesByIdPerson(id);
-        if (client.getPhones() != null && !client.getPhones().isEmpty()) {
-            for (String numero : client.getPhones()) {
+    private void insertPhones(Integer idPerson, List<String> phones) {
+        if (phones != null && !phones.isEmpty()) {
+            for (String numero : phones) {
                 if (numero != null && !numero.isBlank()) {
                     String sqlTelefone = "INSERT INTO telefone (numero, id_telefone) VALUES (?, ?)";
-                    jdbcTemplate.update(sqlTelefone, numero, id);
+                    jdbcTemplate.update(sqlTelefone, numero.trim(), idPerson);
                 }
             }
         }
     }
+    public void update(Integer id, PhysicalClient client) {
+        // Atualiza pessoa
+        String sqlPessoa = "UPDATE pessoa SET rua = ?, numero = ?, bairro = ?, cidade = ?, cep = ? WHERE id_pessoa = ?";
+        jdbcTemplate.update(sqlPessoa,
+                client.getStreet(), client.getNumber(), client.getNeighborhood(), client.getCity(), client.getZipCode(), id);
+
+        // Atualiza cliente físico
+        String sqlFisico = "UPDATE fisico SET nome = ?, cpf = ? WHERE fk_cliente_id = ?";
+        jdbcTemplate.update(sqlFisico,
+                client.getName(), client.getCpf(), id);
+
+        // Atualiza telefones
+        deletePhonesByIdPerson(id);
+        insertPhones(id, client.getPhones());
+    }
+
+
 
     public void deleteById(Integer id) {
         String sqlFisico = "DELETE FROM fisico WHERE fk_cliente_id = ?";
@@ -140,10 +152,7 @@ public class PhysicalClientRepository {
         );
     }
 
-    private void deletePhonesByIdPerson(Integer idPerson) {
-        String sql = "DELETE FROM telefone WHERE id_telefone = ?";
-        jdbcTemplate.update(sql, idPerson);
-    }
+
 
     private class PhysicalClientRowMapper implements RowMapper<PhysicalClient> {
         @Override
