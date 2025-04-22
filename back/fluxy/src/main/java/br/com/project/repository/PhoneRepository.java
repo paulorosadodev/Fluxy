@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class PhoneRepository {
@@ -77,6 +78,17 @@ public class PhoneRepository {
                 (rs, rowNum) -> rs.getString("numero"),
                 idPerson
         );
+    }
+
+    public boolean existsByPhone(List<String> phones) {
+        if (phones == null || phones.isEmpty()) return false;
+
+        String sql = "SELECT COUNT(*) FROM telefone WHERE numero IN (%s)"
+                .formatted(phones.stream().map(p -> "?").collect(Collectors.joining(",")));
+
+        Object[] params = phones.toArray();
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, params);
+        return count != null && count > 0;
     }
 
     /**

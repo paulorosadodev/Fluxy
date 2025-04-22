@@ -15,6 +15,6 @@ public class PhysicalClientResponseDTO {
     private String number;
     private String neighborhood;
     private String city;
-    private String zipCode;
-    private String[] phones; // <<< aqui também!
+    private String cep;
+    private String[] phone; // <<< aqui também!
 }

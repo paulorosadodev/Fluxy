@@ -9,13 +9,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class LegalClientResponseDTO {
     private Integer id;
-    private String corporateName;
+    private String legalName;
     private String cnpj;
     private String stateRegistration;
     private String street;
     private String number;
     private String neighborhood;
     private String city;
-    private String zipCode;
-    private String[] phones; // <<< aqui ó, novo campo
+    private String cep;
+    private String[] phone;
 }

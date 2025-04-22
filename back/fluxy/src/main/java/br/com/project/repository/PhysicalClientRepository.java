@@ -33,7 +33,7 @@ public class PhysicalClientRepository {
             ps.setString(2, client.getNumber());
             ps.setString(3, client.getNeighborhood());
             ps.setString(4, client.getCity());
-            ps.setString(5, client.getZipCode());
+            ps.setString(5, client.getCep());
             return ps;
         }, keyHolder);
 
@@ -46,8 +46,8 @@ public class PhysicalClientRepository {
         jdbcTemplate.update(sqlFisico, idPessoa, client.getName(), client.getCpf());
 
         // Inserir telefones se existirem
-        if (client.getPhones() != null && !client.getPhones().isEmpty()) {
-            for (String numero : client.getPhones()) {
+        if (client.getPhone() != null && !client.getPhone().isEmpty()) {
+            for (String numero : client.getPhone()) {
                 if (numero != null && !numero.isBlank()) {
                     String sqlTelefone = "INSERT INTO telefone (numero, id_telefone) VALUES (?, ?)";
                     jdbcTemplate.update(sqlTelefone, numero, idPessoa);
@@ -56,6 +56,12 @@ public class PhysicalClientRepository {
         }
 
         return idPessoa;
+    }
+
+    public boolean existsByCpf(String cpf) {
+        String sql = "SELECT COUNT(*) FROM fisico WHERE cpf = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, cpf);
+        return count != null && count > 0;
     }
 
     public Optional<PhysicalClient> findById(Integer id) {
@@ -98,12 +104,12 @@ public class PhysicalClientRepository {
         return jdbcTemplate.query(sql, new PhysicalClientRowMapper());
     }
 
-    private void deletePhonesByIdPerson(Integer idPerson) {
+    private void deletePhoneByIdPerson(Integer idPerson) {
         String sql = "DELETE FROM telefone WHERE id_telefone = ?";
         jdbcTemplate.update(sql, idPerson);
     }
 
-    private void insertPhones(Integer idPerson, List<String> phones) {
+    private void insertPhone(Integer idPerson, List<String> phones) {
         if (phones != null && !phones.isEmpty()) {
             for (String numero : phones) {
                 if (numero != null && !numero.isBlank()) {
@@ -117,7 +123,8 @@ public class PhysicalClientRepository {
         // Atualiza pessoa
         String sqlPessoa = "UPDATE pessoa SET rua = ?, numero = ?, bairro = ?, cidade = ?, cep = ? WHERE id_pessoa = ?";
         jdbcTemplate.update(sqlPessoa,
-                client.getStreet(), client.getNumber(), client.getNeighborhood(), client.getCity(), client.getZipCode(), id);
+                client.getStreet(), client.getNumber(), client.getNeighborhood(), client.getCity(),
+                client.getCep(), id);
 
         // Atualiza cliente físico
         String sqlFisico = "UPDATE fisico SET nome = ?, cpf = ? WHERE fk_cliente_id = ?";
@@ -125,8 +132,8 @@ public class PhysicalClientRepository {
                 client.getName(), client.getCpf(), id);
 
         // Atualiza telefones
-        deletePhonesByIdPerson(id);
-        insertPhones(id, client.getPhones());
+        deletePhoneByIdPerson(id);
+        insertPhone(id, client.getPhone());
     }
 
 
@@ -143,7 +150,7 @@ public class PhysicalClientRepository {
         jdbcTemplate.update(sqlPessoa, id);
     }
 
-    private List<String> findPhonesByIdPerson(Integer idPerson) {
+    private List<String> findPhoneByIdPerson(Integer idPerson) {
         String sql = "SELECT numero FROM telefone WHERE id_telefone = ?";
         return jdbcTemplate.query(
                 sql,
@@ -166,7 +173,7 @@ public class PhysicalClientRepository {
                     rs.getString("bairro"),
                     rs.getString("cidade"),
                     rs.getString("cep"),
-                    findPhonesByIdPerson(rs.getInt("id_cliente")) // Telefones do cliente
+                    findPhoneByIdPerson(rs.getInt("id_cliente")) // Telefones do cliente
             );
         }
     }

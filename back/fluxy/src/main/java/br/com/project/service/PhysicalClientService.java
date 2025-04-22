@@ -4,6 +4,7 @@ import br.com.project.dto.request.PhysicalClientRequestDTO;
 import br.com.project.dto.response.PhysicalClientResponseDTO;
 import br.com.project.model.Person;
 import br.com.project.model.PhysicalClient;
+import br.com.project.repository.PhoneRepository;
 import br.com.project.repository.PhysicalClientRepository;
 import br.com.project.repository.PersonRepository;
 import org.springframework.stereotype.Service;
@@ -16,20 +17,29 @@ public class PhysicalClientService {
 
     private final PhysicalClientRepository repository;
     private final PersonRepository personRepository;
+    private final PhoneRepository phoneRepository;
 
-    public PhysicalClientService(PhysicalClientRepository repository, PersonRepository personRepository) {
+    public PhysicalClientService(PhysicalClientRepository repository, PersonRepository personRepository, PhoneRepository phoneRepository) {
         this.repository = repository;
         this.personRepository = personRepository;
+        this.phoneRepository = phoneRepository;
     }
 
     @Transactional
     public Integer save(PhysicalClientRequestDTO dto) {
+        if (repository.existsByCpf(dto.cpf())) {
+            throw new IllegalArgumentException("CPF já cadastrado");
+        }
+
+        if (phoneRepository.existsByPhone(dto.phone())) {
+            throw new IllegalArgumentException("Telefone já cadastrado");
+        }
         Person person = new Person();
         person.setStreet(dto.street());
         person.setNumber(dto.number());
         person.setNeighborhood(dto.neighborhood());
         person.setCity(dto.city());
-        person.setCep(dto.zipCode());
+        person.setCep(dto.cep());
 
         Integer idPessoa = personRepository.saveAndReturnId(person);
 
@@ -41,8 +51,8 @@ public class PhysicalClientService {
         client.setNumber(dto.number());
         client.setNeighborhood(dto.neighborhood());
         client.setCity(dto.city());
-        client.setZipCode(dto.zipCode());
-        client.setPhones(dto.phones() != null ? (dto.phones()) : List.of());
+        client.setCep(dto.cep());
+        client.setPhone(dto.phone() != null ? (dto.phone()) : List.of());
 
         repository.save(client);
         return idPessoa;
@@ -70,7 +80,7 @@ public class PhysicalClientService {
         person.setNumber(dto.number());
         person.setNeighborhood(dto.neighborhood());
         person.setCity(dto.city());
-        person.setCep(dto.zipCode());
+        person.setCep(dto.cep());
 
         personRepository.update(person);
 
@@ -80,8 +90,8 @@ public class PhysicalClientService {
         existing.setNumber(dto.number());
         existing.setNeighborhood(dto.neighborhood());
         existing.setCity(dto.city());
-        existing.setZipCode(dto.zipCode());
-        existing.setPhones(dto.phones() != null ? dto.phones() : List.of());
+        existing.setCep(dto.cep());
+        existing.setPhone(dto.phone() != null ? dto.phone() : List.of());
 
         repository.update(id, existing);
     }
@@ -101,8 +111,8 @@ public class PhysicalClientService {
                 client.getNumber(),
                 client.getNeighborhood(),
                 client.getCity(),
-                client.getZipCode(),
-                client.getPhones() != null ? client.getPhones().toArray(new String[0]) : new String[0]
+                client.getCep(),
+                client.getPhone() != null ? client.getPhone().toArray(new String[0]) : new String[0]
         );
     }
 }

@@ -9,6 +9,6 @@ public record PhysicalClientRequestDTO(
         String number,
         String neighborhood,
         String city,
-        String zipCode,
-        List<String> phones
+        String cep,
+        List<String> phone
 ) {}

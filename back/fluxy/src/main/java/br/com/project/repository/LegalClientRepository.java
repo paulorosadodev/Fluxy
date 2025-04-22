@@ -33,7 +33,7 @@ public class LegalClientRepository {
             ps.setString(2, client.getNumber());
             ps.setString(3, client.getNeighborhood());
             ps.setString(4, client.getCity());
-            ps.setString(5, client.getZipCode());
+            ps.setString(5, client.getCep());
             return ps;
         }, keyHolder);
 
@@ -43,18 +43,18 @@ public class LegalClientRepository {
         jdbcTemplate.update(sqlCliente, idPessoa);
 
         String sqlJuridico = "INSERT INTO juridico (fk_cliente_id, inscr_estadual, cnpj, razao_social) VALUES (?, ?, ?, ?)";
-        jdbcTemplate.update(sqlJuridico, idPessoa, client.getStateRegistration(), client.getCnpj(), client.getCorporateName());
+        jdbcTemplate.update(sqlJuridico, idPessoa, client.getStateRegistration(), client.getCnpj(),
+                client.getLegalName());
 
         // Inserir telefones se existirem
-        if (client.getPhones() != null && !client.getPhones().isEmpty()) {
-            for (String numero : client.getPhones()) {
+        if (client.getPhone() != null && !client.getPhone().isEmpty()) {
+            for (String numero : client.getPhone()) {
                 if (numero != null && !numero.isBlank()) {
                     String sqlTelefone = "INSERT INTO telefone (numero, id_telefone) VALUES (?, ?)";
                     jdbcTemplate.update(sqlTelefone, numero, idPessoa);
                 }
             }
         }
-
         return idPessoa;
     }
 
@@ -103,16 +103,17 @@ public class LegalClientRepository {
     public void update(Integer id, LegalClient client) {
         String sqlPessoa = "UPDATE pessoa SET rua = ?, numero = ?, bairro = ?, cidade = ?, cep = ? WHERE id_pessoa = ?";
         jdbcTemplate.update(sqlPessoa,
-                client.getStreet(), client.getNumber(), client.getNeighborhood(), client.getCity(), client.getZipCode(), id);
+                client.getStreet(), client.getNumber(), client.getNeighborhood(), client.getCity(),
+                client.getCep(), id);
 
         String sqlJuridico = "UPDATE juridico SET razao_social = ?, cnpj = ?, inscr_estadual = ? WHERE fk_cliente_id = ?";
         jdbcTemplate.update(sqlJuridico,
-                client.getCorporateName(), client.getCnpj(), client.getStateRegistration(), id);
+                client.getLegalName(), client.getCnpj(), client.getStateRegistration(), id);
 
         // Atualiza telefones: apaga e insere novamente
         deletePhonesByIdPerson(id);
-        if (client.getPhones() != null && !client.getPhones().isEmpty()) {
-            for (String numero : client.getPhones()) {
+        if (client.getPhone() != null && !client.getPhone().isEmpty()) {
+            for (String numero : client.getPhone()) {
                 if (numero != null && !numero.isBlank()) {
                     String sqlTelefone = "INSERT INTO telefone (numero, id_telefone) VALUES (?, ?)";
                     jdbcTemplate.update(sqlTelefone, numero, id);
@@ -160,7 +161,7 @@ public class LegalClientRepository {
                     rs.getString("bairro"),
                     rs.getString("cidade"),
                     rs.getString("cep"),
-                    findPhonesByIdPerson(rs.getInt("id_cliente")) // Telefones do cliente
+                    findPhonesByIdPerson(rs.getInt("id_cliente"))
             );
         }
     }

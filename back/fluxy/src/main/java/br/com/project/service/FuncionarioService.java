@@ -84,7 +84,7 @@ public class FuncionarioService {
 
         if (dto.cpf() != null && !dto.cpf().equals(existing.getCpf())) {
             if (employerRepository.existsByCpf(dto.cpf())) {
-                throw new IllegalArgumentException("CPF já cadastrado para outro funcionário");
+                throw new IllegalArgumentException("CPF já cadastrado");
             }
             existing.setCpf(dto.cpf());
         }

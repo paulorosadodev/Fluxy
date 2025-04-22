@@ -10,14 +10,14 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LegalClient {
-    private Integer id; // <<<<<< AQUI o id_cliente/id_pessoa
-    private String corporateName;
+    private Integer id;
+    private String legalName;
     private String cnpj;
     private String stateRegistration;
     private String street;
     private String number;
     private String neighborhood;
     private String city;
-    private String zipCode;
-    private List<String> phones;
+    private String cep;
+    private List<String> phone;
 }

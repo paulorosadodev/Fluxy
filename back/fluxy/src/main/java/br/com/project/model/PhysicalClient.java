@@ -17,6 +17,6 @@ public class PhysicalClient {
     private String number;
     private String neighborhood;
     private String city;
-    private String zipCode;
-    private List<String> phones;
+    private String cep;
+    private List<String> phone;
 }
