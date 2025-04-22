@@ -45,12 +45,31 @@ public class LegalClientRepository {
         String sqlJuridico = "INSERT INTO juridico (fk_cliente_id, inscr_estadual, cnpj, razao_social) VALUES (?, ?, ?, ?)";
         jdbcTemplate.update(sqlJuridico, idPessoa, client.getStateRegistration(), client.getCnpj(), client.getCorporateName());
 
+        // Inserir telefones se existirem
+        if (client.getPhones() != null && !client.getPhones().isEmpty()) {
+            for (String numero : client.getPhones()) {
+                if (numero != null && !numero.isBlank()) {
+                    String sqlTelefone = "INSERT INTO telefone (numero, id_telefone) VALUES (?, ?)";
+                    jdbcTemplate.update(sqlTelefone, numero, idPessoa);
+                }
+            }
+        }
+
         return idPessoa;
     }
 
     public Optional<LegalClient> findById(Integer id) {
         String sql = """
-            SELECT c.id_cliente, j.razao_social, j.cnpj, j.inscr_estadual, p.rua, p.numero, p.bairro, p.cidade, p.cep
+            SELECT 
+                c.id_cliente,
+                j.razao_social,
+                j.cnpj,
+                j.inscr_estadual,
+                p.rua,
+                p.numero,
+                p.bairro,
+                p.cidade,
+                p.cep
             FROM juridico j
             INNER JOIN cliente c ON j.fk_cliente_id = c.id_cliente
             INNER JOIN pessoa p ON c.id_cliente = p.id_pessoa
@@ -63,7 +82,16 @@ public class LegalClientRepository {
 
     public List<LegalClient> findAll() {
         String sql = """
-            SELECT c.id_cliente, j.razao_social, j.cnpj, j.inscr_estadual, p.rua, p.numero, p.bairro, p.cidade, p.cep
+            SELECT 
+                c.id_cliente,
+                j.razao_social,
+                j.cnpj,
+                j.inscr_estadual,
+                p.rua,
+                p.numero,
+                p.bairro,
+                p.cidade,
+                p.cep
             FROM juridico j
             INNER JOIN cliente c ON j.fk_cliente_id = c.id_cliente
             INNER JOIN pessoa p ON c.id_cliente = p.id_pessoa
@@ -80,19 +108,46 @@ public class LegalClientRepository {
         String sqlJuridico = "UPDATE juridico SET razao_social = ?, cnpj = ?, inscr_estadual = ? WHERE fk_cliente_id = ?";
         jdbcTemplate.update(sqlJuridico,
                 client.getCorporateName(), client.getCnpj(), client.getStateRegistration(), id);
+
+        // Atualiza telefones: apaga e insere novamente
+        deletePhonesByIdPerson(id);
+        if (client.getPhones() != null && !client.getPhones().isEmpty()) {
+            for (String numero : client.getPhones()) {
+                if (numero != null && !numero.isBlank()) {
+                    String sqlTelefone = "INSERT INTO telefone (numero, id_telefone) VALUES (?, ?)";
+                    jdbcTemplate.update(sqlTelefone, numero, id);
+                }
+            }
+        }
     }
 
     public void deleteById(Integer id) {
         String sqlJuridico = "DELETE FROM juridico WHERE fk_cliente_id = ?";
         String sqlCliente = "DELETE FROM cliente WHERE id_cliente = ?";
         String sqlPessoa = "DELETE FROM pessoa WHERE id_pessoa = ?";
+        String sqlTelefone = "DELETE FROM telefone WHERE id_telefone = ?";
 
+        jdbcTemplate.update(sqlTelefone, id);
         jdbcTemplate.update(sqlJuridico, id);
         jdbcTemplate.update(sqlCliente, id);
         jdbcTemplate.update(sqlPessoa, id);
     }
 
-    private static class LegalClientRowMapper implements RowMapper<LegalClient> {
+    private List<String> findPhonesByIdPerson(Integer idPerson) {
+        String sql = "SELECT numero FROM telefone WHERE id_telefone = ?";
+        return jdbcTemplate.query(
+                sql,
+                (rs, rn) -> rs.getString("numero"),
+                idPerson
+        );
+    }
+
+    private void deletePhonesByIdPerson(Integer idPerson) {
+        String sql = "DELETE FROM telefone WHERE id_telefone = ?";
+        jdbcTemplate.update(sql, idPerson);
+    }
+
+    private class LegalClientRowMapper implements RowMapper<LegalClient> {
         @Override
         public LegalClient mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new LegalClient(
@@ -104,7 +159,8 @@ public class LegalClientRepository {
                     rs.getString("numero"),
                     rs.getString("bairro"),
                     rs.getString("cidade"),
-                    rs.getString("cep")
+                    rs.getString("cep"),
+                    findPhonesByIdPerson(rs.getInt("id_cliente")) // Telefones do cliente
             );
         }
     }

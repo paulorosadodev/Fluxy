@@ -1,15 +1,15 @@
 package br.com.project.dto.request;
 
-import lombok.Data;
+import java.util.List;
 
-@Data
-public class LegalClientRequestDTO {
-    private String corporateName;
-    private String cnpj;
-    private String stateRegistration;
-    private String street;
-    private String number;
-    private String neighborhood;
-    private String city;
-    private String zipCode;
-}
+public record LegalClientRequestDTO(
+        String corporateName,
+        String cnpj,
+        String stateRegistration,
+        String street,
+        String number,
+        String neighborhood,
+        String city,
+        String zipCode,
+        List<String> phones // se quiser usar telefone depois, já deixo preparado
+) {}

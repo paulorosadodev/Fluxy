@@ -1,14 +1,14 @@
 package br.com.project.dto.request;
 
-import lombok.Data;
+import java.util.List;
 
-@Data
-public class PhysicalClientRequestDTO {
-    private String name;
-    private String cpf;
-    private String street;
-    private String number;
-    private String neighborhood;
-    private String city;
-    private String zipCode;
-}
+public record PhysicalClientRequestDTO(
+        String name,
+        String cpf,
+        String street,
+        String number,
+        String neighborhood,
+        String city,
+        String zipCode,
+        List<String> phones
+) {}

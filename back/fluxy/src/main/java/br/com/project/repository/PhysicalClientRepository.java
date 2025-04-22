@@ -45,12 +45,30 @@ public class PhysicalClientRepository {
         String sqlFisico = "INSERT INTO fisico (fk_cliente_id, nome, cpf) VALUES (?, ?, ?)";
         jdbcTemplate.update(sqlFisico, idPessoa, client.getName(), client.getCpf());
 
+        // Inserir telefones se existirem
+        if (client.getPhones() != null && !client.getPhones().isEmpty()) {
+            for (String numero : client.getPhones()) {
+                if (numero != null && !numero.isBlank()) {
+                    String sqlTelefone = "INSERT INTO telefone (numero, id_telefone) VALUES (?, ?)";
+                    jdbcTemplate.update(sqlTelefone, numero, idPessoa);
+                }
+            }
+        }
+
         return idPessoa;
     }
 
     public Optional<PhysicalClient> findById(Integer id) {
         String sql = """
-            SELECT c.id_cliente, f.nome, f.cpf, p.rua, p.numero, p.bairro, p.cidade, p.cep
+            SELECT 
+                c.id_cliente,
+                f.nome,
+                f.cpf,
+                p.rua,
+                p.numero,
+                p.bairro,
+                p.cidade,
+                p.cep
             FROM fisico f
             INNER JOIN cliente c ON f.fk_cliente_id = c.id_cliente
             INNER JOIN pessoa p ON c.id_cliente = p.id_pessoa
@@ -63,7 +81,15 @@ public class PhysicalClientRepository {
 
     public List<PhysicalClient> findAll() {
         String sql = """
-            SELECT c.id_cliente, f.nome, f.cpf, p.rua, p.numero, p.bairro, p.cidade, p.cep
+            SELECT 
+                c.id_cliente,
+                f.nome,
+                f.cpf,
+                p.rua,
+                p.numero,
+                p.bairro,
+                p.cidade,
+                p.cep
             FROM fisico f
             INNER JOIN cliente c ON f.fk_cliente_id = c.id_cliente
             INNER JOIN pessoa p ON c.id_cliente = p.id_pessoa
@@ -80,19 +106,46 @@ public class PhysicalClientRepository {
         String sqlFisico = "UPDATE fisico SET nome = ?, cpf = ? WHERE fk_cliente_id = ?";
         jdbcTemplate.update(sqlFisico,
                 client.getName(), client.getCpf(), id);
+
+        // Atualiza telefones: apaga e insere novamente
+        deletePhonesByIdPerson(id);
+        if (client.getPhones() != null && !client.getPhones().isEmpty()) {
+            for (String numero : client.getPhones()) {
+                if (numero != null && !numero.isBlank()) {
+                    String sqlTelefone = "INSERT INTO telefone (numero, id_telefone) VALUES (?, ?)";
+                    jdbcTemplate.update(sqlTelefone, numero, id);
+                }
+            }
+        }
     }
 
     public void deleteById(Integer id) {
         String sqlFisico = "DELETE FROM fisico WHERE fk_cliente_id = ?";
         String sqlCliente = "DELETE FROM cliente WHERE id_cliente = ?";
         String sqlPessoa = "DELETE FROM pessoa WHERE id_pessoa = ?";
+        String sqlTelefone = "DELETE FROM telefone WHERE id_telefone = ?";
 
+        jdbcTemplate.update(sqlTelefone, id);
         jdbcTemplate.update(sqlFisico, id);
         jdbcTemplate.update(sqlCliente, id);
         jdbcTemplate.update(sqlPessoa, id);
     }
 
-    private static class PhysicalClientRowMapper implements RowMapper<PhysicalClient> {
+    private List<String> findPhonesByIdPerson(Integer idPerson) {
+        String sql = "SELECT numero FROM telefone WHERE id_telefone = ?";
+        return jdbcTemplate.query(
+                sql,
+                (rs, rn) -> rs.getString("numero"),
+                idPerson
+        );
+    }
+
+    private void deletePhonesByIdPerson(Integer idPerson) {
+        String sql = "DELETE FROM telefone WHERE id_telefone = ?";
+        jdbcTemplate.update(sql, idPerson);
+    }
+
+    private class PhysicalClientRowMapper implements RowMapper<PhysicalClient> {
         @Override
         public PhysicalClient mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new PhysicalClient(
@@ -103,7 +156,8 @@ public class PhysicalClientRepository {
                     rs.getString("numero"),
                     rs.getString("bairro"),
                     rs.getString("cidade"),
-                    rs.getString("cep")
+                    rs.getString("cep"),
+                    findPhonesByIdPerson(rs.getInt("id_cliente")) // Telefones do cliente
             );
         }
     }
