@@ -179,7 +179,7 @@ export default function EmployeesDashboard() {
     let editData = [""];
 
     if (selectedRow.length > 1) {
-        const selectedEmployee = employees.filter((employee) => employee.employeeNumber === selectedRow.split(",")[1])[0];
+        const selectedEmployee = employees.filter((employee) => String(employee.id) === selectedRow.split(",")[0])[0];
 
         editData = [
             String(selectedEmployee.id), selectedEmployee.name, selectedEmployee.cpf, ...selectedEmployee.phone, 

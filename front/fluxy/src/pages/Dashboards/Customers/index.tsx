@@ -213,7 +213,7 @@ export default function CustomersDashboard() {
 
     if (naturalPersonSelectedRow.length > 1) {
 
-        const selectedNaturalPerson = naturalPersonCustomers.filter((Customer) => Customer.cpf === naturalPersonSelectedRow.split(",")[2])[0];
+        const selectedNaturalPerson = naturalPersonCustomers.filter((Customer) => String(Customer.id) === naturalPersonSelectedRow.split(",")[0])[0];
     
         editNaturalPersonData = [
             String(selectedNaturalPerson.id), selectedNaturalPerson.name ?? "", selectedNaturalPerson.cpf ?? "", ...selectedNaturalPerson.phone, 
@@ -222,8 +222,7 @@ export default function CustomersDashboard() {
     }
 
     if (legalEntitySelectedRow.length > 1) {
-
-        const selectedLegalEntity = legalEntityCustomers.filter((Customer) => Customer.cnpj === legalEntitySelectedRow.split(",")[2])[0];
+        const selectedLegalEntity = legalEntityCustomers.filter((Customer) => String(Customer.id) === legalEntitySelectedRow.split(",")[0])[0];
         
         editLegalEntityData = [
             String(selectedLegalEntity.id), selectedLegalEntity.legalName ?? "", selectedLegalEntity.cnpj ?? "", selectedLegalEntity.stateRegistration ?? "", 
