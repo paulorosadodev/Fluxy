@@ -17,6 +17,9 @@ public class CategoryService {
     }
 
     public void save(Category category) {
+        if (category.getCode() == null || category.getName() == null) {
+            throw new IllegalArgumentException("Código e nome da categoria são obrigatórios.");
+        }
         repository.save(category);
     }
 
@@ -29,10 +32,18 @@ public class CategoryService {
     }
 
     public void update(Category category) {
+        Optional<Category> existing = repository.findByCode(category.getCode());
+        if (existing.isEmpty()) {
+            throw new IllegalArgumentException("Categoria não encontrada para atualização.");
+        }
         repository.update(category);
     }
 
     public void deleteByCode(String code) {
+        Optional<Category> existing = repository.findByCode(code);
+        if (existing.isEmpty()) {
+            throw new IllegalArgumentException("Categoria não encontrada para exclusão.");
+        }
         repository.deleteByCode(code);
     }
 }

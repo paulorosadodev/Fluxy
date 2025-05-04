@@ -27,44 +27,55 @@ public class ClienteService {
 
     @Transactional
     public void salvar(ClientRequestDTO clienteRequestDTO) {
-        Client cliente = mapperUtils.map(clienteRequestDTO, Client.class);
-        clienteRepository.save(cliente);
+        try {
+            Client cliente = mapperUtils.map(clienteRequestDTO, Client.class);
+            clienteRepository.save(cliente);
 
-        List<Phone> telefones = clienteRequestDTO.getPhone().stream()
-                .map(numero -> new Phone(cliente.getIdClient(), numero))
-                .collect(Collectors.toList());
+            List<Phone> telefones = clienteRequestDTO.getPhone().stream()
+                    .map(numero -> new Phone(cliente.getIdClient(), numero))
+                    .collect(Collectors.toList());
 
-        telefones.forEach(telefoneService::salvar);
+            telefones.forEach(telefoneService::salvar);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao salvar cliente: " + e.getMessage());
+        }
     }
 
     @Transactional
     public void atualizar(Integer id, ClientRequestDTO clienteRequestDTO) {
-        Client cliente = mapperUtils.map(clienteRequestDTO, Client.class);
-        cliente.setIdClient(id);
-        clienteRepository.update(cliente);
+        try {
+            Client cliente = mapperUtils.map(clienteRequestDTO, Client.class);
+            cliente.setIdClient(id);
+            clienteRepository.update(cliente);
 
-        telefoneService.deletarPorIdPessoa(id);
+            telefoneService.deletarPorIdPessoa(id);
 
-        List<Phone> telefones = clienteRequestDTO.getPhone().stream()
-                .map(numero -> new Phone(id, numero))
-                .collect(Collectors.toList());
+            List<Phone> telefones = clienteRequestDTO.getPhone().stream()
+                    .map(numero -> new Phone(id, numero))
+                    .collect(Collectors.toList());
 
-        telefones.forEach(telefoneService::salvar);
+            telefones.forEach(telefoneService::salvar);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao atualizar cliente: " + e.getMessage());
+        }
     }
 
     public ClientResponseDTO buscarPorId(Integer id) {
-        Client cliente = clienteRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
-        return mapperUtils.map(cliente, ClientResponseDTO.class);
+        return clienteRepository.findById(id)
+                .map(cliente -> mapperUtils.map(cliente, ClientResponseDTO.class))
+                .orElseThrow(() -> new RuntimeException("Cliente com ID " + id + " não encontrado."));
     }
 
     public List<ClientResponseDTO> listarTodos() {
-        List<Client> clientes = clienteRepository.findAll();
-        return mapperUtils.mapList(clientes, ClientResponseDTO.class);
+        return mapperUtils.mapList(clienteRepository.findAll(), ClientResponseDTO.class);
     }
 
     public void deletar(Integer id) {
-        telefoneService.deletarPorIdPessoa(id);
-        clienteRepository.deleteById(id);
+        try {
+            telefoneService.deletarPorIdPessoa(id);
+            clienteRepository.deleteById(id);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao deletar cliente: " + e.getMessage());
+        }
     }
 }

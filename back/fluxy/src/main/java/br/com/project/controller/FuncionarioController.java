@@ -25,18 +25,21 @@ public class FuncionarioController {
             funcionarioService.salvar(funcionarioRequestDTO);
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body("Erro ao salvar funcionário: " + e.getMessage());
         }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<EmployeeResponseDTO> buscarPorId(@PathVariable Integer id) {
+    public ResponseEntity<?> buscarPorId(@PathVariable Integer id) {
         EmployeeResponseDTO responseDTO = funcionarioService.buscarPorId(id);
+        if (responseDTO == null) {
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.ok(responseDTO);
     }
 
     @GetMapping
-    public ResponseEntity<List<EmployeeResponseDTO>> listarTodos() {
+    public ResponseEntity<?> listarTodos() {
         List<EmployeeResponseDTO> funcionarios = funcionarioService.listarTodos();
         return ResponseEntity.ok(funcionarios);
     }

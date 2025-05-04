@@ -30,96 +30,116 @@ public class FuncionarioService {
 
     @Transactional
     public void salvar(EmployeeRequestDTO dto) {
+        try {
+            if (employerRepository.existsByCpf(dto.cpf())) {
+                throw new IllegalArgumentException("CPF já cadastrado");
+            }
 
-        if (employerRepository.existsByCpf(dto.cpf())) {
-            throw new IllegalArgumentException("CPF já cadastrado");
-        }
+            Person person = new Person();
+            person.setStreet(dto.street());
+            person.setNumber(dto.number());
+            person.setNeighborhood(dto.neighborhood());
+            person.setCity(dto.city());
+            person.setCep(dto.cep());
+            Integer idPessoa = personRepository.saveAndReturnId(person);
 
-        Person person = new Person();
-        person.setStreet(dto.street());
-        person.setNumber(dto.number());
-        person.setNeighborhood(dto.neighborhood());
-        person.setCity(dto.city());
-        person.setCep(dto.cep());
-        Integer idPessoa = personRepository.saveAndReturnId(person);
+            Employer employer = new Employer();
+            employer.setIdPerson(idPessoa);
+            employer.setEmployeeNumber(gerarMatriculaAleatoria());
+            employer.setCpf(dto.cpf());
+            employer.setName(dto.name());
+            employer.setSalary(dto.salary() != null ? dto.salary().doubleValue() : null);
+            employer.setSectorOfActivity(dto.sectorOfActivity());
+            employer.setWorkShift(dto.workShift());
+            employer.setRole(dto.role());
+            employer.setIdSupervisor(dto.fkSupervisor());
+            employerRepository.save(employer);
 
-        Employer employer = new Employer();
-        employer.setIdPerson(idPessoa);
-        employer.setEmployeeNumber(gerarMatriculaAleatoria());
-        employer.setCpf(dto.cpf());
-        employer.setName(dto.name());
-        employer.setSalary(dto.salary() != null ? dto.salary().doubleValue() : null);
-        employer.setSectorOfActivity(dto.sectorOfActivity());
-        employer.setWorkShift(dto.workShift());
-        employer.setRole(dto.role());
-        employer.setIdSupervisor(dto.fkSupervisor());
-        employerRepository.save(employer);
-
-        if (dto.phone() != null && !dto.phone().isEmpty()) {
-            for (String num : dto.phone()) {
-                if (num != null && !num.isBlank()) {
-                    phoneRepository.save(new Phone(idPessoa, num));
+            if (dto.phone() != null && !dto.phone().isEmpty()) {
+                for (String num : dto.phone()) {
+                    if (num != null && !num.isBlank()) {
+                        phoneRepository.save(new Phone(idPessoa, num));
+                    }
                 }
             }
-        }
 
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao salvar funcionário: " + e.getMessage(), e);
+        }
     }
 
     public EmployeeResponseDTO buscarPorId(Integer id) {
-        Employer e = employerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Funcionário não encontrado"));
-        return toResponseDTO(e);
+        try {
+            Employer e = employerRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Funcionário com ID " + id + " não encontrado"));
+            return toResponseDTO(e);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao buscar funcionário por ID: " + e.getMessage(), e);
+        }
     }
 
     public List<EmployeeResponseDTO> listarTodos() {
-        return employerRepository.findAll().stream()
-                .map(this::toResponseDTO)
-                .toList();
+        try {
+            return employerRepository.findAll().stream()
+                    .map(this::toResponseDTO)
+                    .toList();
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao listar funcionários: " + e.getMessage(), e);
+        }
     }
 
     @Transactional
     public void atualizar(Integer id, EmployeeRequestDTO dto) {
-        Employer existing = employerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Funcionário não encontrado"));
+        try {
+            Employer existing = employerRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Funcionário com ID " + id + " não encontrado"));
 
-        if (dto.cpf() != null && !dto.cpf().equals(existing.getCpf())) {
-            if (employerRepository.existsByCpf(dto.cpf())) {
-                throw new IllegalArgumentException("CPF já cadastrado");
+            if (dto.cpf() != null && !dto.cpf().equals(existing.getCpf())) {
+                if (employerRepository.existsByCpf(dto.cpf())) {
+                    throw new IllegalArgumentException("CPF já cadastrado");
+                }
+                existing.setCpf(dto.cpf());
             }
-            existing.setCpf(dto.cpf());
-        }
 
-        if (dto.cpf() != null) existing.setCpf(dto.cpf());
-        if (dto.name() != null) existing.setName(dto.name());
-        if (dto.salary() != null) existing.setSalary(dto.salary().doubleValue());
-        if (dto.sectorOfActivity() != null) existing.setSectorOfActivity(dto.sectorOfActivity());
-        if (dto.workShift() != null) existing.setWorkShift(dto.workShift());
-        if (dto.role() != null) existing.setRole(dto.role());
-        if (dto.fkSupervisor() != null) existing.setIdSupervisor(dto.fkSupervisor());
+            if (dto.cpf() != null) existing.setCpf(dto.cpf());
+            if (dto.name() != null) existing.setName(dto.name());
+            if (dto.salary() != null) existing.setSalary(dto.salary().doubleValue());
+            if (dto.sectorOfActivity() != null) existing.setSectorOfActivity(dto.sectorOfActivity());
+            if (dto.workShift() != null) existing.setWorkShift(dto.workShift());
+            if (dto.role() != null) existing.setRole(dto.role());
+            if (dto.fkSupervisor() != null) existing.setIdSupervisor(dto.fkSupervisor());
 
-        Person person = existing.getPerson();
-        if (dto.street() != null) person.setStreet(dto.street());
-        if (dto.number() != null) person.setNumber(dto.number());
-        if (dto.neighborhood() != null) person.setNeighborhood(dto.neighborhood());
-        if (dto.city() != null) person.setCity(dto.city());
-        if (dto.cep() != null) person.setCep(dto.cep());
+            Person person = existing.getPerson();
+            if (dto.street() != null) person.setStreet(dto.street());
+            if (dto.number() != null) person.setNumber(dto.number());
+            if (dto.neighborhood() != null) person.setNeighborhood(dto.neighborhood());
+            if (dto.city() != null) person.setCity(dto.city());
+            if (dto.cep() != null) person.setCep(dto.cep());
 
-        employerRepository.update(existing);
+            employerRepository.update(existing);
 
-        phoneRepository.deleteByIdPerson(existing.getIdPerson());
-        if (dto.phone() != null && !dto.phone().isEmpty()) {
-            for (String num : dto.phone()) {
-                phoneRepository.save(new Phone(existing.getIdPerson(), num));
+            phoneRepository.deleteByIdPerson(existing.getIdPerson());
+            if (dto.phone() != null && !dto.phone().isEmpty()) {
+                for (String num : dto.phone()) {
+                    phoneRepository.save(new Phone(existing.getIdPerson(), num));
+                }
             }
+
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao atualizar funcionário: " + e.getMessage(), e);
         }
     }
 
     @Transactional
     public void deletar(Integer id) {
-        Employer existing = employerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Funcionário não encontrado"));
-        phoneRepository.deleteByIdPerson(existing.getIdPerson());
-        employerRepository.deleteById(id);
+        try {
+            Employer existing = employerRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Funcionário com ID " + id + " não encontrado"));
+            phoneRepository.deleteByIdPerson(existing.getIdPerson());
+            employerRepository.deleteById(id);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao deletar funcionário: " + e.getMessage(), e);
+        }
     }
 
     private EmployeeResponseDTO toResponseDTO(Employer e) {
@@ -151,5 +171,4 @@ public class FuncionarioService {
         int num = (int) (Math.random() * 1_000_000);
         return String.format("EMP%06d", num);
     }
-
 }

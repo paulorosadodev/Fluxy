@@ -4,9 +4,11 @@ import br.com.project.model.Category;
 import br.com.project.service.CategoryService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Optional;
+
+import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequestMapping("/categories")
@@ -20,33 +22,54 @@ public class CategoryController {
 
     @PostMapping
     public ResponseEntity<Void> save(@RequestBody Category category) {
-        service.save(category);
-        return ResponseEntity.ok().build();
+        try {
+            service.save(category);
+            return ResponseEntity.status(CREATED).build();
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(BAD_REQUEST, e.getMessage());
+        } catch (Exception e) {
+            throw new ResponseStatusException(INTERNAL_SERVER_ERROR, "Erro ao salvar categoria.");
+        }
     }
 
     @GetMapping
     public ResponseEntity<List<Category>> findAll() {
-        List<Category> categories = service.findAll();
-        return ResponseEntity.ok(categories);
+        try {
+            return ResponseEntity.ok(service.findAll());
+        } catch (Exception e) {
+            throw new ResponseStatusException(INTERNAL_SERVER_ERROR, "Erro ao buscar categorias.");
+        }
     }
 
     @GetMapping("/{code}")
     public ResponseEntity<Category> findByCode(@PathVariable String code) {
-        Optional<Category> category = service.findByCode(code);
-        return category.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        return service.findByCode(code)
+                .map(ResponseEntity::ok)
+                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Categoria não encontrada."));
     }
 
     @PutMapping("/{code}")
     public ResponseEntity<Void> update(@PathVariable String code, @RequestBody Category category) {
-        category.setCode(code);
-        service.update(category);
-        return ResponseEntity.ok().build();
+        try {
+            category.setCode(code);
+            service.update(category);
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(BAD_REQUEST, e.getMessage());
+        } catch (Exception e) {
+            throw new ResponseStatusException(INTERNAL_SERVER_ERROR, "Erro ao atualizar categoria.");
+        }
     }
 
     @DeleteMapping("/{code}")
     public ResponseEntity<Void> deleteByCode(@PathVariable String code) {
-        service.deleteByCode(code);
-        return ResponseEntity.ok().build();
+        try {
+            service.deleteByCode(code);
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(NOT_FOUND, e.getMessage());
+        } catch (Exception e) {
+            throw new ResponseStatusException(INTERNAL_SERVER_ERROR, "Erro ao deletar categoria.");
+        }
     }
 }

@@ -19,32 +19,54 @@ public class ClienteController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> salvar(@RequestBody ClientRequestDTO clienteRequestDTO) {
-        clienteService.salvar(clienteRequestDTO);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> salvar(@RequestBody ClientRequestDTO clienteRequestDTO) {
+        try {
+            clienteService.salvar(clienteRequestDTO);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erro ao salvar cliente: " + e.getMessage());
+        }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ClientResponseDTO> buscarPorId(@PathVariable Integer id) {
-        ClientResponseDTO responseDTO = clienteService.buscarPorId(id);
-        return ResponseEntity.ok(responseDTO);
+    public ResponseEntity<?> buscarPorId(@PathVariable Integer id) {
+        try {
+            ClientResponseDTO responseDTO = clienteService.buscarPorId(id);
+            return ResponseEntity.ok(responseDTO);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao buscar cliente: " + e.getMessage());
+        }
     }
 
     @GetMapping
-    public ResponseEntity<List<ClientResponseDTO>> listarTodos() {
-        List<ClientResponseDTO> clientes = clienteService.listarTodos();
-        return ResponseEntity.ok(clientes);
+    public ResponseEntity<?> listarTodos() {
+        try {
+            List<ClientResponseDTO> clientes = clienteService.listarTodos();
+            return ResponseEntity.ok(clientes);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao listar clientes: " + e.getMessage());
+        }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> atualizar(@PathVariable Integer id, @RequestBody ClientRequestDTO clienteRequestDTO) {
-        clienteService.atualizar(id, clienteRequestDTO);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> atualizar(@PathVariable Integer id, @RequestBody ClientRequestDTO clienteRequestDTO) {
+        try {
+            clienteService.atualizar(id, clienteRequestDTO);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erro ao atualizar cliente: " + e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable Integer id) {
-        clienteService.deletar(id);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> deletar(@PathVariable Integer id) {
+        try {
+            clienteService.deletar(id);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao deletar cliente: " + e.getMessage());
+        }
     }
 }

@@ -20,29 +20,49 @@ public class ClientRepository {
     }
 
     public void save(Client client) {
-        String sql = "INSERT INTO cliente (cliente.id) VALUES (?)";
-        jdbcTemplate.update(sql, client.getIdPerson());
+        try {
+            String sql = "INSERT INTO cliente (id_cliente) VALUES (?)";
+            jdbcTemplate.update(sql, client.getIdPerson());
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao inserir cliente no banco de dados: " + e.getMessage());
+        }
     }
 
     public Optional<Client> findById(Integer id) {
-        String sql = "SELECT * FROM cliente WHERE cliente.id = ?";
-        List<Client> result = jdbcTemplate.query(sql, new ClienteRowMapper(), id);
-        return result.stream().findFirst();
+        try {
+            String sql = "SELECT * FROM cliente WHERE id_cliente = ?";
+            List<Client> result = jdbcTemplate.query(sql, new ClienteRowMapper(), id);
+            return result.stream().findFirst();
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao buscar cliente: " + e.getMessage());
+        }
     }
 
     public List<Client> findAll() {
-        String sql = "SELECT * FROM cliente";
-        return jdbcTemplate.query(sql, new ClienteRowMapper());
+        try {
+            String sql = "SELECT * FROM cliente";
+            return jdbcTemplate.query(sql, new ClienteRowMapper());
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao listar clientes: " + e.getMessage());
+        }
     }
 
     public void update(Client client) {
-        String sql = "UPDATE cliente SET cliente.id = ? WHERE cliente.id = ?";
-        jdbcTemplate.update(sql, client.getIdPerson(), client.getIdClient());
+        try {
+            String sql = "UPDATE cliente SET id_cliente = ? WHERE id_cliente = ?";
+            jdbcTemplate.update(sql, client.getIdPerson(), client.getIdClient());
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao atualizar cliente: " + e.getMessage());
+        }
     }
 
     public void deleteById(Integer id) {
-        String sql = "DELETE FROM cliente WHERE cliente.id = ?";
-        jdbcTemplate.update(sql, id);
+        try {
+            String sql = "DELETE FROM cliente WHERE id_cliente = ?";
+            jdbcTemplate.update(sql, id);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao deletar cliente: " + e.getMessage());
+        }
     }
 
     private static class ClienteRowMapper implements RowMapper<Client> {
