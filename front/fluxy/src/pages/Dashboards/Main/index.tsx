@@ -1,6 +1,8 @@
 
 export default function MainDashboard() {
     return (
-        <h1>Dashboard</h1>
+        <div id="main">
+            <h1>Dashboard</h1>
+        </div>
     );
 }

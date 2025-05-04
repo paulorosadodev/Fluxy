@@ -1,7 +1,7 @@
 package br.com.project.service.auth;
 
-import br.com.project.model.Loja;
-import br.com.project.repository.LojaRepository;
+import br.com.project.model.User;
+import br.com.project.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,7 +21,7 @@ public class SecurityFilter extends OncePerRequestFilter {
     @Autowired
     TokenService tokenService;
     @Autowired
-    LojaRepository lojaRepository;
+    UserRepository userRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -29,9 +29,11 @@ public class SecurityFilter extends OncePerRequestFilter {
         String login = tokenService.validateToken(token);
 
         if (login != null) {
-            Loja loja = lojaRepository.encontrarPorNome(login).orElseThrow(() -> new RuntimeException("Loja não encontrada"));
+            User user = userRepository.findByName(login).orElseThrow(() -> new RuntimeException("Usuário " +
+                    "não" +
+                    " encontrado"));
             var authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
-            var authentication = new UsernamePasswordAuthenticationToken(loja, null, authorities);
+            var authentication = new UsernamePasswordAuthenticationToken(user, null, authorities);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
         filterChain.doFilter(request, response);

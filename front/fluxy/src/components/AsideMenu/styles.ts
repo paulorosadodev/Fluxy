@@ -46,13 +46,14 @@ export const CloseMenuIcon = styled(ArrowCircleLeft)`
 `;
 
 export const AsideMenuWrapper = styled.aside`
+    position: absolute;
     background-color: ${(props) => props.theme["purple-500"]};
     display: flex;
     flex-direction: column;
     padding: 1rem;
     width: 5rem;
+    height: 100dvh;
     transition: width 0.3s ease;
-    position: relative;
     overflow: hidden;
 
     overflow-y: auto;

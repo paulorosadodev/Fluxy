@@ -4,19 +4,19 @@ import { Reveal } from "../Reveal";
 import { Check, X } from "phosphor-react";
 import { PopUpWrapper } from "./styles";
 
-interface PopUpProps {
+interface PopUpProps extends React.HTMLAttributes<HTMLDivElement> {
     message: string,
     show: boolean,
     type: "error" | "success",
     onClose: () => void;
 }
 
-export function PopUp({ message, show, type, onClose }: PopUpProps) {
+export function PopUp({ message, show, type, onClose, ...rest }: PopUpProps) {
 
     if (!show) return null;
 
     return (
-        <PopUpWrapper>
+        <PopUpWrapper {...rest}>
             <Reveal type="div" className={"popUp " + type}>
                 {type === "success" ? 
                     <Check size={30} color="green" weight="bold" />

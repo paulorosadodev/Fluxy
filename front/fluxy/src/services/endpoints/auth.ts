@@ -1,4 +1,3 @@
-// src/services/endpoints/auth.ts
 import { api } from "../api";
 
 interface RegisterPayload {

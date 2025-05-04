@@ -5,12 +5,25 @@ import AsideMenu from "../components/AsideMenu/";
 const LayoutContainer = styled.div`
     display: flex;
     height: 100vh;
+
+    @media (max-width: 880px) {
+        flex-direction: column;
+    }
 `;
 
 const Main = styled.main`
     flex: 1;
-    padding: 1rem;
     overflow-y: auto;
+    
+    #main {
+        padding: 1rem 2rem;
+        margin-left: 5rem;
+
+        @media (max-width: 880px) {
+            margin-left: 0;
+        }
+    }
+    
 `;
 
 export function DefaultLayout() {

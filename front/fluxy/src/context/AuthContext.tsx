@@ -1,7 +1,7 @@
 import { useCookies } from "react-cookie";
 import { createContext, ReactNode, useEffect, useState } from "react";
 
-import { Store } from "../@types";
+import { User } from "../@types";
 
 import { api } from "../services/api";
 import * as auth from "../services/endpoints/auth";
@@ -14,7 +14,7 @@ type Login = {
 
 interface AuthContextData {
     login: (data: Login) => Promise<string | void>;
-    store: Store | null;
+    user: User | null;
     signOut: () => void;
     isAuthenticated: boolean
 }
@@ -28,12 +28,12 @@ interface AuthProviderProps {
 export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     const [cookies, setCookie, removeCookie] = useCookies();
-    const [store, setStore] = useState<Store | null>(null);
+    const [user, setUser] = useState<User | null>(null);
 
     useEffect(() => {
-        const savedStore = cookies["@Auth:user"];
-        if (savedStore) {
-            setStore(savedStore);
+        const savedUser = cookies["@Auth:user"];
+        if (savedUser) {
+            setUser(savedUser);
         }
     }, []);
 
@@ -41,17 +41,17 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
         try {
             const response = await auth.login({name, password});
-            const {token, store} = response.data;
+            const {token, user} = response.data;
 
             api.defaults.headers.common.authorization = `Bearer ${token}`;
 
-            setStore(store);
+            setUser(user);
 
             setCookie("@Auth:token", token, {
                 path: "/",
                 maxAge: 60 * 60 * 2, 
             });
-            setCookie("@Auth:user", JSON.stringify(store), {
+            setCookie("@Auth:user", JSON.stringify(user), {
                 path: "/",
                 maxAge: 60 * 60 * 2, 
             });
@@ -64,12 +64,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const signOut = () => {
         removeCookie("@Auth:token", { path: "/" });
         removeCookie("@Auth:user", { path: "/" });
-        setStore(null);
+        setUser(null);
         <Navigate to="/login" />;
     };
 
     return (
-        <AuthContext.Provider value={{store, login, signOut, isAuthenticated: !!store}}>
+        <AuthContext.Provider value={{user, login, signOut, isAuthenticated: true}}>
             {children}
         </AuthContext.Provider>
     );

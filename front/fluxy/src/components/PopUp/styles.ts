@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const PopUpWrapper = styled.div`
 
     position: absolute;
-    z-index: 999;
+    z-index: 9999;
 
     .popUp {
             background-color: white;

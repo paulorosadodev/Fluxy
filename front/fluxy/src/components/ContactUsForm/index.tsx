@@ -22,7 +22,6 @@ const contactUsSchema = z.object({
     })
 });
 
-
 type ContactUsSchema = z.infer<typeof contactUsSchema>
 
 export function ContactUsForm() {

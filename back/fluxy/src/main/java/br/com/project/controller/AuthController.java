@@ -1,61 +1,57 @@
 package br.com.project.controller;
 
 import br.com.project.dto.auth.LoginRequestDTO;
-import br.com.project.dto.auth.LoginResponseDTO;
 import br.com.project.dto.auth.RegisterRequestDTO;
-import br.com.project.dto.auth.ResponseDTO;
-import br.com.project.model.Loja;
-import br.com.project.repository.LojaRepository;
-import br.com.project.service.LojaService;
+import br.com.project.dto.auth.RegisterResponseDTO;
+import br.com.project.model.User;
+import br.com.project.repository.UserRepository;
+import br.com.project.service.UserService;
 import br.com.project.service.auth.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
-    private final LojaRepository lojaRepository;
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
-    private final LojaService lojaService;
+    private final UserService userService;
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequestDTO body) {
         if (!body.password().equals(body.confirmPassword())) {
-            return ResponseEntity.badRequest().body("As senhas não coincidem.");
+            return ResponseEntity.badRequest().body("As senhas não coincidem");
         }
 
-        Optional<Loja> lojaExistente = lojaRepository.encontrarPorNome(body.name());
+        Optional<User> existingUser = userRepository.findByName(body.name());
 
-        if (lojaExistente.isPresent()) {
-            return ResponseEntity.badRequest().body("Loja já registrada.");
+        if (existingUser.isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Usuário já cadastrado");
         }
 
-        Loja novaLoja = new Loja();
-        novaLoja.setNome(body.name());
-        novaLoja.setSenha(passwordEncoder.encode(body.password()));
+        User newUser = new User();
+        newUser.setName(body.name());
+        newUser.setPassword(passwordEncoder.encode(body.password()));
 
-        lojaRepository.salvar(novaLoja);
+        userRepository.save(newUser);
 
-        String token = tokenService.generateToken(novaLoja);
-        return ResponseEntity.ok(new ResponseDTO(token, novaLoja));
+        String token = tokenService.generateToken(newUser);
+        return ResponseEntity.ok(new RegisterResponseDTO(token, newUser));
     }
-
 
     @PostMapping("/login")
     public ResponseEntity<Object> login(@RequestBody LoginRequestDTO body) {
         String name = body.name();
         String password = body.password();
 
-        return lojaService.autenticar(name, password)
+        return userService.authenticate(name, password)
                 .<ResponseEntity<Object>>map(ResponseEntity::ok)
-                .orElse(ResponseEntity.status(401).body("Usuário ou senha inválidos"));
+                .orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuário ou senha inválidos"));
     }
 }

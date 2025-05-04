@@ -13,7 +13,7 @@ import ProductsDashboard from "./pages/Dashboards/Products";
 import SuppliersDashboard from "./pages/Dashboards/Suppliers";
 import EmployeesDashboard from "./pages/Dashboards/Employees";
 import CustomersDashboard from "./pages/Dashboards/Customers";
-import OrdersDashboard from "./pages/Dashboards/Orders";
+import PurchasesDashboard from "./pages/Dashboards/Purchases";
 
 export function Router() {
     const { isAuthenticated } = useAuth();
@@ -37,7 +37,7 @@ export function Router() {
                     <Route path="/dashboard/clientes" 
                         element={ isAuthenticated ? <CustomersDashboard /> : <Navigate to="/login"/> } />
                     <Route path="/dashboard/compras" 
-                        element={ isAuthenticated ? <OrdersDashboard /> : <Navigate to="/login"/> } />
+                        element={ isAuthenticated ? <PurchasesDashboard /> : <Navigate to="/login"/> } />
                 </Route>
             </Routes>
         </BrowserRouter>
