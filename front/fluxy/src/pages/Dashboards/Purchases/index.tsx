@@ -1,14 +1,28 @@
 import { Column, DataTable } from "../../../components/DataTable";
-import { Purchase } from "../../../@types";
-import { formatCustomer, formatDate, formatEmployee, formatMoney, formatPaymentMethod, formatProduct, formatStock } from "../../../utils";
+import { Customer, Purchase } from "../../../@types";
+import { formatCustomer, formatDate, formatEmployee, formatMoney, formatPaymentMethod, formatProduct, formatPurchaseProduct, formatStock } from "../../../utils";
 import { useData } from "../../../hooks/useData";
 import { useEffect, useState } from "react";
+import { PopUp } from "../../../components/PopUp";
+import { EntityForm } from "../../../components/EntityForm";
+
+import { addPurchase, deletePurchase, editPurchase } from "../../../services/endpoints/purchase";
+import { z } from "zod";
 
 export default function PurchasesDashboard() {
 
-    const {purchases} = useData();
+    const {purchases, products, employees, naturalPersonCustomers, legalEntityCustomers} = useData();
 
     const [formattedPurchases, setFormattedPurchases] = useState<Purchase[]>([]);
+    const [customers, setCustomers] = useState<Customer[]>([]);
+    const [isAddFormOpened, setIsAddFormOpened] = useState(false);
+    const [isEditFormOpened, setIsEditFormOpened] = useState(false);
+    const [showPopUp, setShowPopUp] = useState(false);
+    const [popUpMessage, setPopUpMessage] = useState("");
+    const [showDeletePopUp, setShowDeletePopUp] = useState(false);
+    const [deletePopUpMessage, setDeletePopUpMessage] = useState("");
+    const [deletePopUpType, setDeletePopUpType] = useState<"success" | "error">("error");
+    const [selectedRow, setSelectedRow] = useState(""); 
 
     useEffect(() => {
 
@@ -16,7 +30,14 @@ export default function PurchasesDashboard() {
             return {...purchase, total: purchase.product.price * purchase.productAmount};
         }));
 
-    }, [purchases]);
+        const combinedCustomers = [
+            ...(naturalPersonCustomers ?? []),
+            ...(legalEntityCustomers ?? [])
+        ];
+    
+        setCustomers(combinedCustomers);
+
+    }, [purchases, naturalPersonCustomers, legalEntityCustomers]);
 
     const columns: Column<Purchase>[] = [
         { header: "Número", accessor: "number" },
@@ -29,10 +50,96 @@ export default function PurchasesDashboard() {
         { header: "Hora e Data", accessor: "date", formatter: formatDate },
     ];
 
+    const fields = [
+        [
+            {
+                label: "Cliente",
+                type: "select",
+                value: "customerId",
+                placeholder: "Selecione o cliente",
+                validation: z.string().min(1, { message: "Cliente é obrigatório" }),
+                options: customers.map((customer) => formatCustomer(customer)),
+            }
+        ],
+        [
+            {
+                label: "Produto",
+                type: "select",
+                value: "productId",
+                placeholder: "Selecione o produto",
+                validation: z.string().min(1, { message: "Produto é obrigatório" }),
+                options: products.map((product) => formatPurchaseProduct(product)),
+            },
+            {
+                label: "Quantidade",
+                type: "number",
+                value: "productAmount",
+                placeholder: "Digite a quantidade",
+                validation: z.coerce.number().int().min(1, { message: "Quantidade deve ser pelo menos 1" }),
+            }
+        ],
+        [
+            {
+                label: "Forma de pagamento",
+                type: "select",
+                value: "paymentType",
+                placeholder: "Selecione a forma de pagamento",
+                validation: z.string().min(1, { message: "Forma de pagamento é obrigatória" }),
+                options: ["Crédito", "Débito", "Pix", "Dinheiro", "Vale Alimentação", "Outro"]
+            },
+            {
+                label: "Parcelas",
+                type: "number",
+                value: "installments",
+                placeholder: "Digite a quantidade de parcelas",
+                validation: z.coerce.number().int().min(1, { message: "Quantidade de parcelas deve ser pelo menos 1" }),
+            }
+        ],
+        [
+            {
+                label: "Funcionário",
+                type: "select",
+                value: "employeeId",
+                placeholder: "Selecione o funcionário",
+                validation: z.string().min(1, { message: "Funcionário é obrigatório" }),
+                options: employees.filter((employee) => !employee.role.includes("Gerente")).map((employee) => formatEmployee(employee)),
+            }
+        ]
+    ];
+
+    const formControllers = {
+        add: setIsAddFormOpened, 
+        edit: setIsEditFormOpened
+    };
+
+    let editData = [""];
+
+    if (selectedRow.length > 1 && formattedPurchases) {
+        const selectedPurchase = formattedPurchases.filter((purchase) => String(purchase.number) === selectedRow.split(",")[0])[0];
+        const selectedPurchaseProduct = products.filter((purchase) => String(purchase.codEa) === selectedPurchase.product.codEa)[0];
+
+        if (selectedPurchase) {
+            editData = [String(selectedPurchase.id), String(formatCustomer(selectedPurchase.customer)), String(formatPurchaseProduct(selectedPurchaseProduct)), 
+                String(selectedPurchase.productAmount), String(selectedPurchase.paymentMethod.type), String(selectedPurchase.paymentMethod.installments), String(formatEmployee(selectedPurchase.employee))];
+        }
+    }
+
     return (
         <>
-            <h1>Compras</h1>
-            <DataTable data={formattedPurchases} columns={columns} entityName="compras" />
+            <EntityForm type="Adicionar" title="Compra" fields={fields} open={isAddFormOpened} formControllers={formControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} onSubmitAPI={addPurchase} />
+            {editData.length > 1 && 
+                <EntityForm type="Editar" title="Compra" fields={fields} open={isEditFormOpened} formControllers={formControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} data={editData} onSubmitAPI={editPurchase} />
+            }
+            <div id="main">
+                <h1>Compras</h1>
+                <DataTable deleteRow={deletePurchase} data={formattedPurchases} columns={columns} entityName="compras" popUpController={setShowPopUp} deletePopUpController={setShowDeletePopUp} setDeletePopUpMessage={setDeletePopUpMessage} setDeletePopUpType={setDeletePopUpType} formControllers={formControllers} selectedRowController={setSelectedRow}/>
+                {showPopUp &&
+                    <PopUp type="success" message={popUpMessage} show={showPopUp} onClose={() => setShowPopUp(false)} />
+                }
+                {showDeletePopUp &&
+                    <PopUp type={deletePopUpType} message={deletePopUpMessage} show={showDeletePopUp} onClose={() => setShowDeletePopUp(false)} />
+                }
+            </div>
         </>
     );
 }

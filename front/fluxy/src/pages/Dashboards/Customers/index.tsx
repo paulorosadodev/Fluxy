@@ -221,7 +221,6 @@ export default function CustomersDashboard() {
         ];
     }
 
-    console.log(legalEntityCustomers);
     if (legalEntitySelectedRow.length > 1) {
         const selectedLegalEntity = legalEntityCustomers.filter((Customer) => String(Customer.id) === legalEntitySelectedRow.split(",")[0])[0];
         editLegalEntityData = [

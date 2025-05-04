@@ -1,11 +1,14 @@
 import { Column, DataTable } from "../../../components/DataTable";
 import { Supplier, ProductSupply } from "../../../@types";
-import { formatAddress, formatPhoneNumber, formatCNPJ, formatSupplier, formatProduct, formatStock, formatMoney, formatDate, isValidCNPJ, isValidPhoneNumber } from "../../../utils";
+import { formatAddress, formatPhoneNumber, formatCNPJ, formatSupplier, formatProduct, formatStock, formatMoney, formatDate, isValidCNPJ, isValidPhoneNumber, formatPurchaseProduct } from "../../../utils";
 import { useData } from "../../../hooks/useData";
 import { PopUp } from "../../../components/PopUp";
 import { useState } from "react";
 import { z } from "zod";
 import { EntityForm } from "../../../components/EntityForm";
+
+import { addSupplier, deleteSupplier, editSupplier } from "../../../services/endpoints/supplier";
+import { addSupply, deleteSupply, editSupply } from "../../../services/endpoints/supply";
 
 export default function SuppliersDashboard() {
 
@@ -16,6 +19,9 @@ export default function SuppliersDashboard() {
     const [isSupplyEditFormOpened, setIsSupplyEditFormOpened] = useState(false);
     const [showPopUp, setShowPopUp] = useState(false);
     const [popUpMessage, setPopUpMessage] = useState("");
+    const [showDeletePopUp, setShowDeletePopUp] = useState(false);
+    const [deletePopUpMessage, setDeletePopUpMessage] = useState("");
+    const [deletePopUpType, setDeletePopUpType] = useState<"success" | "error">("error");
     const [supplierSelectedRow, setSupplierSelectedRow] = useState("");
     const [supplySelectedRow, setSupplySelectedRow] = useState("");
 
@@ -116,40 +122,33 @@ export default function SuppliersDashboard() {
                 value: "supplier",
                 placeholder: "Selecione o fornecedor",
                 validation: z.string().min(1, { message: "Fornecedor é obrigatório" }),
-                options: suppliers.map((supplier) => supplier.name),
+                options: suppliers.map((supplier) => formatSupplier(supplier)),
             },
+        ],
+        [
             {
                 label: "Produto",
                 type: "select",
                 value: "product",
                 placeholder: "Selecione o produto",
                 validation: z.string().min(1, { message: "Produto é obrigatório" }),
-                options: products.map((product) => product.name),
+                options: products.map((product) => formatPurchaseProduct(product)),
             },
-        ],
-        [
             {
                 label: "Quantidade",
                 type: "number",
                 value: "productAmount",
                 placeholder: "Digite a quantidade",
                 validation: z.coerce.number().min(1, { message: "Quantidade deve ser maior que 0" }),
-            },
+            }
+        ],
+        [
             {
                 label: "Preço",
                 type: "number",
                 value: "price",
                 placeholder: "Digite o preço",
                 validation: z.coerce.number().min(0.01, { message: "Preço deve ser maior que 0" }),
-            },
-        ],
-        [
-            {
-                label: "Hora",
-                type: "time",
-                value: "time",
-                placeholder: "Selecione a hora",
-                validation: z.string().min(1, { message: "Hora é obrigatória" }), 
             },
             {
                 label: "Data",
@@ -177,45 +176,46 @@ export default function SuppliersDashboard() {
 
     if (supplierSelectedRow.length > 1) {
         const selectedSupplier = suppliers.filter((Supplier) => Supplier.cnpj === supplierSelectedRow.split(",")[0])[0];
-    
+
         editSupplierData = [
-            selectedSupplier.name, selectedSupplier.cnpj, ...selectedSupplier.phone, selectedSupplier.address.cep, 
+            String(selectedSupplier.id), selectedSupplier.name, selectedSupplier.cnpj, ...selectedSupplier.phone, selectedSupplier.address.cep, 
             selectedSupplier.address.city, selectedSupplier.address.neighborhood, selectedSupplier.address.street,
             selectedSupplier.address.number
         ];
     }
 
     if (supplySelectedRow.length > 1) {
-        const formatedRow = supplySelectedRow.split(",");
 
-        const selectedSupply = productSupplies.filter((Supply) => 
-            String(Supply.productAmount) === formatedRow[2] && String(Supply.price) === formatedRow[3] && Supply.date === formatedRow[5])[0];
+        const selectedSupply = productSupplies.filter((Supply) => String(Supply.id) === supplySelectedRow.split(",")[0])[0];
     
         editSupplyData = [
-            selectedSupply.supplier.name, selectedSupply.product.name, String(selectedSupply.productAmount), String(selectedSupply.price), selectedSupply.date
+            String(selectedSupply.id), formatSupplier(selectedSupply.supplier), formatPurchaseProduct(selectedSupply.product), String(selectedSupply.productAmount), String(selectedSupply.price), selectedSupply.date
         ];
 
     }
 
     return (
         <>
-            <EntityForm type="Adicionar" title="Fornecedor" fields={supplierFields} open={isSupplierAddFormOpened} formControllers={suppliersFormControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} />
+            <EntityForm type="Adicionar" title="Fornecedor" fields={supplierFields} open={isSupplierAddFormOpened} formControllers={suppliersFormControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} onSubmitAPI={addSupplier} />
             {editSupplierData.length > 1 && 
-                <EntityForm type="Editar" title="Fornecedor" fields={supplierFields} open={isSupplierEditFormOpened} formControllers={suppliersFormControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} data={editSupplierData} />
+                <EntityForm type="Editar" title="Fornecedor" fields={supplierFields} open={isSupplierEditFormOpened} formControllers={suppliersFormControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} data={editSupplierData} onSubmitAPI={editSupplier} />
             }
-            <EntityForm type="Adicionar" title="Entrega" fields={supplyFields} open={isSupplyAddFormOpened} formControllers={suppliesFormControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} />
+            <EntityForm type="Adicionar" title="Entrega" fields={supplyFields} open={isSupplyAddFormOpened} formControllers={suppliesFormControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} onSubmitAPI={addSupply} />
             {editSupplyData.length > 1 && 
-                <EntityForm type="Editar" title="Entrega" fields={supplyFields} open={isSupplyEditFormOpened} formControllers={suppliesFormControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} data={editSupplyData} />
+                <EntityForm type="Editar" title="Entrega" fields={supplyFields} open={isSupplyEditFormOpened} formControllers={suppliesFormControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} data={editSupplyData} onSubmitAPI={editSupply} />
             }
             <div id="main">
                 <h1>Fornecedores</h1>
-                <DataTable data={suppliers} columns={columnsSuppliers} entityName="fornecedores" popUpController={setShowPopUp} formControllers={suppliersFormControllers} selectedRowController={setSupplierSelectedRow} />
+                <DataTable deleteRow={deleteSupplier} data={suppliers} columns={columnsSuppliers} entityName="fornecedores" popUpController={setShowPopUp} formControllers={suppliersFormControllers} selectedRowController={setSupplierSelectedRow} deletePopUpController={setShowDeletePopUp} setDeletePopUpMessage={setDeletePopUpMessage} setDeletePopUpType={setDeletePopUpType} />
 
                 <h1>Entregas</h1>
-                <DataTable data={productSupplies} columns={columnsSupply} entityName="entregas" popUpController={setShowPopUp} formControllers={suppliesFormControllers} selectedRowController={setSupplySelectedRow} />
+                <DataTable deleteRow={deleteSupply} data={productSupplies} columns={columnsSupply} entityName="entregas" popUpController={setShowPopUp} formControllers={suppliesFormControllers} selectedRowController={setSupplySelectedRow} deletePopUpController={setShowDeletePopUp} setDeletePopUpMessage={setDeletePopUpMessage} setDeletePopUpType={setDeletePopUpType} />
 
                 {showPopUp &&
                     <PopUp type="success" message={popUpMessage} show={showPopUp} onClose={() => setShowPopUp(false)} />
+                }
+                {showDeletePopUp &&
+                    <PopUp type={deletePopUpType} message={deletePopUpMessage} show={showDeletePopUp} onClose={() => setShowDeletePopUp(false)} />
                 }
             </div>
         </>
