@@ -32,7 +32,7 @@ export function SearchFilterInput<T extends Record<string, any>>({data, columns,
 
                     if (typeof value === "object" && value !== null) {
                         if ((value as Date) instanceof Date) {
-                            return formatDate((value as Date)).includes(searchTerm.toLowerCase());
+                            return formatDate(value).includes(searchTerm.toLowerCase());
                         }
                         return Object.values(value).some(val => {
                             return typeof val === "string" && val.toLowerCase().includes(searchTerm.toLowerCase());
