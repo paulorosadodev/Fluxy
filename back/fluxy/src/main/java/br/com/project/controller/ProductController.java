@@ -3,8 +3,6 @@ package br.com.project.controller;
 import br.com.project.dto.request.ProductRequestDTO;
 import br.com.project.dto.response.ProductResponseDTO;
 import br.com.project.service.ProductService;
-import org.apache.coyote.BadRequestException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,21 +24,32 @@ public class ProductController {
             ProductResponseDTO response = productService.save(requestDTO);
             return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.badRequest().body("Erro ao salvar produto: " + e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Erro ao salvar produto: " + e.getMessage());
+            return ResponseEntity.internalServerError().body("Erro ao salvar produto: " + e.getMessage());
         }
     }
 
     @GetMapping
-    public List<ProductResponseDTO> findAll() {
-        return productService.findAll();
+    public ResponseEntity<?> findAll() {
+        try {
+            List<ProductResponseDTO> products = productService.findAll();
+            return ResponseEntity.ok(products);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao listar produtos: " + e.getMessage());
+        }
     }
 
     @GetMapping("/{id}")
-    public ProductResponseDTO findById(@PathVariable Integer id) {
-        return productService.findById(id);
+    public ResponseEntity<?> findById(@PathVariable Integer id) {
+        try {
+            ProductResponseDTO response = productService.findById(id);
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao buscar produto: " + e.getMessage());
+        }
     }
 
     @PutMapping("/{id}")
@@ -49,10 +58,9 @@ public class ProductController {
             ProductResponseDTO response = productService.update(id, requestDTO);
             return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.badRequest().body("Erro ao atualizar produto: " + e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Erro ao atualizar produto: " + e.getMessage());
+            return ResponseEntity.internalServerError().body("Erro ao atualizar produto: " + e.getMessage());
         }
     }
 
@@ -60,13 +68,11 @@ public class ProductController {
     public ResponseEntity<?> delete(@PathVariable Integer id) {
         try {
             productService.delete(id);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.notFound().build();
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Erro ao deletar produto: " + e.getMessage());
+            return ResponseEntity.internalServerError().body("Erro ao deletar produto: " + e.getMessage());
         }
     }
-
 }

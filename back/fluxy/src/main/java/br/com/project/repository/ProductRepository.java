@@ -25,48 +25,63 @@ public class ProductRepository {
     }
 
     public Integer save(Product product) {
-        String sql = "INSERT INTO produto (codigo_categoria, qtd_estoque, cod_ea, preco, nome) VALUES (?, ?, ?, ?, ?)";
+        try {
+            String sql = "INSERT INTO produto (codigo_categoria, qtd_estoque, cod_ea, preco, nome) VALUES (?, ?, ?, ?, ?)";
+            KeyHolder keyHolder = new GeneratedKeyHolder();
+            jdbcTemplate.update(connection -> {
+                PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                ps.setString(1, product.getCategoryCode());
+                ps.setInt(2, product.getStockQuantity());
+                ps.setString(3, product.getCodEa());
+                ps.setDouble(4, product.getPrice());
+                ps.setString(5, product.getName());
+                return ps;
+            }, keyHolder);
 
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, product.getCategoryCode());
-            ps.setInt(2, product.getStockQuantity());
-            ps.setString(3, product.getCodEa());
-            ps.setDouble(4, product.getPrice());
-            ps.setString(5, product.getName());
-            return ps;
-        }, keyHolder);
-
-        return keyHolder.getKey().intValue();
+            return keyHolder.getKey().intValue();
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao salvar produto: " + e.getMessage());
+        }
     }
 
     public Optional<Product> findById(Integer id) {
-        String sql = "SELECT * FROM produto WHERE id_produto = ?";
-        List<Product> result = jdbcTemplate.query(sql, new ProductRowMapper(), id);
-        return result.stream().findFirst();
+        try {
+            String sql = "SELECT * FROM produto WHERE id_produto = ?";
+            List<Product> result = jdbcTemplate.query(sql, new ProductRowMapper(), id);
+            return result.stream().findFirst();
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao buscar produto: " + e.getMessage());
+        }
     }
 
     public List<Product> findAll() {
-        String sql = "SELECT * FROM produto";
-        return jdbcTemplate.query(sql, new ProductRowMapper());
+        try {
+            String sql = "SELECT * FROM produto";
+            return jdbcTemplate.query(sql, new ProductRowMapper());
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao listar produtos: " + e.getMessage());
+        }
     }
 
     public void update(Product product) {
-        String sql = "UPDATE produto SET codigo_categoria = ?, qtd_estoque = ?, cod_ea = ?, preco = ?, nome = ? WHERE id_produto = ?";
-        jdbcTemplate.update(sql,
-                product.getCategoryCode(),
-                product.getStockQuantity(),
-                product.getCodEa(),
-                product.getPrice(),
-                product.getName(),
-                product.getIdProduct()
-        );
+        try {
+            String sql = "UPDATE produto SET codigo_categoria = ?, qtd_estoque = ?, cod_ea = ?, preco = ?, nome = ? WHERE id_produto = ?";
+            jdbcTemplate.update(sql,
+                    product.getCategoryCode(),
+                    product.getStockQuantity(),
+                    product.getCodEa(),
+                    product.getPrice(),
+                    product.getName(),
+                    product.getIdProduct()
+            );
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao atualizar produto: " + e.getMessage());
+        }
     }
 
     public Product findByCodEa(String codEa) {
-        String sql = "SELECT * FROM produto WHERE cod_ea = ?";
         try {
+            String sql = "SELECT * FROM produto WHERE cod_ea = ?";
             return jdbcTemplate.queryForObject(sql, new Object[]{codEa}, (rs, rowNum) -> {
                 Product product = new Product();
                 product.setIdProduct(rs.getInt("id_produto"));
@@ -79,12 +94,18 @@ public class ProductRepository {
             });
         } catch (EmptyResultDataAccessException e) {
             return null;
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao buscar produto por código EA: " + e.getMessage());
         }
     }
 
     public void deleteById(Integer id) {
-        String sql = "DELETE FROM produto WHERE id_produto = ?";
-        jdbcTemplate.update(sql, id);
+        try {
+            String sql = "DELETE FROM produto WHERE id_produto = ?";
+            jdbcTemplate.update(sql, id);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao deletar produto: " + e.getMessage());
+        }
     }
 
     private static class ProductRowMapper implements RowMapper<Product> {
