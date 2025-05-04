@@ -232,7 +232,7 @@ export default function CustomersDashboard() {
 
     return (
         <>  
-            <EntityForm type="Adicionar" title="Pessoa Física" fields={legalEntityFields} open={isNaturalPersonAddFormOpened} formControllers={naturalPersonFormControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} onSubmitAPI={addNaturalPersonCustomer}/>
+            <EntityForm type="Adicionar" title="Pessoa Física" fields={naturalPersonFields} open={isNaturalPersonAddFormOpened} formControllers={naturalPersonFormControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} onSubmitAPI={addNaturalPersonCustomer}/>
             {editNaturalPersonData.length > 1 && 
                 <EntityForm type="Editar" title="Pessoa Física" fields={naturalPersonFields} open={isNaturalPersonEditFormOpened} formControllers={naturalPersonFormControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} data={editNaturalPersonData} onSubmitAPI={editNaturalPersonCustomer}/>
             }
