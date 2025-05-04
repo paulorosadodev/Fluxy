@@ -19,28 +19,55 @@ public class HistoricPriceProductController {
     }
 
     @PostMapping
-    public ResponseEntity<HistoricPriceProductResponseDTO> save(@RequestBody HistoricPriceProductRequestDTO requestDTO) {
-        return ResponseEntity.ok(historicPriceProductService.save(requestDTO));
+    public ResponseEntity<?> save(@RequestBody HistoricPriceProductRequestDTO requestDTO) {
+        try {
+            System.out.println(requestDTO.getPrice());
+            HistoricPriceProductResponseDTO response = historicPriceProductService.save(requestDTO);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erro ao salvar histórico de preço: " + e.getMessage());
+        }
     }
 
     @GetMapping
-    public ResponseEntity<List<HistoricPriceProductResponseDTO>> findAll() {
-        return ResponseEntity.ok(historicPriceProductService.findAll());
+    public ResponseEntity<?> findAll() {
+        try {
+            List<HistoricPriceProductResponseDTO> lista = historicPriceProductService.findAll();
+            return ResponseEntity.ok(lista);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao listar históricos de preço: " + e.getMessage());
+        }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<HistoricPriceProductResponseDTO> findById(@PathVariable Integer id) {
-        return ResponseEntity.ok(historicPriceProductService.findById(id));
+    public ResponseEntity<?> findById(@PathVariable Integer id) {
+        try {
+            HistoricPriceProductResponseDTO response = historicPriceProductService.findById(id);
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao buscar histórico de preço: " + e.getMessage());
+        }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<HistoricPriceProductResponseDTO> update(@PathVariable Integer id, @RequestBody HistoricPriceProductRequestDTO requestDTO) {
-        return ResponseEntity.ok(historicPriceProductService.update(id, requestDTO));
+    public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody HistoricPriceProductRequestDTO requestDTO) {
+        try {
+            HistoricPriceProductResponseDTO response = historicPriceProductService.update(id, requestDTO);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erro ao atualizar histórico de preço: " + e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
-        historicPriceProductService.delete(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<?> delete(@PathVariable Integer id) {
+        try {
+            historicPriceProductService.delete(id);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao deletar histórico de preço: " + e.getMessage());
+        }
     }
 }

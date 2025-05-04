@@ -23,51 +23,72 @@ public class PersonRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    // Novo método correto
+    // Método para salvar e retornar o ID gerado
     public Integer saveAndReturnId(Person person) {
-        String sql = "INSERT INTO pessoa (rua, numero, bairro, cidade, cep) VALUES (?, ?, ?, ?, ?)";
+        try {
+            String sql = "INSERT INTO pessoa (rua, numero, bairro, cidade, cep) VALUES (?, ?, ?, ?, ?)";
 
-        KeyHolder keyHolder = new GeneratedKeyHolder();
+            KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, person.getStreet());
-            ps.setString(2, person.getNumber());
-            ps.setString(3, person.getNeighborhood());
-            ps.setString(4, person.getCity());
-            ps.setString(5, person.getCep());
-            return ps;
-        }, keyHolder);
+            jdbcTemplate.update(connection -> {
+                PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                ps.setString(1, person.getStreet());
+                ps.setString(2, person.getNumber());
+                ps.setString(3, person.getNeighborhood());
+                ps.setString(4, person.getCity());
+                ps.setString(5, person.getCep());
+                return ps;
+            }, keyHolder);
 
-        return keyHolder.getKey().intValue(); // Retorna o ID gerado
+            return keyHolder.getKey().intValue(); // Retorna o ID gerado
+
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao salvar pessoa no banco de dados: " + e.getMessage());
+        }
     }
 
     public Optional<Person> findById(Integer id) {
-        String sql = "SELECT * FROM pessoa WHERE id_pessoa = ?";
-        List<Person> result = jdbcTemplate.query(sql, new PersonRowMapper(), id);
-        return result.stream().findFirst();
+        try {
+            String sql = "SELECT * FROM pessoa WHERE id_pessoa = ?";
+            List<Person> result = jdbcTemplate.query(sql, new PersonRowMapper(), id);
+            return result.stream().findFirst();
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao buscar pessoa: " + e.getMessage());
+        }
     }
 
     public List<Person> findAll() {
-        String sql = "SELECT * FROM pessoa";
-        return jdbcTemplate.query(sql, new PersonRowMapper());
+        try {
+            String sql = "SELECT * FROM pessoa";
+            return jdbcTemplate.query(sql, new PersonRowMapper());
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao listar pessoas: " + e.getMessage());
+        }
     }
 
     public void update(Person person) {
-        String sql = "UPDATE pessoa SET rua = ?, numero = ?, bairro = ?, cidade = ?, cep = ? WHERE id_pessoa = ?";
-        jdbcTemplate.update(sql,
-                person.getStreet(),
-                person.getNumber(),
-                person.getNeighborhood(),
-                person.getCity(),
-                person.getCep(),
-                person.getIdPerson()
-        );
+        try {
+            String sql = "UPDATE pessoa SET rua = ?, numero = ?, bairro = ?, cidade = ?, cep = ? WHERE id_pessoa = ?";
+            jdbcTemplate.update(sql,
+                    person.getStreet(),
+                    person.getNumber(),
+                    person.getNeighborhood(),
+                    person.getCity(),
+                    person.getCep(),
+                    person.getIdPerson()
+            );
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao atualizar pessoa: " + e.getMessage());
+        }
     }
 
     public void deleteById(Integer id) {
-        String sql = "DELETE FROM pessoa WHERE id_pessoa = ?";
-        jdbcTemplate.update(sql, id);
+        try {
+            String sql = "DELETE FROM pessoa WHERE id_pessoa = ?";
+            jdbcTemplate.update(sql, id);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao deletar pessoa: " + e.getMessage());
+        }
     }
 
     private static class PersonRowMapper implements RowMapper<Person> {

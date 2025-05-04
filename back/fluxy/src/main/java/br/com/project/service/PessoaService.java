@@ -26,47 +26,64 @@ public class PessoaService {
 
     @Transactional
     public void save(PersonRequestDTO personRequestDTO) {
-        Person person = mapperUtils.map(personRequestDTO, Person.class);
-        pessoaRepository.saveAndReturnId(person);
+        try {
+            Person person = mapperUtils.map(personRequestDTO, Person.class);
+            pessoaRepository.saveAndReturnId(person);
 
-        // Salva todos os telefones vinculados
-        List<Phone> phones = personRequestDTO.getPhone().stream()
-                .map(number -> new Phone(person.getIdPerson(), number))
-                .toList();
+            List<Phone> phones = personRequestDTO.getPhone().stream()
+                    .map(number -> new Phone(person.getIdPerson(), number))
+                    .toList();
 
-        phones.forEach(telefoneService::salvar);
+            phones.forEach(telefoneService::salvar);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao salvar pessoa: " + e.getMessage());
+        }
     }
 
     @Transactional
     public void update(Integer id, PersonRequestDTO pessoaRequestDTO) {
-        Person person = mapperUtils.map(pessoaRequestDTO, Person.class);
-        person.setIdPerson(id);
-        pessoaRepository.update(person);
+        try {
+            Person person = mapperUtils.map(pessoaRequestDTO, Person.class);
+            person.setIdPerson(id);
+            pessoaRepository.update(person);
 
-        // Primeiro apaga os telefones antigos
-        telefoneService.deletarPorIdPessoa(id);
+            telefoneService.deletarPorIdPessoa(id);
 
-        // Depois salva os novos telefones
-        List<Phone> phones = pessoaRequestDTO.getPhone().stream()
-                .map(number -> new Phone(id, number))
-                .toList();
+            List<Phone> phones = pessoaRequestDTO.getPhone().stream()
+                    .map(number -> new Phone(id, number))
+                    .toList();
 
-        phones.forEach(telefoneService::salvar);
+            phones.forEach(telefoneService::salvar);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao atualizar pessoa: " + e.getMessage());
+        }
     }
 
     public PersonResponseDTO findById(Integer id) {
-        Person person = pessoaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pessoa não encontrada"));
-        return mapperUtils.map(person, PersonResponseDTO.class);
+        try {
+            Person person = pessoaRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Pessoa não encontrada"));
+            return mapperUtils.map(person, PersonResponseDTO.class);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao buscar pessoa: " + e.getMessage());
+        }
     }
 
     public List<PersonResponseDTO> listAll() {
-        List<Person> persons = pessoaRepository.findAll();
-        return mapperUtils.mapList(persons, PersonResponseDTO.class);
+        try {
+            List<Person> persons = pessoaRepository.findAll();
+            return mapperUtils.mapList(persons, PersonResponseDTO.class);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao listar pessoas: " + e.getMessage());
+        }
     }
 
     public void delete(Integer id) {
-        telefoneService.deletarPorIdPessoa(id);
-        pessoaRepository.deleteById(id);
+        try {
+            telefoneService.deletarPorIdPessoa(id);
+            pessoaRepository.deleteById(id);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao deletar pessoa: " + e.getMessage());
+        }
     }
 }

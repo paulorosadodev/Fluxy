@@ -25,20 +25,32 @@ public class LegalClientController {
             Integer id = service.save(dto);
             return ResponseEntity.status(HttpStatus.CREATED).body(id);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body("Erro ao salvar cliente jurídico: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro interno ao salvar cliente jurídico: " + e.getMessage());
         }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<LegalClientResponseDTO> findById(@PathVariable Integer id) {
-        LegalClientResponseDTO response = service.findById(id);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<?> findById(@PathVariable Integer id) {
+        try {
+            LegalClientResponseDTO response = service.findById(id);
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao buscar cliente jurídico: " + e.getMessage());
+        }
     }
 
     @GetMapping
-    public ResponseEntity<List<LegalClientResponseDTO>> findAll() {
-        List<LegalClientResponseDTO> response = service.findAll();
-        return ResponseEntity.ok(response);
+    public ResponseEntity<?> findAll() {
+        try {
+            List<LegalClientResponseDTO> response = service.findAll();
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao listar clientes jurídicos: " + e.getMessage());
+        }
     }
 
     @PutMapping("/{id}")
@@ -47,9 +59,11 @@ public class LegalClientController {
             service.update(id, dto);
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body("Erro ao atualizar cliente jurídico: " + e.getMessage());
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro interno: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro interno ao atualizar cliente jurídico: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro inesperado ao atualizar cliente jurídico: " + e.getMessage());
         }
     }
 
@@ -59,8 +73,9 @@ public class LegalClientController {
             service.deleteById(id);
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao deletar cliente: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao deletar cliente jurídico: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro inesperado ao deletar cliente jurídico: " + e.getMessage());
         }
     }
 }
-

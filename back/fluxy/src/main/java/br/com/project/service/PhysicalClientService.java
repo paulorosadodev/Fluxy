@@ -27,79 +27,100 @@ public class PhysicalClientService {
 
     @Transactional
     public Integer save(PhysicalClientRequestDTO dto) {
-        if (repository.existsByCpf(dto.cpf())) {
-            throw new IllegalArgumentException("CPF já cadastrado");
+        try {
+            if (repository.existsByCpf(dto.cpf())) {
+                throw new IllegalArgumentException("CPF já cadastrado.");
+            }
+
+            if (phoneRepository.existsByPhone(dto.phone())) {
+                throw new IllegalArgumentException("Telefone já cadastrado.");
+            }
+
+            Person person = new Person();
+            person.setStreet(dto.street());
+            person.setNumber(dto.number());
+            person.setNeighborhood(dto.neighborhood());
+            person.setCity(dto.city());
+            person.setCep(dto.cep());
+
+            Integer idPessoa = personRepository.saveAndReturnId(person);
+
+            PhysicalClient client = new PhysicalClient();
+            client.setId(idPessoa);
+            client.setName(dto.name());
+            client.setCpf(dto.cpf());
+            client.setStreet(dto.street());
+            client.setNumber(dto.number());
+            client.setNeighborhood(dto.neighborhood());
+            client.setCity(dto.city());
+            client.setCep(dto.cep());
+            client.setPhone(dto.phone() != null ? dto.phone() : List.of());
+
+            repository.save(client);
+            return idPessoa;
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao salvar cliente físico: " + e.getMessage());
         }
-
-        if (phoneRepository.existsByPhone(dto.phone())) {
-            throw new IllegalArgumentException("Telefone já cadastrado");
-        }
-        Person person = new Person();
-        person.setStreet(dto.street());
-        person.setNumber(dto.number());
-        person.setNeighborhood(dto.neighborhood());
-        person.setCity(dto.city());
-        person.setCep(dto.cep());
-
-        Integer idPessoa = personRepository.saveAndReturnId(person);
-
-        PhysicalClient client = new PhysicalClient();
-        client.setId(idPessoa);
-        client.setName(dto.name());
-        client.setCpf(dto.cpf());
-        client.setStreet(dto.street());
-        client.setNumber(dto.number());
-        client.setNeighborhood(dto.neighborhood());
-        client.setCity(dto.city());
-        client.setCep(dto.cep());
-        client.setPhone(dto.phone() != null ? (dto.phone()) : List.of());
-
-        repository.save(client);
-        return idPessoa;
     }
 
     public PhysicalClientResponseDTO findById(Integer id) {
-        PhysicalClient client = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Cliente físico não encontrado"));
-        return toResponseDTO(client);
+        try {
+            PhysicalClient client = repository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Cliente físico com ID " + id + " não encontrado."));
+            return toResponseDTO(client);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao buscar cliente físico por ID: " + e.getMessage());
+        }
     }
 
     public List<PhysicalClientResponseDTO> findAll() {
-        return repository.findAll().stream()
-                .map(this::toResponseDTO)
-                .toList();
+        try {
+            return repository.findAll().stream()
+                    .map(this::toResponseDTO)
+                    .toList();
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao listar clientes físicos: " + e.getMessage());
+        }
     }
 
     @Transactional
     public void update(Integer id, PhysicalClientRequestDTO dto) {
-        PhysicalClient existing = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Cliente físico não encontrado"));
+        try {
+            PhysicalClient existing = repository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Cliente físico com ID " + id + " não encontrado."));
 
-        Person person = new Person();
-        person.setStreet(dto.street());
-        person.setNumber(dto.number());
-        person.setNeighborhood(dto.neighborhood());
-        person.setCity(dto.city());
-        person.setCep(dto.cep());
+            Person person = new Person();
+            person.setStreet(dto.street());
+            person.setNumber(dto.number());
+            person.setNeighborhood(dto.neighborhood());
+            person.setCity(dto.city());
+            person.setCep(dto.cep());
 
-        personRepository.update(person);
+            personRepository.update(person);
 
-        existing.setName(dto.name());
-        existing.setCpf(dto.cpf());
-        existing.setStreet(dto.street());
-        existing.setNumber(dto.number());
-        existing.setNeighborhood(dto.neighborhood());
-        existing.setCity(dto.city());
-        existing.setCep(dto.cep());
-        existing.setPhone(dto.phone() != null ? dto.phone() : List.of());
+            existing.setName(dto.name());
+            existing.setCpf(dto.cpf());
+            existing.setStreet(dto.street());
+            existing.setNumber(dto.number());
+            existing.setNeighborhood(dto.neighborhood());
+            existing.setCity(dto.city());
+            existing.setCep(dto.cep());
+            existing.setPhone(dto.phone() != null ? dto.phone() : List.of());
 
-        repository.update(id, existing);
+            repository.update(id, existing);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao atualizar cliente físico: " + e.getMessage());
+        }
     }
 
     @Transactional
     public void deleteById(Integer id) {
-        repository.deleteById(id);
-        personRepository.deleteById(id);
+        try {
+            repository.deleteById(id);
+            personRepository.deleteById(id);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao deletar cliente físico: " + e.getMessage());
+        }
     }
 
     private PhysicalClientResponseDTO toResponseDTO(PhysicalClient client) {

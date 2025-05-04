@@ -25,76 +25,94 @@ public class LegalClientService {
 
     @Transactional
     public Integer save(LegalClientRequestDTO dto) {
+        try {
+            Person person = new Person();
+            person.setStreet(dto.street());
+            person.setNumber(dto.number());
+            person.setNeighborhood(dto.neighborhood());
+            person.setCity(dto.city());
+            person.setCep(dto.cep());
 
-        Person person = new Person();
-        person.setStreet(dto.street());
-        person.setNumber(dto.number());
-        person.setNeighborhood(dto.neighborhood());
-        person.setCity(dto.city());
-        person.setCep(dto.cep());
+            Integer idPessoa = personRepository.saveAndReturnId(person);
 
-        Integer idPessoa = personRepository.saveAndReturnId(person);
+            LegalClient client = new LegalClient();
+            client.setId(idPessoa);
+            client.setLegalName(dto.legalName());
+            client.setCnpj(dto.cnpj());
+            client.setStateRegistration(dto.stateRegistration());
+            client.setStreet(dto.street());
+            client.setNumber(dto.number());
+            client.setNeighborhood(dto.neighborhood());
+            client.setCity(dto.city());
+            client.setCep(dto.cep());
+            client.setPhone(dto.phone() != null ? dto.phone() : List.of());
 
-        LegalClient client = new LegalClient();
-        client.setId(idPessoa);
-        client.setLegalName(dto.legalName());
-        client.setCnpj(dto.cnpj());
-        client.setStateRegistration(dto.stateRegistration());
-        client.setStreet(dto.street());
-        client.setNumber(dto.number());
-        client.setNeighborhood(dto.neighborhood());
-        client.setCity(dto.city());
-        client.setCep(dto.cep());
-        client.setPhone(dto.phone() != null ? dto.phone() : List.of());
-
-        repository.save(client);
-        return idPessoa;
+            repository.save(client);
+            return idPessoa;
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao salvar cliente jurídico: " + e.getMessage());
+        }
     }
 
-
     public LegalClientResponseDTO findById(Integer id) {
-        LegalClient client = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Cliente jurídico não encontrado"));
-        return toResponseDTO(client);
+        try {
+            LegalClient client = repository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Cliente jurídico com ID " + id + " não encontrado"));
+            return toResponseDTO(client);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao buscar cliente jurídico: " + e.getMessage());
+        }
     }
 
     public List<LegalClientResponseDTO> findAll() {
-        return repository.findAll().stream()
-                .map(this::toResponseDTO)
-                .toList();
+        try {
+            return repository.findAll().stream()
+                    .map(this::toResponseDTO)
+                    .toList();
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao listar clientes jurídicos: " + e.getMessage());
+        }
     }
 
     @Transactional
     public void update(Integer id, LegalClientRequestDTO dto) {
-        LegalClient existing = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Cliente jurídico não encontrado"));
+        try {
+            LegalClient existing = repository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Cliente jurídico com ID " + id + " não encontrado"));
 
-        Person person = new Person();
-        person.setStreet(dto.street());
-        person.setNumber(dto.number());
-        person.setNeighborhood(dto.neighborhood());
-        person.setCity(dto.city());
-        person.setCep(dto.cep());
+            Person person = new Person();
+            person.setStreet(dto.street());
+            person.setNumber(dto.number());
+            person.setNeighborhood(dto.neighborhood());
+            person.setCity(dto.city());
+            person.setCep(dto.cep());
 
-        personRepository.update(person);
+            personRepository.update(person);
 
-        existing.setLegalName(dto.legalName());
-        existing.setCnpj(dto.cnpj());
-        existing.setStateRegistration(dto.stateRegistration());
-        existing.setStreet(dto.street());
-        existing.setNumber(dto.number());
-        existing.setNeighborhood(dto.neighborhood());
-        existing.setCity(dto.city());
-        existing.setCep(dto.cep());
-        existing.setPhone(dto.phone() != null ? dto.phone(): List.of());
+            existing.setLegalName(dto.legalName());
+            existing.setCnpj(dto.cnpj());
+            existing.setStateRegistration(dto.stateRegistration());
+            existing.setStreet(dto.street());
+            existing.setNumber(dto.number());
+            existing.setNeighborhood(dto.neighborhood());
+            existing.setCity(dto.city());
+            existing.setCep(dto.cep());
+            existing.setPhone(dto.phone() != null ? dto.phone() : List.of());
 
-        repository.update(id, existing);
+            repository.update(id, existing);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao atualizar cliente jurídico: " + e.getMessage());
+        }
     }
 
     @Transactional
     public void deleteById(Integer id) {
-        repository.deleteById(id);
-        personRepository.deleteById(id);
+        try {
+            repository.deleteById(id);
+            personRepository.deleteById(id);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao deletar cliente jurídico: " + e.getMessage());
+        }
     }
 
     private LegalClientResponseDTO toResponseDTO(LegalClient client) {

@@ -3,7 +3,6 @@ package br.com.project.controller;
 import br.com.project.dto.request.PhysicalClientRequestDTO;
 import br.com.project.dto.response.PhysicalClientResponseDTO;
 import br.com.project.service.PhysicalClientService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,22 +22,32 @@ public class PhysicalClientController {
     public ResponseEntity<?> save(@RequestBody PhysicalClientRequestDTO dto) {
         try {
             Integer id = service.save(dto);
-            return ResponseEntity.status(HttpStatus.CREATED).body(id);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.ok(id);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erro ao salvar cliente físico: " + e.getMessage());
         }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PhysicalClientResponseDTO> findById(@PathVariable Integer id) {
-        PhysicalClientResponseDTO response = service.findById(id);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<?> findById(@PathVariable Integer id) {
+        try {
+            PhysicalClientResponseDTO response = service.findById(id);
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao buscar cliente físico: " + e.getMessage());
+        }
     }
 
     @GetMapping
-    public ResponseEntity<List<PhysicalClientResponseDTO>> findAll() {
-        List<PhysicalClientResponseDTO> response = service.findAll();
-        return ResponseEntity.ok(response);
+    public ResponseEntity<?> findAll() {
+        try {
+            List<PhysicalClientResponseDTO> response = service.findAll();
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao listar clientes físicos: " + e.getMessage());
+        }
     }
 
     @PutMapping("/{id}")
@@ -46,10 +55,8 @@ public class PhysicalClientController {
         try {
             service.update(id, dto);
             return ResponseEntity.ok().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro interno: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erro ao atualizar cliente físico: " + e.getMessage());
         }
     }
 
@@ -58,8 +65,8 @@ public class PhysicalClientController {
         try {
             service.deleteById(id);
             return ResponseEntity.ok().build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao deletar cliente: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao deletar cliente físico: " + e.getMessage());
         }
     }
 }

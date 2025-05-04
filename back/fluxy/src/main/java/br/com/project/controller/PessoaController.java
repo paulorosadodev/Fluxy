@@ -19,32 +19,54 @@ public class PessoaController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> salvar(@RequestBody PersonRequestDTO pessoaRequestDTO) {
-        pessoaService.save(pessoaRequestDTO);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> salvar(@RequestBody PersonRequestDTO pessoaRequestDTO) {
+        try {
+            pessoaService.save(pessoaRequestDTO);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erro ao salvar pessoa: " + e.getMessage());
+        }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PersonResponseDTO> buscarPorId(@PathVariable Integer id) {
-        PersonResponseDTO responseDTO = pessoaService.findById(id);
-        return ResponseEntity.ok(responseDTO);
+    public ResponseEntity<?> buscarPorId(@PathVariable Integer id) {
+        try {
+            PersonResponseDTO responseDTO = pessoaService.findById(id);
+            return ResponseEntity.ok(responseDTO);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao buscar pessoa: " + e.getMessage());
+        }
     }
 
     @GetMapping
-    public ResponseEntity<List<PersonResponseDTO>> listarTodas() {
-        List<PersonResponseDTO> pessoas = pessoaService.listAll();
-        return ResponseEntity.ok(pessoas);
+    public ResponseEntity<?> listarTodas() {
+        try {
+            List<PersonResponseDTO> pessoas = pessoaService.listAll();
+            return ResponseEntity.ok(pessoas);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao listar pessoas: " + e.getMessage());
+        }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> atualizar(@PathVariable Integer id, @RequestBody PersonRequestDTO pessoaRequestDTO) {
-        pessoaService.update(id, pessoaRequestDTO);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> atualizar(@PathVariable Integer id, @RequestBody PersonRequestDTO pessoaRequestDTO) {
+        try {
+            pessoaService.update(id, pessoaRequestDTO);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erro ao atualizar pessoa: " + e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable Integer id) {
-        pessoaService.delete(id);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> deletar(@PathVariable Integer id) {
+        try {
+            pessoaService.delete(id);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao deletar pessoa: " + e.getMessage());
+        }
     }
 }

@@ -6,6 +6,7 @@ import br.com.project.model.HistoricPriceProduct;
 import br.com.project.repository.HistoricPriceProductRepository;
 import br.com.project.util.MapperUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,31 +21,54 @@ public class HistoricPriceProductService {
         this.mapperUtils = mapperUtils;
     }
 
+    @Transactional
     public HistoricPriceProductResponseDTO save(HistoricPriceProductRequestDTO requestDTO) {
-        HistoricPriceProduct historic = mapperUtils.map(requestDTO, HistoricPriceProduct.class);
-        Integer id = historicPriceProductRepository.save(historic);
-        historic.setIdHistoricPriceProduct(id);
-        return mapperUtils.map(historic, HistoricPriceProductResponseDTO.class);
+        try {
+            HistoricPriceProduct historic = mapperUtils.map(requestDTO, HistoricPriceProduct.class);
+            Integer id = historicPriceProductRepository.save(historic);
+            historic.setIdHistoricPriceProduct(id);
+            return mapperUtils.map(historic, HistoricPriceProductResponseDTO.class);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao salvar histórico de preço: " + e.getMessage());
+        }
     }
 
     public List<HistoricPriceProductResponseDTO> findAll() {
-        return mapperUtils.mapList(historicPriceProductRepository.findAll(), HistoricPriceProductResponseDTO.class);
+        try {
+            return mapperUtils.mapList(historicPriceProductRepository.findAll(), HistoricPriceProductResponseDTO.class);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao listar históricos de preço: " + e.getMessage());
+        }
     }
 
     public HistoricPriceProductResponseDTO findById(Integer id) {
-        HistoricPriceProduct historic = historicPriceProductRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Historic Price not found"));
-        return mapperUtils.map(historic, HistoricPriceProductResponseDTO.class);
+        try {
+            HistoricPriceProduct historic = historicPriceProductRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Histórico de preço com ID " + id + " não encontrado."));
+            return mapperUtils.map(historic, HistoricPriceProductResponseDTO.class);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao buscar histórico de preço: " + e.getMessage());
+        }
     }
 
+    @Transactional
     public HistoricPriceProductResponseDTO update(Integer id, HistoricPriceProductRequestDTO requestDTO) {
-        HistoricPriceProduct historic = mapperUtils.map(requestDTO, HistoricPriceProduct.class);
-        historic.setIdHistoricPriceProduct(id);
-        historicPriceProductRepository.update(historic);
-        return mapperUtils.map(historic, HistoricPriceProductResponseDTO.class);
+        try {
+            HistoricPriceProduct historic = mapperUtils.map(requestDTO, HistoricPriceProduct.class);
+            historic.setIdHistoricPriceProduct(id);
+            historicPriceProductRepository.update(historic);
+            return mapperUtils.map(historic, HistoricPriceProductResponseDTO.class);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao atualizar histórico de preço: " + e.getMessage());
+        }
     }
 
+    @Transactional
     public void delete(Integer id) {
-        historicPriceProductRepository.deleteById(id);
+        try {
+            historicPriceProductRepository.deleteById(id);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao deletar histórico de preço: " + e.getMessage());
+        }
     }
 }
