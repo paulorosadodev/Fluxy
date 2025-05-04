@@ -2,6 +2,7 @@ package br.com.project.controller;
 
 import br.com.project.model.Category;
 import br.com.project.service.CategoryService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,28 +19,34 @@ public class CategoryController {
     }
 
     @PostMapping
-    public void save(@RequestBody Category category) {
+    public ResponseEntity<Void> save(@RequestBody Category category) {
         service.save(category);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping
-    public List<Category> findAll() {
-        return service.findAll();
+    public ResponseEntity<List<Category>> findAll() {
+        List<Category> categories = service.findAll();
+        return ResponseEntity.ok(categories);
     }
 
     @GetMapping("/{code}")
-    public Optional<Category> findByCode(@PathVariable String code) {
-        return service.findByCode(code);
+    public ResponseEntity<Category> findByCode(@PathVariable String code) {
+        Optional<Category> category = service.findByCode(code);
+        return category.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{code}")
-    public void update(@PathVariable String code, @RequestBody Category category) {
+    public ResponseEntity<Void> update(@PathVariable String code, @RequestBody Category category) {
         category.setCode(code);
         service.update(category);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{code}")
-    public void deleteByCode(@PathVariable String code) {
+    public ResponseEntity<Void> deleteByCode(@PathVariable String code) {
         service.deleteByCode(code);
+        return ResponseEntity.ok().build();
     }
 }

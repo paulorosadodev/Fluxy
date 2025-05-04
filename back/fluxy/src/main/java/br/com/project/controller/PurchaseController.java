@@ -2,8 +2,10 @@ package br.com.project.controller;
 
 import br.com.project.model.Purchase;
 import br.com.project.service.PurchaseService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,28 +20,35 @@ public class PurchaseController {
     }
 
     @PostMapping
-    public Integer save(@RequestBody Purchase purchase) {
-        return purchaseService.save(purchase);
+    public ResponseEntity<Void> save(@RequestBody Purchase purchase) {
+        Integer savedId = purchaseService.save(purchase);
+        URI location = URI.create("/purchases/" + savedId);
+        return ResponseEntity.created(location).build();
     }
 
     @GetMapping("/{number}")
-    public Optional<Purchase> findByNumber(@PathVariable Integer number) {
-        return purchaseService.findByNumber(number);
+    public ResponseEntity<Purchase> findByNumber(@PathVariable Integer number) {
+        Optional<Purchase> purchase = purchaseService.findByNumber(number);
+        return purchase.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping
-    public List<Purchase> findAll() {
-        return purchaseService.findAll();
+    public ResponseEntity<List<Purchase>> findAll() {
+        List<Purchase> purchases = purchaseService.findAll();
+        return ResponseEntity.ok(purchases);
     }
 
     @PutMapping("/{number}")
-    public void update(@PathVariable Integer number, @RequestBody Purchase purchase) {
+    public ResponseEntity<Void> update(@PathVariable Integer number, @RequestBody Purchase purchase) {
         purchase.setNumber(number);
         purchaseService.update(purchase);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{number}")
-    public void deleteByNumber(@PathVariable Integer number) {
+    public ResponseEntity<Void> deleteByNumber(@PathVariable Integer number) {
         purchaseService.deleteByNumber(number);
+        return ResponseEntity.noContent().build();
     }
 }
