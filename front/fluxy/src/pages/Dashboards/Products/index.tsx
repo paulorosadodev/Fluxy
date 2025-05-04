@@ -87,7 +87,6 @@ export default function ProductsDashboard() {
     if (selectedRow.length > 1 && products) {
 
         const selectedProduct = products.filter((product) => String(product.id) === selectedRow.split(",")[0])[0];
-
         if (selectedProduct) {
             editData = [String(selectedProduct.id), selectedProduct.codEa, selectedProduct.name, selectedProduct.category.name, String(selectedProduct.price), String(selectedProduct.stockQuantity)];
         }

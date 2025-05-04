@@ -65,18 +65,32 @@ export const DataProvider = ({ children }: DataProviderProps) => {
 
     const loadData = async () => {
         setIsLoading(true);
-
-        const result = await fetchData();
-        setData(result);
-        setProducts(result.products);
-        setSuppliers(result.suppliers);
-        setEmployees(result.employees);
-        setNaturalPersonCustomers(result.naturalPersonCustomers);
-        setLegalEntityCustomers(result.legalEntityCustomers);
-        setPurchases(result.purchases);
-        setCategories(result.categories);
-        setProductSupplies(result.productSupplies);
-
+    
+        const timeoutPromise = new Promise<null>(resolve => 
+            setTimeout(() => resolve(null), 3000)
+        );
+    
+        try {
+            const result = await Promise.race([
+                fetchData(),
+                timeoutPromise
+            ]) as FetchDataResponse | null;
+    
+            if (result) {
+                setData(result);
+                setProducts(result.products);
+                setSuppliers(result.suppliers);
+                setEmployees(result.employees);
+                setNaturalPersonCustomers(result.naturalPersonCustomers);
+                setLegalEntityCustomers(result.legalEntityCustomers);
+                setPurchases(result.purchases);
+                setCategories(result.categories);
+                setProductSupplies(result.productSupplies);
+            }
+        } catch (error) {
+            console.error("Erro ao carregar dados:", error);
+        }
+    
         setIsLoading(false);
     };
 

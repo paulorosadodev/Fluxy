@@ -24,7 +24,6 @@ export function isValidStateRegistration(ie: string): boolean {
     return true;
 }
 
-
 export function isValidCNPJ(cnpj: string): boolean {
     cnpj = cnpj.replace(/[^\d]+/g, "");
 
@@ -155,6 +154,10 @@ export function formatCustomer(customer: Customer) {
     return `${customer.legalName} | ${formatCNPJ(customer.cnpj ?? "")}`;
 }
 
+export function formatPurchaseProduct(product: Product) {
+    return `${product.id} | ${product.name}`;
+}
+
 export function formatEmployee(employee: Employee) {
     return `${employee.name} | ${employee.employeeNumber}`;
 }
@@ -172,31 +175,19 @@ export function formatStateRegistration(ie: string) {
     return cleaned.replace(/(\d{7})(\d{2})/, "$1-$2");
 }
 
-export function formatDate(date: string | Date) {
-
+export function formatDate(date: string): string {
     
-    if (typeof date === "string") {
-        
-        if (date.includes("undefined")) {
-            return date.slice(9);
-        }
-        const timePart = date.slice(0, 5);  
-        const datePart = date.slice(5);     
-        
-        date = `${datePart}T${timePart}`;
-    } 
+    const cleanDate = date.replace("undefined", "");
 
-    const d = new Date(date);
+    const [fullDate, time] = cleanDate.split("T"); 
+    const [year, month, day] = fullDate.split("-");
 
-    if (isNaN(d.getTime())) return String(date);
+    const formattedDate = `${day}/${month}/${year}`;
 
-    const day = String(d.getDate()).padStart(2, "0");
-    const month = String(d.getMonth() + 1).padStart(2, "0");
-    const year = d.getFullYear();
-    const hours = String(d.getHours()).padStart(2, "0");
-    const minutes = String(d.getMinutes()).padStart(2, "0");
-    const hasTime = d.getHours() !== 0 || d.getMinutes() !== 0 || d.getSeconds() !== 0;
+    if (time) {
+        const [hour, minute] = time.split(":");
+        return `${hour}:${minute} - ${formattedDate}`;
+    }
 
-    return hasTime ? `${hours}:${minutes} - ${day}/${month}/${year}` : `${day}/${month}/${year}`;
+    return formattedDate;
 }
-

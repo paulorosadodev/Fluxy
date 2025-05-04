@@ -127,8 +127,8 @@ export const fetchData = async () => {
             {
                 number: 2,
                 customer: {
-                    cpf: "23456789012",
-                    name: "Carlos Almeida",
+                    cpf: "75248582059",
+                    name: "Carlos Souza",
                     address: {
                         street: "Avenida Central",
                         number: "350",
@@ -139,16 +139,16 @@ export const fetchData = async () => {
                     phone: ["11987654321"]
                 },
                 product: {
-                    codEa: "002",
-                    name: "Banana",
+                    codEa: "7891234567001",
+                    name: "Maçã Fuji 1kg",
                     category: { code: "Hortifruti", name: "Hortifruti" },
-                    price: 3,
-                    stockQuantity: 120
+                    price: 3.99,
+                    stockQuantity: 100
                 },
                 employee: {
-                    employeeNumber: "002",
-                    name: "Fernanda Lima",
-                    cpf: "12345678900",
+                    employeeNumber: "EMP000002",
+                    name: "Maria Silva",
+                    cpf: "39825433043",
                     role: "Atendente",
                     salary: 2500,
                     address: {
@@ -161,17 +161,17 @@ export const fetchData = async () => {
                     phone: ["11987654322"]
                 },
                 productAmount: 8,
-                date: new Date(),
+                date: "2025-03-15T14:30:00",
                 paymentMethod: {
-                    type: "Cash",
-                    installments: 1
+                    type: "Crédito",
+                    installments: 2
                 }
             },
             {
                 number: 3,
                 customer: {
-                    cpf: "32165498765",
-                    name: "Maria Santos",
+                    cpf: "50224698044",
+                    name: "Maria Oliveira",
                     address: {
                         street: "Rua das Flores",
                         number: "12",
@@ -189,9 +189,9 @@ export const fetchData = async () => {
                     stockQuantity: 200
                 },
                 employee: {
-                    employeeNumber: "003",
-                    name: "Lucas Pereira",
-                    cpf: "98765432100",
+                    employeeNumber: "EMP000003",
+                    name: "Carlos Souza",
+                    cpf: "96152518016",
                     role: "Repositor",
                     salary: 2200,
                     address: {
@@ -204,7 +204,7 @@ export const fetchData = async () => {
                     phone: ["19988884444"]
                 },
                 productAmount: 2,
-                date: new Date(),
+                date: "2025-03-15T14:30:00",
                 paymentMethod: {
                     type: "Debit Card",
                     installments: 1
@@ -233,9 +233,9 @@ export const fetchData = async () => {
                     stockQuantity: 15
                 },
                 employee: {
-                    employeeNumber: "004",
-                    name: "Juliana Rocha",
-                    cpf: "65432198700",
+                    employeeNumber: "EMP000004",
+                    name: "Ana Paula",
+                    cpf: "71215577036",
                     role: "Vendedora",
                     salary: 3200,
                     address: {
@@ -248,7 +248,7 @@ export const fetchData = async () => {
                     phone: ["11998761234"]
                 },
                 productAmount: 1,
-                date: new Date(),
+                date: "2025-03-15T14:30:00",
                 paymentMethod: {
                     type: "Credit Card",
                     installments: 6
@@ -257,8 +257,8 @@ export const fetchData = async () => {
             {
                 number: 5,
                 customer: {
-                    cpf: "56789012345",
-                    name: "Joaquim Silva",
+                    cpf: "38687054068",
+                    name: "João da Silva",
                     address: {
                         street: "Avenida Brasil",
                         number: "1000",
@@ -276,9 +276,9 @@ export const fetchData = async () => {
                     stockQuantity: 500
                 },
                 employee: {
-                    employeeNumber: "005",
-                    name: "Carla Mendes",
-                    cpf: "32178965400",
+                    employeeNumber: "EMP000005",
+                    name: "Lucas Mendes",
+                    cpf: "14780616000",
                     role: "Caixa",
                     salary: 2400,
                     address: {
@@ -291,7 +291,7 @@ export const fetchData = async () => {
                     phone: ["67999887766"]
                 },
                 productAmount: 20,
-                date: new Date(),
+                date: "2025-03-15T14:30:00",
                 paymentMethod: {
                     type: "Pix",
                     installments: 1
@@ -300,8 +300,8 @@ export const fetchData = async () => {
             {
                 number: 6,
                 customer: {
-                    cpf: "14383252400",
-                    name: "Paulo Rosado",
+                    cpf: "75248582059",
+                    name: "Carlos Souza",
                     address: {
                         street: "Rua Faustino Porto",
                         number: "200",
@@ -319,9 +319,9 @@ export const fetchData = async () => {
                     stockQuantity: 300
                 },
                 employee: {
-                    employeeNumber: "001",
-                    name: "Paulo Rosado",
-                    cpf: "14383252400",
+                    employeeNumber: "EMP000005",
+                    name: "Lucas Mendes",
+                    cpf: "14780616000",
                     role: "Caixa",
                     salary: 3040.50,
                     address: {
@@ -334,7 +334,7 @@ export const fetchData = async () => {
                     phone: ["81999972730"]
                 },
                 productAmount: 15,
-                date: new Date(),
+                date: "2025-03-15T14:30:00",
                 paymentMethod: {
                     type: "Cash",
                     installments: 1
@@ -378,139 +378,10 @@ export const fetchData = async () => {
                     phone: ["21999988776"]
                 },
                 productAmount: 10,
-                date: new Date(),
+                date: "2025-03-15T14:30:00",
                 paymentMethod: {
                     type: "Credit Card",
                     installments: 2
-                }
-            },
-            {
-                number: 8,
-                customer: {
-                    cpf: "11223344556",
-                    name: "Ana Beatriz",
-                    address: {
-                        street: "Rua Nova Esperança",
-                        number: "40",
-                        neighborhood: "Santa Cruz",
-                        city: "Salvador",
-                        cep: "40100123"
-                    },
-                    phone: ["71998877665"]
-                },
-                product: {
-                    codEa: "008",
-                    name: "Papel Higiênico",
-                    category: { code: "Higiene", name: "Higiene" },
-                    price: 12,
-                    stockQuantity: 150
-                },
-                employee: {
-                    employeeNumber: "007",
-                    name: "Mariana Freitas",
-                    cpf: "33445566778",
-                    role: "Supervisora",
-                    salary: 4500,
-                    address: {
-                        street: "Rua dos Girassóis",
-                        number: "77",
-                        neighborhood: "Pituba",
-                        city: "Salvador",
-                        cep: "40100234"
-                    },
-                    phone: ["71999887744"]
-                },
-                productAmount: 5,
-                date: new Date(),
-                paymentMethod: {
-                    type: "Pix",
-                    installments: 1
-                }
-            },
-            {
-                number: 9,
-                customer: {
-                    cpf: "99887766554",
-                    name: "Felipe Carvalho",
-                    address: {
-                        street: "Rua do Sol",
-                        number: "101",
-                        neighborhood: "Centro",
-                        city: "Fortaleza",
-                        cep: "60010001"
-                    },
-                    phone: ["85991234567"]
-                },
-                product: {
-                    codEa: "009",
-                    name: "Leite Integral",
-                    category: { code: "Alimentos", name: "Alimentos" },
-                    price: 6.5,
-                    stockQuantity: 180
-                },
-                employee: {
-                    employeeNumber: "008",
-                    name: "Eduardo Silva",
-                    cpf: "77665544332",
-                    role: "Repositor",
-                    salary: 2300,
-                    address: {
-                        street: "Rua das Marés",
-                        number: "21",
-                        neighborhood: "Meireles",
-                        city: "Fortaleza",
-                        cep: "60060123"
-                    },
-                    phone: ["85998877666"]
-                },
-                productAmount: 6,
-                date: new Date(),
-                paymentMethod: {
-                    type: "Debit Card",
-                    installments: 1
-                }
-            },
-            {
-                number: 10,
-                customer: {
-                    cpf: "55667788990",
-                    name: "Clara Mendes",
-                    address: {
-                        street: "Rua Azul",
-                        number: "89",
-                        neighborhood: "Boa Vista",
-                        city: "Belo Horizonte",
-                        cep: "30140071"
-                    },
-                    phone: ["31992345678"]
-                },
-                product: {
-                    codEa: "010",
-                    name: "Biscoito Recheado",
-                    category: { code: "Alimentos", name: "Alimentos" },
-                    price: 4.2,
-                    stockQuantity: 220
-                },
-                employee: {
-                    employeeNumber: "009",
-                    name: "Henrique Dias",
-                    cpf: "22334455667",
-                    role: "Caixa",
-                    salary: 2700,
-                    address: {
-                        street: "Rua Estrela",
-                        number: "70",
-                        neighborhood: "Savassi",
-                        city: "Belo Horizonte",
-                        cep: "30140072"
-                    },
-                    phone: ["31991234567"]
-                },
-                productAmount: 12,
-                date: new Date(),
-                paymentMethod: {
-                    type: "Credit Card",
-                    installments: 3
                 }
             }
         ],        
@@ -565,7 +436,8 @@ export const fetchData = async () => {
             }
         ],        
         productSupplies: [
-            {
+            {   
+                id: 1,
                 supplier: {
                     cnpj: "67015726000179",
                     name: "Estudos LTDA",
@@ -579,8 +451,9 @@ export const fetchData = async () => {
                     phone: ["81999972730"]
                 },
                 product: {
-                    codEa: "001",
-                    name: "Maçã",
+                    id: 1,
+                    codEa: "7891234567001",
+                    name: "Maçã Fuji 1kg",
                     category: { code: "Hortifruti", name: "Hortifruti" },
                     price: 5,
                     stockQuantity: 304
@@ -590,6 +463,7 @@ export const fetchData = async () => {
                 date: "2025-03-15"
             },
             {
+                id: 2,
                 supplier: {
                     cnpj: "00457891000123",
                     name: "Alimentos Brasil SA",
@@ -603,8 +477,9 @@ export const fetchData = async () => {
                     phone: ["11223344556"]
                 },
                 product: {
-                    codEa: "002",
-                    name: "Arroz Tipo 1",
+                    id: 4,
+                    codEa: "7891234567004",
+                    name: "Arroz Integral 1kg",
                     category: { code: "Grãos", name: "Grãos" },
                     price: 22.5,
                     stockQuantity: 120
@@ -614,6 +489,7 @@ export const fetchData = async () => {
                 date: "2025-04-10"
             },
             {
+                id: 3,
                 supplier: {
                     cnpj: "12894567000199",
                     name: "Frutas Tropicais ME",
@@ -627,9 +503,10 @@ export const fetchData = async () => {
                     phone: ["85988776655"]
                 },
                 product: {
-                    codEa: "003",
-                    name: "Feijão Carioca",
-                    category: { code: "Grãos", name: "Grãos" },
+                    id: 5,
+                    codEa: "7891234567005",
+                    name: "Leite Integral 1L",
+                    category: { code: "Laticínios", name: "Laticínios" },
                     price: 8.99,
                     stockQuantity: 75
                 },
@@ -638,6 +515,7 @@ export const fetchData = async () => {
                 date: "2025-04-20"
             },
             {
+                id: 4,
                 supplier: {
                     cnpj: "23654789000111",
                     name: "Verde Vale Agro",
@@ -651,9 +529,10 @@ export const fetchData = async () => {
                     phone: ["1933445566"]
                 },
                 product: {
-                    codEa: "004",
-                    name: "Leite Integral",
-                    category: { code: "Laticínios", name: "Laticínios" },
+                    id: 6,
+                    codEa: "7891234567006",
+                    name: "Pão Francês 1kg",
+                    category: { code: "Padaria", name: "Padaria" },
                     price: 4.79,
                     stockQuantity: 260
                 },

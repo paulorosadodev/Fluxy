@@ -34,9 +34,10 @@ type EntityFormProps = {
 }
 
 export function EntityForm({open, type, title, fields, formControllers, data, selectedRowController, popUpMessage, popUpController, onSubmitAPI}: EntityFormProps) {
-
     const id = Number(data?.[0]);
     const rawData = useMemo(() => data?.slice(1), [data]);
+
+    console.log(rawData);
 
     const createValidationSchema = (fields: Field[][]) => {
         const shape: Record<string, z.ZodTypeAny> = {};
@@ -55,9 +56,11 @@ export function EntityForm({open, type, title, fields, formControllers, data, se
     const {setMadeRequest} = useData();
 
     const validationSchema = createValidationSchema(fields);
+
     const { register, watch, control, handleSubmit, formState: { errors }, reset } = useForm({
         resolver: zodResolver(validationSchema),
     });
+
     const { fields: phoneFields, append, remove } = useFieldArray({
         control,
         name: "phone",
@@ -127,7 +130,6 @@ export function EntityForm({open, type, title, fields, formControllers, data, se
     });
 
     const isSubmitDisabled = !isFormFilled;
-
 
     const handleClose = () => {
         reset();
@@ -232,76 +234,78 @@ export function EntityForm({open, type, title, fields, formControllers, data, se
                                                 );
                                             }
                                             return (
-                                                <div className="input-wrapper" key={index}>
-                                                    <label htmlFor={field.value}>{field.label}</label>
-                                                    {field.type === "select" ? (
-                                                        <select
-                                                            id={field.value}
-                                                            {...register(field.value)}
-                                                            defaultValue={""}
-                                                        >
-                                                            <option value="" disabled>
-                                                                {field.placeholder}
-                                                            </option>
-                                                            {field.options?.map((option: string, idx: number) => (
-                                                                <option key={idx} value={option}>
-                                                                    {option}
+                                                field.value === "installments" && watchedValues.paymentType !== "Crédito" ? null : (
+                                                    <div className="input-wrapper" key={index}>
+                                                        <label htmlFor={field.value}>{field.label}</label>
+                                                        {field.type === "select" ? (
+                                                            <select
+                                                                id={field.value}
+                                                                {...register(field.value)}
+                                                                defaultValue={""}
+                                                            >
+                                                                <option value="" disabled>
+                                                                    {field.placeholder}
                                                                 </option>
-                                                            ))}
-                                                        </select>
-                                                    ) : field.label === "CPF" ? (
-                                                        <input
-                                                            type={field.type}
-                                                            id={field.value}
-                                                            placeholder={field.placeholder}
-                                                            {...register("cpf", {
-                                                                onChange: (e) => {
-                                                                    e.target.value = formatCPF(e.target.value);
-                                                                }
-                                                            })}
-                                                        />
-                                                    ) : field.label === "CEP" ? (
-                                                        <input
-                                                            type={field.type}
-                                                            id={field.value}
-                                                            placeholder={field.placeholder}
-                                                            {...register("cep", {
-                                                                onChange: (e) => {
-                                                                    e.target.value = formatCEP(e.target.value);
-                                                                }
-                                                            })}
-                                                        />
-                                                    ): field.label === "CNPJ" ? (
-                                                        <input
-                                                            type={field.type}
-                                                            id={field.value}
-                                                            placeholder={field.placeholder}
-                                                            {...register("cnpj", {
-                                                                onChange: (e) => {
-                                                                    e.target.value = formatCNPJ(e.target.value);
-                                                                }
-                                                            })}
-                                                        />
-                                                    ) : field.label === "Inscrição Estadual" ? (
-                                                        <input
-                                                            type={field.type}
-                                                            id={field.value}
-                                                            placeholder={field.placeholder}
-                                                            {...register("stateRegistration", {
-                                                                onChange: (e) => {
-                                                                    e.target.value = formatStateRegistration(e.target.value);
-                                                                }
-                                                            })}
-                                                        />
-                                                    ) : (
-                                                        <input
-                                                            type={field.type}
-                                                            id={field.value}
-                                                            placeholder={field.placeholder}
-                                                            {...register(field.value)}
-                                                        />
-                                                    )}
-                                                </div>
+                                                                {field.options?.map((option: string, idx: number) => (
+                                                                    <option key={idx} value={option}>
+                                                                        {option}
+                                                                    </option>
+                                                                ))}
+                                                            </select>
+                                                        ) : field.label === "CPF" ? (
+                                                            <input
+                                                                type={field.type}
+                                                                id={field.value}
+                                                                placeholder={field.placeholder}
+                                                                {...register("cpf", {
+                                                                    onChange: (e) => {
+                                                                        e.target.value = formatCPF(e.target.value);
+                                                                    }
+                                                                })}
+                                                            />
+                                                        ) : field.label === "CEP" ? (
+                                                            <input
+                                                                type={field.type}
+                                                                id={field.value}
+                                                                placeholder={field.placeholder}
+                                                                {...register("cep", {
+                                                                    onChange: (e) => {
+                                                                        e.target.value = formatCEP(e.target.value);
+                                                                    }
+                                                                })}
+                                                            />
+                                                        ): field.label === "CNPJ" ? (
+                                                            <input
+                                                                type={field.type}
+                                                                id={field.value}
+                                                                placeholder={field.placeholder}
+                                                                {...register("cnpj", {
+                                                                    onChange: (e) => {
+                                                                        e.target.value = formatCNPJ(e.target.value);
+                                                                    }
+                                                                })}
+                                                            />
+                                                        ) : field.label === "Inscrição Estadual" ? (
+                                                            <input
+                                                                type={field.type}
+                                                                id={field.value}
+                                                                placeholder={field.placeholder}
+                                                                {...register("stateRegistration", {
+                                                                    onChange: (e) => {
+                                                                        e.target.value = formatStateRegistration(e.target.value);
+                                                                    }
+                                                                })}
+                                                            />
+                                                        ) : (
+                                                            <input
+                                                                type={field.type}
+                                                                id={field.value}
+                                                                placeholder={field.placeholder}
+                                                                {...register(field.value)}
+                                                            />
+                                                        )}
+                                                    </div>
+                                                )
                                             );
                                         })
                                     }
@@ -311,7 +315,6 @@ export function EntityForm({open, type, title, fields, formControllers, data, se
                     </div>
                     <button type="submit" disabled={isSubmitDisabled}>{type}</button>
                 </form>
-
 
             </FormWrapper>
 
