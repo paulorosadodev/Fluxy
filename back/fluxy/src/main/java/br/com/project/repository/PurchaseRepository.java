@@ -73,8 +73,14 @@ public class PurchaseRepository {
     }
 
     public void deleteByNumber(Integer number) {
-        String sql = "DELETE FROM compra WHERE numero = ?";
-        jdbcTemplate.update(sql, number);
+
+        try {
+            String sql = "DELETE FROM compra WHERE numero = ?";
+            jdbcTemplate.update(sql, number);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao deletar compra: " + e.getMessage());
+        }
+
     }
 
     private static class PurchaseRowMapper implements RowMapper<Purchase> {

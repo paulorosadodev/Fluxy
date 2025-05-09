@@ -91,6 +91,7 @@ export default function PurchasesDashboard() {
                 label: "Parcelas",
                 type: "number",
                 value: "installments",
+                defaultValue: 1,
                 placeholder: "Digite a quantidade de parcelas",
                 validation: z.coerce.number().int().min(1, { message: "Quantidade de parcelas deve ser pelo menos 1" }),
             }

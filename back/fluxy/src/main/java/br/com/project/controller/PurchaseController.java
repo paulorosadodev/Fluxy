@@ -1,6 +1,10 @@
 package br.com.project.controller;
 
+import br.com.project.dto.request.PurchaseRequestDTO;
+import br.com.project.dto.response.ProductResponseDTO;
+import br.com.project.dto.response.PurchaseResponseDTO;
 import br.com.project.model.Purchase;
+import br.com.project.service.ProductService;
 import br.com.project.service.PurchaseService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,35 +24,62 @@ public class PurchaseController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> save(@RequestBody Purchase purchase) {
-        Integer savedId = purchaseService.save(purchase);
-        URI location = URI.create("/purchases/" + savedId);
-        return ResponseEntity.created(location).build();
+    public ResponseEntity<?> save(@RequestBody PurchaseRequestDTO requestDTO) {
+        try {
+            PurchaseResponseDTO responseDTO = purchaseService.save(requestDTO);
+            return ResponseEntity.created(URI.create("/purchases/" + responseDTO.number())).body(responseDTO);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body("Erro ao salvar compra: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao salvar compra: " + e.getMessage());
+        }
     }
 
     @GetMapping("/{number}")
-    public ResponseEntity<Purchase> findByNumber(@PathVariable Integer number) {
-        Optional<Purchase> purchase = purchaseService.findByNumber(number);
-        return purchase.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<?> findByNumber(@PathVariable Integer number) {
+        try {
+            PurchaseResponseDTO response = purchaseService.findByNumber(number);
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao buscar número: " + e.getMessage());
+        }
     }
 
     @GetMapping
-    public ResponseEntity<List<Purchase>> findAll() {
-        List<Purchase> purchases = purchaseService.findAll();
-        return ResponseEntity.ok(purchases);
+    public ResponseEntity<List<PurchaseResponseDTO>> findAll() {
+        try {
+            List<PurchaseResponseDTO> purchases = purchaseService.findAll();
+            return ResponseEntity.ok(purchases);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(null);
+        }
     }
 
     @PutMapping("/{number}")
-    public ResponseEntity<Void> update(@PathVariable Integer number, @RequestBody Purchase purchase) {
-        purchase.setNumber(number);
-        purchaseService.update(purchase);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> update(@PathVariable Integer number, @RequestBody PurchaseRequestDTO requestDTO) {
+        try {
+            purchaseService.update(number, requestDTO);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body("Erro ao atualizar compra: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao atualizar compra: " + e.getMessage());
+        }
     }
 
     @DeleteMapping("/{number}")
     public ResponseEntity<Void> deleteByNumber(@PathVariable Integer number) {
-        purchaseService.deleteByNumber(number);
-        return ResponseEntity.noContent().build();
+        try {
+            purchaseService.deleteByNumber(number);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(null);
+        }
     }
 }
