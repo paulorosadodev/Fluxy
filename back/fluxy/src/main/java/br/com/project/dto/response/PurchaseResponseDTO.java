@@ -1,11 +1,12 @@
 package br.com.project.dto.response;
 
-import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 public record PurchaseResponseDTO(
         Integer number,
-        Date date,
-        Integer hour,
+        LocalDate date,
+        LocalTime time,
         Integer installments,
         String type,
         Integer productAmount,
