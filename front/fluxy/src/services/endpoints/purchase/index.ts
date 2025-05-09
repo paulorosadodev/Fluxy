@@ -1,23 +1,32 @@
 import { api } from "../../api";
 
-interface ProductPayload {
+interface PurchasePayload {
     id: number;
-    name: string;
-    codEa: string;
-    price: number;
-    stockQuantity: number;
-    categoryCode: string;
+    customerId: string;
+    employeeId: string;
+    installments: number;
+    paymentType: string;
+    productAmount: number;
+    productId: string
 }
 
 export const fetchPurchase = async () => {
-    const response = await api.get("/products", );
+    const response = await api.get("/purchases", );
     return response.data;
 };
 
-export const addPurchase = async (data: ProductPayload) => {
+export const addPurchase = async (data: PurchasePayload) => {
+
+    const formattedData = {
+        ...data,
+        productId: data.productId.split("|")[0]?.trim(),
+        customerId: data.customerId.split("|")[1]?.trim(),
+        employeeId: data.employeeId.split("|")[1]?.trim(),
+    };
 
     try {
-        const response = await api.post("/products", data);
+        console.log(formattedData);
+        const response = await api.post("/purchases", formattedData);
         return response;
     } catch (error: any) {
         
@@ -26,13 +35,26 @@ export const addPurchase = async (data: ProductPayload) => {
         if (errorMessage) {
             throw new Error(errorMessage);
         }
-        throw new Error("Erro inesperado ao adicionar produto");
+        throw new Error("Erro inesperado ao adicionar compra");
     }
 };
 
-export const editPurchase = async (data: ProductPayload) => {
+export const editPurchase = async (data: PurchasePayload) => {
+
+    const match = data.productId.match(/\d+/);
+    const cleanedProductId = match ? Number(match[0]) : null;
+
+    if (!cleanedProductId) {
+        throw new Error("ID do produto inválido");
+    }
+
+    const formattedData = {
+        ...data,
+        productId: cleanedProductId,
+    };
+
     try {
-        const response = await api.put(`/products/${data.id}`, data);
+        const response = await api.put(`/purchases/${data.id}`, formattedData);
         return response;
     } catch (error: any) {
         
@@ -41,13 +63,13 @@ export const editPurchase = async (data: ProductPayload) => {
         if (errorMessage) {
             throw new Error(errorMessage);
         }
-        throw new Error("Erro inesperado ao editar produto");
+        throw new Error("Erro inesperado ao editar compra");
     }
 };
 
-export const deletePurchase = async (data: ProductPayload) => {
+export const deletePurchase = async (data: PurchasePayload) => {
     try {
-        const response = await api.delete(`/products/${data}`);
+        const response = await api.delete(`/purchases/${data}`);
         return response;
     } catch (error: any) {
         
@@ -56,6 +78,6 @@ export const deletePurchase = async (data: ProductPayload) => {
         if (errorMessage) {
             throw new Error(errorMessage);
         }
-        throw new Error("Erro inesperado ao excluir produto");
+        throw new Error("Erro inesperado ao excluir compra");
     }
 };
