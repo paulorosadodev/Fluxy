@@ -188,6 +188,16 @@ public class EmployerRepository {
         }
     }
 
+    public Optional<Integer> findEmployeeIdByMatricula(String matricula) {
+        try {
+            String sql = "SELECT id_funcionario FROM funcionario WHERE matricula = ?";
+            Integer id = jdbcTemplate.queryForObject(sql, Integer.class, matricula);
+            return Optional.ofNullable(id);
+        } catch (Exception e) {
+            return Optional.empty() ;
+        }
+    }
+
     public boolean existsByCpf(String cpf) {
         try {
             String sql = "SELECT COUNT(*) FROM funcionario WHERE cpf = ?";

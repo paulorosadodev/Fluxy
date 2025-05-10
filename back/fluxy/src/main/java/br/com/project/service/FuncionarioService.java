@@ -171,4 +171,9 @@ public class FuncionarioService {
         int num = (int) (Math.random() * 1_000_000);
         return String.format("EMP%06d", num);
     }
+
+    public Integer buscarIdPorMatricula(String matricula) {
+        return employerRepository.findEmployeeIdByMatricula(matricula)
+                .orElseThrow(() -> new RuntimeException("Funcionário com matrícula " + matricula + " não encontrado"));
+    }
 }
