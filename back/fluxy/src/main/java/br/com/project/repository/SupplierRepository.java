@@ -34,7 +34,7 @@ public class SupplierRepository {
                 ps.setString(2, supplier.getNumber());
                 ps.setString(3, supplier.getNeighborhood());
                 ps.setString(4, supplier.getCity());
-                ps.setString(5, supplier.getZipCode());
+                ps.setString(5, supplier.getCep());
                 return ps;
             }, keyHolder);
 
@@ -87,7 +87,7 @@ public class SupplierRepository {
                     supplier.getNumber(),
                     supplier.getNeighborhood(),
                     supplier.getCity(),
-                    supplier.getZipCode(),
+                    supplier.getCep(),
                     id
             );
         } catch (Exception e) {

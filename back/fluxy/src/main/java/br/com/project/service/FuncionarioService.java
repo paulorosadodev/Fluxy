@@ -5,9 +5,12 @@ import br.com.project.dto.response.EmployeeResponseDTO;
 import br.com.project.model.Employer;
 import br.com.project.model.Person;
 import br.com.project.model.Phone;
+import br.com.project.model.User;
 import br.com.project.repository.EmployerRepository;
 import br.com.project.repository.PersonRepository;
 import br.com.project.repository.PhoneRepository;
+import br.com.project.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,13 +22,19 @@ public class FuncionarioService {
     private final EmployerRepository employerRepository;
     private final PersonRepository personRepository;
     private final PhoneRepository phoneRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public FuncionarioService(EmployerRepository employerRepository,
                               PersonRepository personRepository,
-                              PhoneRepository phoneRepository) {
+                              PhoneRepository phoneRepository,
+                              UserRepository userRepository,
+                              PasswordEncoder passwordEncoder) {
         this.employerRepository = employerRepository;
         this.personRepository = personRepository;
         this.phoneRepository = phoneRepository;
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional
@@ -54,6 +63,15 @@ public class FuncionarioService {
             employer.setRole(dto.role());
             employer.setIdSupervisor(dto.fkSupervisor());
             employerRepository.save(employer);
+            String systemRole = mapearRoleSistema(dto.role(), dto.sectorOfActivity());
+            if (!systemRole.equals("none")) {
+                String senhaSomenteDigitos = dto.cpf().replaceAll("\\D", "");
+                User user = new User();
+                user.setName(employer.getEmployeeNumber());
+                user.setRole(systemRole);
+                user.setPassword(passwordEncoder.encode(senhaSomenteDigitos));
+                userRepository.save(user);
+            }
 
             if (dto.phone() != null && !dto.phone().isEmpty()) {
                 for (String num : dto.phone()) {
@@ -66,6 +84,48 @@ public class FuncionarioService {
         } catch (Exception e) {
             throw new RuntimeException("Erro ao salvar funcionário: " + e.getMessage(), e);
         }
+    }
+
+    private String mapearRoleSistema(String role, String sector) {
+        role = role.toLowerCase();
+        sector = sector != null ? sector.toLowerCase() : "";
+
+        if (role.equals("vigilante") || sector.equals("limpeza")){
+            return "none";
+        }
+
+        if (role.contains("gerente")) {
+            return "admin";
+        }
+        if (role.equals("caixa")) {
+            return "purchases-customers-products";
+        }
+        if (role.equals("repositor")) {
+            return "products-productSupplies-suppliers";
+        }
+        if ((role.equals("açougueiro") && sector.equals("açougue")) ||
+                (role.equals("padeiro") && sector.equals("padaria"))) {
+            return "products-productSupplies";
+        }
+        if (role.equals("auxiliar")) {
+            if (sector.equals("estoque")) {
+                return "products-productSupplies-suppliers";
+            }
+            if (sector.equals("administração")) {
+                return "employees-customers-products-productSupplies-suppliers-purchases";
+            }
+            return "customers-products";
+        }
+        if (role.equals("estagiário")) {
+            if (sector.equals("estoque")) {
+                return "products-productSupplies-suppliers";
+            }
+            if (sector.equals("administração")) {
+                return "employees-customers-products-productSupplies-suppliers-purchases";
+            }
+            return "customers-products";
+        }
+        return "none";
     }
 
     public EmployeeResponseDTO buscarPorId(Integer id) {

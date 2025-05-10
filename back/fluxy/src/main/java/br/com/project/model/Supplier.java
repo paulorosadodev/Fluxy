@@ -15,5 +15,5 @@ public class Supplier {
     private String number;
     private String neighborhood;
     private String city;
-    private String zipCode;
+    private String cep;
 }

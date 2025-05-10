@@ -25,9 +25,6 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequestDTO body) {
-        if (!body.password().equals(body.confirmPassword())) {
-            return ResponseEntity.badRequest().body("As senhas não coincidem");
-        }
 
         Optional<User> existingUser = userRepository.findByName(body.name());
 

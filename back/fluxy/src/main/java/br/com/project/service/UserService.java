@@ -51,9 +51,8 @@ public class UserService {
         }
 
         String token = generateToken(user.get().getName());
-        return Optional.of(new LoginResponseDTO(token, user.get().getName()));
+        return Optional.of(new LoginResponseDTO(token, user.get().getName(), user.get().getRole()));
     }
-
 
     private String generateToken(String userName) {
         return Jwts.builder()

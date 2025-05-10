@@ -11,5 +11,5 @@ public class SupplierResponseDTO {
     private String number;
     private String neighborhood;
     private String city;
-    private String zipCode;
+    private String cep;
 }
