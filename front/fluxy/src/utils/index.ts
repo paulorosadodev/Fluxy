@@ -1,5 +1,23 @@
 import { Address, Customer, Employee, PaymentMethod, Product, Supplier } from "../@types";
 
+const SECRET_KEY = import.meta.env.VITE_SECRET_KEY;
+
+export function encryptRole(role: string): string {
+    const combined = `${SECRET_KEY}:${role}`;
+    return btoa(unescape(encodeURIComponent(combined))); 
+}
+
+export function decryptRole(encrypted: string): string {
+    try {
+        const decoded = decodeURIComponent(escape(atob(encrypted)));
+        const [key, role] = decoded.split(":");
+        if (key !== SECRET_KEY) throw new Error("Chave inválida");
+        return role;
+    } catch {
+        return "";
+    }
+}
+
 export function removeNonDigits(value: string)  {
     return value.replace(/\D/g, "");
 }

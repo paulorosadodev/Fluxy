@@ -7,10 +7,13 @@ import { EntityForm } from "../../../components/EntityForm";
 import { z } from "zod";
 import { PopUp } from "../../../components/PopUp";
 import { addEmployee, deleteEmployee, editEmployee } from "../../../services/endpoints/employee";
+import { useAuth } from "../../../hooks/useAuth";
+import { Lock } from "phosphor-react";
 
 export default function EmployeesDashboard() {
 
     const {employees} = useData();
+    const {role} = useAuth();
     const [isAddFormOpened, setIsAddFormOpened] = useState(false);
     const [isEditFormOpened, setIsEditFormOpened] = useState(false);
     const [showPopUp, setShowPopUp] = useState(false);
@@ -190,20 +193,34 @@ export default function EmployeesDashboard() {
 
     return (
         <>  
-            <EntityForm type="Adicionar" title="Funcionário" fields={fields} open={isAddFormOpened} formControllers={formControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} onSubmitAPI={addEmployee} />
-            {editData.length > 1 && 
-                <EntityForm type="Editar" title="Funcionário" fields={fields} open={isEditFormOpened} formControllers={formControllers} selectedRowController={setSelectedRow} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} data={editData} onSubmitAPI={editEmployee} />
+            {
+                role.includes("employees") ? (
+                    <>
+                        <EntityForm type="Adicionar" title="Funcionário" fields={fields} open={isAddFormOpened} formControllers={formControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} onSubmitAPI={addEmployee} />
+                        {editData.length > 1 && 
+                        <EntityForm type="Editar" title="Funcionário" fields={fields} open={isEditFormOpened} formControllers={formControllers} selectedRowController={setSelectedRow} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} data={editData} onSubmitAPI={editEmployee} />
+                        }
+                        <div id="main">
+                            <h1>Funcionários</h1>
+                            <DataTable deleteRow={deleteEmployee} data={employees} columns={columns} entityName="funcionários" popUpController={setShowPopUp} deletePopUpController={setShowDeletePopUp} setDeletePopUpMessage={setDeletePopUpMessage} setDeletePopUpType={setDeletePopUpType} formControllers={formControllers} selectedRowController={setSelectedRow}/>
+                            {showPopUp &&
+                            <PopUp type="success" message={popUpMessage} show={showPopUp} onClose={() => setShowPopUp(false)} />
+                            }
+                            {showDeletePopUp &&
+                            <PopUp type={deletePopUpType} message={deletePopUpMessage} show={showDeletePopUp} onClose={() => setShowDeletePopUp(false)} />
+                            }
+                        </div>
+                    </>
+                ) : (
+                    <div id="main">
+                        <div className="unauthorized-container">
+                            <Lock size={64} weight="duotone" className="unauthorized-icon" />
+                            <h2 className="unauthorized-title">Acesso negado</h2>
+                            <p className="unauthorized-text">Você não tem permissão para visualizar esta página.</p>
+                        </div>
+                    </div>
+                )
             }
-            <div id="main">
-                <h1>Funcionários</h1>
-                <DataTable deleteRow={deleteEmployee} data={employees} columns={columns} entityName="funcionários" popUpController={setShowPopUp} deletePopUpController={setShowDeletePopUp} setDeletePopUpMessage={setDeletePopUpMessage} setDeletePopUpType={setDeletePopUpType} formControllers={formControllers} selectedRowController={setSelectedRow}/>
-                {showPopUp &&
-                    <PopUp type="success" message={popUpMessage} show={showPopUp} onClose={() => setShowPopUp(false)} />
-                }
-                {showDeletePopUp &&
-                    <PopUp type={deletePopUpType} message={deletePopUpMessage} show={showDeletePopUp} onClose={() => setShowDeletePopUp(false)} />
-                }
-            </div>
         </>
     );
 }

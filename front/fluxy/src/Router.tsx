@@ -6,7 +6,6 @@ import { DefaultLayout } from "./layouts/DefaultLayout";
 
 import { Home } from "./pages/Home";
 import { Login } from "./pages/Login";
-import { Register } from "./pages/Register";
 
 import MainDashboard from "./pages/Dashboards/Main";
 import ProductsDashboard from "./pages/Dashboards/Products";
@@ -14,16 +13,20 @@ import SuppliersDashboard from "./pages/Dashboards/Suppliers";
 import EmployeesDashboard from "./pages/Dashboards/Employees";
 import CustomersDashboard from "./pages/Dashboards/Customers";
 import PurchasesDashboard from "./pages/Dashboards/Purchases";
+import Loading from "./components/Loading";
 
 export function Router() {
-    const { isAuthenticated } = useAuth();
+    const { isAuthenticated, isLoading } = useAuth();
+
+    if (isLoading) {
+        return <Loading />; 
+    }
 
     return (
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
 
                 <Route element={<DefaultLayout />}>
                     <Route path="/dashboard/inicio" 

@@ -2,7 +2,8 @@ export interface Entity {
     id?: number;
 }
 export interface User extends Entity {
-    name: string
+    name: string;
+    role: string
 };
 
 export interface Address {
