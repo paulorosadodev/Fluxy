@@ -175,8 +175,9 @@ export default function SuppliersDashboard() {
     let editSupplyData = [""];
 
     if (supplierSelectedRow.length > 1) {
-        const selectedSupplier = suppliers.filter((Supplier) => Supplier.cnpj === supplierSelectedRow.split(",")[0])[0];
-
+        console.log(supplierSelectedRow);
+        const selectedSupplier = suppliers.filter((Supplier) => Supplier.cnpj === supplierSelectedRow.split(",")[1])[0];
+        console.log(selectedSupplier);
         editSupplierData = [
             String(selectedSupplier.id), selectedSupplier.name, selectedSupplier.cnpj, ...selectedSupplier.phone, selectedSupplier.address.cep, 
             selectedSupplier.address.city, selectedSupplier.address.neighborhood, selectedSupplier.address.street,

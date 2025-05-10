@@ -2,6 +2,7 @@ import { fetchProducts } from "./product";
 import { fetchEmployees } from "./employee";
 import { fetchLegalEntityCustomers } from "./legalEntityCustomer";
 import { fetchNaturalPersonCustomers } from "./naturalPersonCustomer";
+import { fetchSuppliers } from "./supplier";
 
 export const fetchData = async () => {
     const data = {
@@ -9,120 +10,7 @@ export const fetchData = async () => {
         employees: [],
         naturalPersonCustomers: [],
         legalEntityCustomers: [],
-        suppliers: [
-            {
-                cnpj: "67015726000179",
-                name: "Estudos LTDA",
-                address: {
-                    street: "Rua Faustino Porto",
-                    number: "200",
-                    neighborhood: "Boa Viagem",
-                    city: "Recife",
-                    cep: "51020270"
-                },
-                phone: ["81999972730", "81996376659"]
-            },
-            {
-                cnpj: "00457891000123",
-                name: "Alimentos Brasil SA",
-                address: {
-                    street: "Av. das Mangueiras",
-                    number: "1020",
-                    neighborhood: "Centro",
-                    city: "São Paulo",
-                    cep: "01001000"
-                },
-                phone: ["11923344556"]
-            },
-            {
-                cnpj: "12894567000199",
-                name: "Frutas Tropicais ME",
-                address: {
-                    street: "Rua do Pomar",
-                    number: "77",
-                    neighborhood: "Jardins",
-                    city: "Fortaleza",
-                    cep: "60150110"
-                },
-                phone: ["85988776655"]
-            },
-            {
-                cnpj: "23654789000111",
-                name: "Verde Vale Agro",
-                address: {
-                    street: "Estrada da Colheita",
-                    number: "350",
-                    neighborhood: "Interior",
-                    city: "Campinas",
-                    cep: "13060000"
-                },
-                phone: ["19933445566"]
-            }
-        ],              
-        customers: [
-            {
-                cpf: "23456789012",
-                name: "Carlos Almeida",
-                address: {
-                    street: "Avenida Central",
-                    number: "350",
-                    neighborhood: "Centro",
-                    city: "São Paulo",
-                    cep: "01015001"
-                },
-                phone: ["11987654321"]
-            },
-            {
-                cnpj: "12345678000145",
-                legalName: "Tech Solutions Ltda",
-                stateRegistration: "451234567",
-                address: {
-                    street: "Rua dos Trabalhadores",
-                    number: "245",
-                    neighborhood: "Zona Norte",
-                    city: "São Paulo",
-                    cep: "02152020"
-                },
-                phone: ["11932456789"]
-            },
-            {
-                cpf: "32165498765",
-                name: "Maria Santos",
-                address: {
-                    street: "Rua das Flores",
-                    number: "12",
-                    neighborhood: "Jardim Paulista",
-                    city: "Campinas",
-                    cep: "13034060"
-                },
-                phone: ["19987654321"]
-            },
-            {
-                cnpj: "98765432000134",
-                legalName: "Comércio & Cia Ltda",
-                stateRegistration: "067823910",
-                address: {
-                    street: "Rua Pedro II",
-                    number: "128",
-                    neighborhood: "Vila Progresso",
-                    city: "Rio de Janeiro",
-                    cep: "21010010"
-                },
-                phone: ["21976543210"]
-            },
-            {
-                cpf: "56789012345",
-                name: "Joaquim Silva",
-                address: {
-                    street: "Avenida Brasil",
-                    number: "1000",
-                    neighborhood: "Campo Grande",
-                    city: "Mato Grosso do Sul",
-                    cep: "79002001"
-                },
-                phone: ["67998765432"]
-            }
-        ],
+        suppliers: [],
         purchases: [
             {
                 number: 2,
@@ -547,6 +435,7 @@ export const fetchData = async () => {
     data["employees"] = (await fetchEmployees());
     data["naturalPersonCustomers"] = (await fetchNaturalPersonCustomers());
     data["legalEntityCustomers"] = (await fetchLegalEntityCustomers());
+    data["suppliers"] = (await fetchSuppliers());
 
     return data;
 };
