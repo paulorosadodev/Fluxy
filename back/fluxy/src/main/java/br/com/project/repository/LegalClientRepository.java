@@ -185,4 +185,24 @@ public class LegalClientRepository {
             );
         }
     }
+
+    public boolean existsByCnpj(String cnpj) {
+        try {
+            String sql = "SELECT COUNT(*) FROM juridico WHERE cnpj = ?";
+            Integer count = jdbcTemplate.queryForObject(sql, Integer.class, cnpj);
+            return count != null && count > 0;
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public boolean existsByStateRegistration(String inscr_estadual) {
+        try {
+            String sql = "SELECT COUNT(*) FROM juridico WHERE inscr_estadual = ?";
+            Integer count = jdbcTemplate.queryForObject(sql, Integer.class, inscr_estadual);
+            return count != null && count > 0;
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
 }

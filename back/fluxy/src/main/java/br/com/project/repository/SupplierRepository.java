@@ -138,4 +138,14 @@ public class SupplierRepository {
                 rs.getString("cep")
         );
     }
+
+    public boolean existsByCnpj(String cnpj) {
+        try {
+            String sql = "SELECT COUNT(*) FROM fornecedor WHERE cnpj = ?";
+            Integer count = jdbcTemplate.queryForObject(sql, Integer.class, cnpj);
+            return count != null && count > 0;
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
 }

@@ -10,7 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PhysicalClient {
-    private Integer id; // id_cliente
+    private Integer id;
     private String name;
     private String cpf;
     private String street;

@@ -24,6 +24,10 @@ public class SupplierService {
     @Transactional
     public void save(SupplierRequestDTO requestDTO) {
         try {
+            if (supplierRepository.existsByCnpj(requestDTO.getCnpj())){
+                throw new IllegalArgumentException("CNPJ já cadastrado");
+            }
+
             Supplier supplier = mapperUtils.map(requestDTO, Supplier.class);
             Integer idPessoa = supplierRepository.savePerson(supplier);
             supplierRepository.saveSupplier(idPessoa, supplier);

@@ -43,6 +43,9 @@ public class FuncionarioService {
             if (employerRepository.existsByCpf(dto.cpf())) {
                 throw new IllegalArgumentException("CPF já cadastrado");
             }
+            if (employerRepository.existsByPhoneNumber(String.valueOf(dto.phone()))){
+                throw new IllegalArgumentException("Telefone já cadastrado");
+            }
 
             Person person = new Person();
             person.setStreet(dto.street());

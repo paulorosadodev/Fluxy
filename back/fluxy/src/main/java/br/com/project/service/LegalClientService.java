@@ -17,15 +17,24 @@ public class LegalClientService {
 
     private final LegalClientRepository repository;
     private final PersonRepository personRepository;
+    private final LegalClientRepository legalClientRepository;
 
-    public LegalClientService(LegalClientRepository repository, PersonRepository personRepository) {
+    public LegalClientService(LegalClientRepository repository, PersonRepository personRepository, LegalClientRepository legalClientRepository) {
         this.repository = repository;
         this.personRepository = personRepository;
+        this.legalClientRepository = legalClientRepository;
     }
 
     @Transactional
     public Integer save(LegalClientRequestDTO dto) {
         try {
+            if (legalClientRepository.existsByCnpj(dto.cnpj())){
+                throw new IllegalArgumentException("CNPJ já cadastrado");
+            }
+            if (legalClientRepository.existsByStateRegistration(dto.stateRegistration())){
+                throw new IllegalArgumentException("Inscrição estadual já cadastrado");
+            }
+
             Person person = new Person();
             person.setStreet(dto.street());
             person.setNumber(dto.number());

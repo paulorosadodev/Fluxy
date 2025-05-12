@@ -207,4 +207,10 @@ public class EmployerRepository {
             throw new RuntimeException(e.getMessage());
         }
     }
+
+    public boolean existsByPhoneNumber(String phoneNumber) {
+        String sql = "SELECT COUNT(*) FROM telefone WHERE numero = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, phoneNumber);
+        return count != null && count > 0;
+    }
 }
