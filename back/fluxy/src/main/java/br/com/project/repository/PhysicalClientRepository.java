@@ -52,7 +52,7 @@ public class PhysicalClientRepository {
             return idPessoa;
 
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao salvar cliente físico: " + e.getMessage(), e);
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
@@ -62,7 +62,7 @@ public class PhysicalClientRepository {
             Integer count = jdbcTemplate.queryForObject(sql, Integer.class, cpf);
             return count != null && count > 0;
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao verificar existência de CPF: " + e.getMessage(), e);
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
@@ -95,7 +95,7 @@ public class PhysicalClientRepository {
 
             return Optional.ofNullable(client);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao buscar cliente físico por ID: " + e.getMessage(), e);
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
@@ -124,7 +124,7 @@ public class PhysicalClientRepository {
 
             return clients;
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao listar clientes físicos: " + e.getMessage(), e);
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
@@ -143,7 +143,7 @@ public class PhysicalClientRepository {
             insertPhone(id, client.getPhone());
 
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao atualizar cliente físico: " + e.getMessage(), e);
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
@@ -159,7 +159,7 @@ public class PhysicalClientRepository {
             jdbcTemplate.update(sqlCliente, id);
             jdbcTemplate.update(sqlPessoa, id);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao deletar cliente físico: " + e.getMessage(), e);
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
@@ -172,7 +172,7 @@ public class PhysicalClientRepository {
                     idPerson
             );
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao buscar telefones do cliente físico: " + e.getMessage(), e);
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
@@ -181,7 +181,7 @@ public class PhysicalClientRepository {
             String sql = "DELETE FROM telefone WHERE id_telefone = ?";
             jdbcTemplate.update(sql, idPerson);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao deletar telefones do cliente físico: " + e.getMessage(), e);
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 

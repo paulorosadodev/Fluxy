@@ -40,7 +40,7 @@ public class SupplierRepository {
 
             return keyHolder.getKey().intValue();
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao salvar dados da pessoa: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -53,7 +53,7 @@ public class SupplierRepository {
                     supplier.getName()
             );
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao salvar fornecedor: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -63,7 +63,7 @@ public class SupplierRepository {
                     "FROM fornecedor f INNER JOIN pessoa p ON f.id_fornecedor = p.id_pessoa";
             return jdbcTemplate.query(sql, supplierRowMapper());
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao listar fornecedores: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -75,7 +75,7 @@ public class SupplierRepository {
             List<Supplier> suppliers = jdbcTemplate.query(sql, supplierRowMapper(), id);
             return suppliers.stream().findFirst();
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao buscar fornecedor por ID: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -91,7 +91,7 @@ public class SupplierRepository {
                     id
             );
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao atualizar dados da pessoa: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -104,7 +104,7 @@ public class SupplierRepository {
                     id
             );
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao atualizar fornecedor: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -113,7 +113,7 @@ public class SupplierRepository {
             String sql = "DELETE FROM fornecedor WHERE id_fornecedor = ?";
             jdbcTemplate.update(sql, id);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao deletar fornecedor: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -122,7 +122,7 @@ public class SupplierRepository {
             String sql = "DELETE FROM pessoa WHERE id_pessoa = ?";
             jdbcTemplate.update(sql, id);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao deletar pessoa: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 

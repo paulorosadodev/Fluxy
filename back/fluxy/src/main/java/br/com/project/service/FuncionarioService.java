@@ -82,7 +82,7 @@ public class FuncionarioService {
             }
 
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao salvar funcionário: " + e.getMessage(), e);
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
@@ -134,7 +134,7 @@ public class FuncionarioService {
                     .orElseThrow(() -> new RuntimeException("Funcionário com ID " + id + " não encontrado"));
             return toResponseDTO(e);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao buscar funcionário por ID: " + e.getMessage(), e);
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
@@ -144,7 +144,7 @@ public class FuncionarioService {
                     .map(this::toResponseDTO)
                     .toList();
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao listar funcionários: " + e.getMessage(), e);
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
@@ -186,7 +186,7 @@ public class FuncionarioService {
             }
 
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao atualizar funcionário: " + e.getMessage(), e);
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
@@ -198,7 +198,7 @@ public class FuncionarioService {
             phoneRepository.deleteByIdPerson(existing.getIdPerson());
             employerRepository.deleteById(id);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao deletar funcionário: " + e.getMessage(), e);
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 

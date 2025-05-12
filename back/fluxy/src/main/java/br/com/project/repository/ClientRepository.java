@@ -24,7 +24,7 @@ public class ClientRepository {
             String sql = "INSERT INTO cliente (id_cliente) VALUES (?)";
             jdbcTemplate.update(sql, client.getIdPerson());
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao inserir cliente no banco de dados: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -34,7 +34,7 @@ public class ClientRepository {
             List<Client> result = jdbcTemplate.query(sql, new ClienteRowMapper(), id);
             return result.stream().findFirst();
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao buscar cliente: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -43,7 +43,7 @@ public class ClientRepository {
             String sql = "SELECT * FROM cliente";
             return jdbcTemplate.query(sql, new ClienteRowMapper());
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao listar clientes: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -52,7 +52,7 @@ public class ClientRepository {
             String sql = "UPDATE cliente SET id_cliente = ? WHERE id_cliente = ?";
             jdbcTemplate.update(sql, client.getIdPerson(), client.getIdClient());
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao atualizar cliente: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -61,7 +61,7 @@ public class ClientRepository {
             String sql = "DELETE FROM cliente WHERE id_cliente = ?";
             jdbcTemplate.update(sql, id);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao deletar cliente: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 

@@ -39,7 +39,7 @@ public class HistoricPriceProductRepository {
 
             return keyHolder.getKey().intValue();
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao salvar histórico de preço do produto: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -53,7 +53,7 @@ public class HistoricPriceProductRepository {
                     historic.getIdHistoricPriceProduct()
             );
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao atualizar histórico de preço do produto: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -63,7 +63,7 @@ public class HistoricPriceProductRepository {
             List<HistoricPriceProduct> result = jdbcTemplate.query(sql, new HistoricPriceProductRowMapper(), id);
             return result.stream().findFirst();
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao buscar histórico de preço por ID: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -72,7 +72,7 @@ public class HistoricPriceProductRepository {
             String sql = "SELECT * FROM historico_preco_produto";
             return jdbcTemplate.query(sql, new HistoricPriceProductRowMapper());
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao listar históricos de preço: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -81,7 +81,7 @@ public class HistoricPriceProductRepository {
             String sql = "DELETE FROM historico_preco_produto WHERE id_historico_preco_produto = ?";
             jdbcTemplate.update(sql, id);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao deletar histórico de preço por ID: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -90,7 +90,7 @@ public class HistoricPriceProductRepository {
             String sql = "DELETE FROM historico_preco_produto WHERE codigo_produto = ?";
             jdbcTemplate.update(sql, productId);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao deletar histórico de preço por código do produto: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 

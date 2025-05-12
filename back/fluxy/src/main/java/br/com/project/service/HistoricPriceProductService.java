@@ -29,7 +29,7 @@ public class HistoricPriceProductService {
             historic.setIdHistoricPriceProduct(id);
             return mapperUtils.map(historic, HistoricPriceProductResponseDTO.class);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao salvar histórico de preço: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -37,7 +37,7 @@ public class HistoricPriceProductService {
         try {
             return mapperUtils.mapList(historicPriceProductRepository.findAll(), HistoricPriceProductResponseDTO.class);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao listar históricos de preço: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -47,7 +47,7 @@ public class HistoricPriceProductService {
                     .orElseThrow(() -> new RuntimeException("Histórico de preço com ID " + id + " não encontrado."));
             return mapperUtils.map(historic, HistoricPriceProductResponseDTO.class);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao buscar histórico de preço: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -59,7 +59,7 @@ public class HistoricPriceProductService {
             historicPriceProductRepository.update(historic);
             return mapperUtils.map(historic, HistoricPriceProductResponseDTO.class);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao atualizar histórico de preço: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -68,7 +68,7 @@ public class HistoricPriceProductService {
         try {
             historicPriceProductRepository.deleteById(id);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao deletar histórico de preço: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 }

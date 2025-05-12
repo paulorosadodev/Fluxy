@@ -40,7 +40,7 @@ public class ProductRepository {
 
             return keyHolder.getKey().intValue();
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao salvar produto: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -50,7 +50,7 @@ public class ProductRepository {
             List<Product> result = jdbcTemplate.query(sql, new ProductRowMapper(), id);
             return result.stream().findFirst();
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao buscar produto: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -59,7 +59,7 @@ public class ProductRepository {
             String sql = "SELECT * FROM produto";
             return jdbcTemplate.query(sql, new ProductRowMapper());
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao listar produtos: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -75,7 +75,7 @@ public class ProductRepository {
                     product.getIdProduct()
             );
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao atualizar produto: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -84,7 +84,7 @@ public class ProductRepository {
             String sql = "SELECT COALESCE(SUM(qtd_estoque), 0) FROM produto";
             return jdbcTemplate.queryForObject(sql, Integer.class);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao calcular total de produtos em estoque: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -104,7 +104,7 @@ public class ProductRepository {
         } catch (EmptyResultDataAccessException e) {
             return null;
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao buscar produto por código EA: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -113,7 +113,7 @@ public class ProductRepository {
             String sql = "DELETE FROM produto WHERE id_produto = ?";
             jdbcTemplate.update(sql, id);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao deletar produto: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 

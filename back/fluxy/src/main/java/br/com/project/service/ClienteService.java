@@ -37,7 +37,7 @@ public class ClienteService {
 
             telefones.forEach(telefoneService::salvar);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao salvar cliente: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -56,7 +56,7 @@ public class ClienteService {
 
             telefones.forEach(telefoneService::salvar);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao atualizar cliente: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -75,7 +75,7 @@ public class ClienteService {
             telefoneService.deletarPorIdPessoa(id);
             clienteRepository.deleteById(id);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao deletar cliente: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 }

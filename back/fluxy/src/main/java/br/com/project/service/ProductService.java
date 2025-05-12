@@ -69,7 +69,7 @@ public class ProductService {
             response.setCategory(categoryDTO);
             return response;
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao salvar produto: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -111,7 +111,7 @@ public class ProductService {
             response.setCategory(categoryDTO);
             return response;
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao atualizar produto: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -119,7 +119,7 @@ public class ProductService {
         try {
             return productRepository.getTotalStockQuantity();
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao obter quantidade total em estoque: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -137,7 +137,7 @@ public class ProductService {
 
             return response;
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao buscar produto: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -154,7 +154,7 @@ public class ProductService {
 
             return responseList;
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao listar produtos: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -163,7 +163,7 @@ public class ProductService {
         try {
             productRepository.deleteById(id);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao deletar produto: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 }

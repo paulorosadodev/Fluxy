@@ -28,7 +28,7 @@ public class SupplierService {
             Integer idPessoa = supplierRepository.savePerson(supplier);
             supplierRepository.saveSupplier(idPessoa, supplier);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao salvar fornecedor: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -36,7 +36,7 @@ public class SupplierService {
         try {
             return supplierRepository.findAll();
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao listar fornecedores: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -44,7 +44,7 @@ public class SupplierService {
         try {
             return supplierRepository.findById(id);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao buscar fornecedor com ID " + id + ": " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -55,7 +55,7 @@ public class SupplierService {
             supplierRepository.updatePerson(id, supplier);
             supplierRepository.updateSupplier(id, supplier);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao atualizar fornecedor com ID " + id + ": " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -65,7 +65,7 @@ public class SupplierService {
             supplierRepository.deleteSupplier(id);
             supplierRepository.deletePerson(id);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao deletar fornecedor com ID " + id + ": " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 }
