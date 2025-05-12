@@ -79,6 +79,15 @@ public class ProductRepository {
         }
     }
 
+    public int getTotalStockQuantity() {
+        try {
+            String sql = "SELECT COALESCE(SUM(qtd_estoque), 0) FROM produto";
+            return jdbcTemplate.queryForObject(sql, Integer.class);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao calcular total de produtos em estoque: " + e.getMessage());
+        }
+    }
+
     public Product findByCodEa(String codEa) {
         try {
             String sql = "SELECT * FROM produto WHERE cod_ea = ?";

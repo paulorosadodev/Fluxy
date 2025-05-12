@@ -40,6 +40,16 @@ public class ProductController {
         }
     }
 
+    @GetMapping("/total-stock")
+    public ResponseEntity<?> getTotalStockQuantity() {
+        try {
+            int totalStock = productService.getTotalStockQuantity();
+            return ResponseEntity.ok(totalStock);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao obter quantidade total em estoque: " + e.getMessage());
+        }
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable Integer id) {
         try {

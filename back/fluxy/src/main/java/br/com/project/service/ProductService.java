@@ -115,6 +115,14 @@ public class ProductService {
         }
     }
 
+    public int getTotalStockQuantity() {
+        try {
+            return productRepository.getTotalStockQuantity();
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao obter quantidade total em estoque: " + e.getMessage());
+        }
+    }
+
     public ProductResponseDTO findById(Integer id) {
         try {
             Product product = productRepository.findById(id)
