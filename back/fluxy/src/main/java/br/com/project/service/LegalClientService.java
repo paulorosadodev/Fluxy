@@ -32,7 +32,7 @@ public class LegalClientService {
                 throw new IllegalArgumentException("CNPJ já cadastrado");
             }
             if (legalClientRepository.existsByStateRegistration(dto.stateRegistration())){
-                throw new IllegalArgumentException("Inscrição estadual já cadastrado");
+                throw new IllegalArgumentException("Inscrição estadual já cadastrada");
             }
 
             Person person = new Person();

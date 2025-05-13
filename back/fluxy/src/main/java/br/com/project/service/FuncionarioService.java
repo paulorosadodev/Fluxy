@@ -13,8 +13,11 @@ import br.com.project.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @Service
 public class FuncionarioService {
@@ -43,8 +46,10 @@ public class FuncionarioService {
             if (employerRepository.existsByCpf(dto.cpf())) {
                 throw new IllegalArgumentException("CPF já cadastrado");
             }
-            if (employerRepository.existsByPhoneNumber(String.valueOf(dto.phone()))){
-                throw new IllegalArgumentException("Telefone já cadastrado");
+            for (int i = 0;i < dto.phone().toArray().length;i++){
+                if (employerRepository.existsByPhoneNumber((String) dto.phone().toArray()[i])){
+                    throw new IllegalArgumentException("Telefone já cadastrado");
+                }
             }
 
             Person person = new Person();
@@ -85,7 +90,7 @@ public class FuncionarioService {
             }
 
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage(), e);
+            throw new RuntimeException(e.getMessage());
         }
     }
 

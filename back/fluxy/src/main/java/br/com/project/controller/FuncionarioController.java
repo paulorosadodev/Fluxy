@@ -26,6 +26,8 @@ public class FuncionarioController {
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Erro ao salvar funcionário: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro interno ao salvar funcionário: " + e.getMessage());
         }
     }
 
