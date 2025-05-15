@@ -188,13 +188,13 @@ public class EmployerRepository {
         }
     }
 
-    public Optional<Integer> findEmployeeIdByMatricula(String matricula) {
+    public Integer findEmployeeIdByMatricula(String matricula) {
         try {
             String sql = "SELECT id_funcionario FROM funcionario WHERE matricula = ?";
             Integer id = jdbcTemplate.queryForObject(sql, Integer.class, matricula);
-            return Optional.ofNullable(id);
+            return id != null ? id : -1;
         } catch (Exception e) {
-            return Optional.empty() ;
+            return null;
         }
     }
 

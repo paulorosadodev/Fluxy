@@ -78,4 +78,12 @@ public class ClienteService {
             throw new RuntimeException(e.getMessage());
         }
     }
+
+    public Integer buscarIdPorMatricula(String matricula) {
+        try {
+            return clienteRepository.findIdByPersonType(matricula);
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }

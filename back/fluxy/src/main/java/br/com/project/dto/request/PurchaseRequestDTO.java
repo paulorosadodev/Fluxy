@@ -8,10 +8,10 @@ public record PurchaseRequestDTO(
         LocalTime time,
         Integer total,
         Integer installments,
-        String type,
+        String paymentType,
         Integer productAmount,
 
-        Integer fkProductId,
-        Integer fkClientId,
-        Integer fkOperationalIdEmployee
+        Integer productId,
+        String customerId,
+        String employeeId
 ) {}
