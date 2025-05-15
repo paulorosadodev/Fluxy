@@ -24,11 +24,21 @@ public class SupplierService {
     @Transactional
     public void save(SupplierRequestDTO requestDTO) {
         try {
-            if (supplierRepository.existsByCnpj(requestDTO.getCnpj())){
+            if (supplierRepository.existsByCnpj(requestDTO.cnpj())) {
                 throw new IllegalArgumentException("CNPJ já cadastrado");
             }
 
-            Supplier supplier = mapperUtils.map(requestDTO, Supplier.class);
+            // Mapeamento manual completo (substitui o uso de mapperUtils)
+            Supplier supplier = new Supplier();
+            supplier.setCnpj(requestDTO.cnpj());
+            supplier.setName(requestDTO.name());
+            supplier.setStreet(requestDTO.street());
+            supplier.setNumber(requestDTO.number());
+            supplier.setNeighborhood(requestDTO.neighborhood());
+            supplier.setCity(requestDTO.city());
+            supplier.setCep(requestDTO.cep());
+            supplier.setPhone(requestDTO.phone());
+
             Integer idPessoa = supplierRepository.savePerson(supplier);
             supplierRepository.saveSupplier(idPessoa, supplier);
         } catch (Exception e) {
@@ -56,6 +66,7 @@ public class SupplierService {
     public void update(Integer id, SupplierRequestDTO requestDTO) {
         try {
             Supplier supplier = mapperUtils.map(requestDTO, Supplier.class);
+            supplier.setPhone(requestDTO.phone()); // importante
             supplierRepository.updatePerson(id, supplier);
             supplierRepository.updateSupplier(id, supplier);
         } catch (Exception e) {
