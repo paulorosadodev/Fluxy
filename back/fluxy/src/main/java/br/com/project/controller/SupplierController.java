@@ -23,8 +23,10 @@ public class SupplierController {
         try {
             supplierService.save(requestDTO);
             return ResponseEntity.ok().build();
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e){
             return ResponseEntity.badRequest().body("Erro ao salvar fornecedor: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro interno ao salvar fornecedor: " + e.getMessage());
         }
     }
 

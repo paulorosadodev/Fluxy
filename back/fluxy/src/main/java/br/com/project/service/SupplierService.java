@@ -2,6 +2,7 @@ package br.com.project.service;
 
 import br.com.project.dto.request.SupplierRequestDTO;
 import br.com.project.model.Supplier;
+import br.com.project.repository.PhoneRepository;
 import br.com.project.repository.SupplierRepository;
 import br.com.project.util.MapperUtils;
 import org.springframework.stereotype.Service;
@@ -15,10 +16,12 @@ public class SupplierService {
 
     private final SupplierRepository supplierRepository;
     private final MapperUtils mapperUtils;
+    private final PhoneRepository phoneRepository;
 
-    public SupplierService(SupplierRepository supplierRepository, MapperUtils mapperUtils) {
+    public SupplierService(SupplierRepository supplierRepository, MapperUtils mapperUtils, PhoneRepository phoneRepository) {
         this.supplierRepository = supplierRepository;
         this.mapperUtils = mapperUtils;
+        this.phoneRepository = phoneRepository;
     }
 
     @Transactional
@@ -28,7 +31,10 @@ public class SupplierService {
                 throw new IllegalArgumentException("CNPJ já cadastrado");
             }
 
-            // Mapeamento manual completo (substitui o uso de mapperUtils)
+            if (phoneRepository.existsByPhone(requestDTO.phone())) {
+                throw new IllegalArgumentException("Telefone já cadastrado.");
+            }
+
             Supplier supplier = new Supplier();
             supplier.setCnpj(requestDTO.cnpj());
             supplier.setName(requestDTO.name());
