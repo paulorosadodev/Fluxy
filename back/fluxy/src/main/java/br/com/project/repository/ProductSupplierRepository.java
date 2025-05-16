@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ProductSupplierRepository {
@@ -19,26 +20,53 @@ public class ProductSupplierRepository {
     }
 
     public void save(ProductSupplier productSupplier) {
-        String sql = "INSERT INTO produto_fornecedor (fk_fornecedor_id, fk_produto_id) VALUES (?, ?)";
+        String sql = "INSERT INTO entrega (fk_fornecedor_id, fk_produto_id, qnt_fornecida, valor_pago, data_reposicao) " +
+                "VALUES (?, ?, ?, ?, ?)";
         jdbcTemplate.update(sql,
-                productSupplier.getSupplierId(),
-                productSupplier.getProductId()
+                productSupplier.getFornecedorId(),
+                productSupplier.getProdutoId(),
+                productSupplier.getQuantidadeFornecida(),
+                productSupplier.getValorPago(),
+                productSupplier.getDataReposicao()
         );
     }
 
-    public void deleteByProductId(Integer productId) {
-        String sql = "DELETE FROM produto_fornecedor WHERE fk_produto_id = ?";
-        jdbcTemplate.update(sql, productId);
-    }
-
-    public void deleteBySupplierAndProduct(Integer supplierId, Integer productId) {
-        String sql = "DELETE FROM produto_fornecedor WHERE fk_fornecedor_id = ? AND fk_produto_id = ?";
-        jdbcTemplate.update(sql, supplierId, productId);
-    }
-
     public List<ProductSupplier> findAll() {
-        String sql = "SELECT * FROM produto_fornecedor";
+        String sql = "SELECT * FROM entrega";
         return jdbcTemplate.query(sql, new ProductSupplierRowMapper());
+    }
+
+    public Optional<ProductSupplier> findBySupplierAndProduct(Integer fornecedorId, Integer produtoId) {
+        String sql = "SELECT * FROM entrega WHERE fk_fornecedor_id = ? AND fk_produto_id = ?";
+        List<ProductSupplier> result = jdbcTemplate.query(sql, new ProductSupplierRowMapper(), fornecedorId, produtoId);
+        if (result.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(result.get(0));
+    }
+
+    public void update(ProductSupplier productSupplier) {
+        String sql = "UPDATE entrega SET qnt_fornecida = ?, valor_pago = ?, data_reposicao = ? " +
+                "WHERE fk_fornecedor_id = ? AND fk_produto_id = ?";
+        int rows = jdbcTemplate.update(sql,
+                productSupplier.getQuantidadeFornecida(),
+                productSupplier.getValorPago(),
+                productSupplier.getDataReposicao(),
+                productSupplier.getFornecedorId(),
+                productSupplier.getProdutoId()
+        );
+        if (rows == 0) {
+            throw new RuntimeException("Nenhum entrega atualizado. IDs: fornecedor " +
+                    productSupplier.getFornecedorId() + ", produto " + productSupplier.getProdutoId());
+        }
+    }
+
+    public void deleteById(Integer fornecedorId, Integer produtoId) {
+        String sql = "DELETE FROM entrega WHERE fk_fornecedor_id = ? AND fk_produto_id = ?";
+        int rows = jdbcTemplate.update(sql, fornecedorId, produtoId);
+        if (rows == 0) {
+            throw new RuntimeException("Nenhuma entrega foi deletada. Fornecedor ID: " + fornecedorId + ", Produto ID: " + produtoId);
+        }
     }
 
     private static class ProductSupplierRowMapper implements RowMapper<ProductSupplier> {
@@ -46,7 +74,10 @@ public class ProductSupplierRepository {
         public ProductSupplier mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new ProductSupplier(
                     rs.getInt("fk_fornecedor_id"),
-                    rs.getInt("fk_produto_id")
+                    rs.getInt("fk_produto_id"),
+                    rs.getInt("qnt_fornecida"),
+                    rs.getBigDecimal("valor_pago"),
+                    rs.getDate("data_reposicao").toLocalDate()
             );
         }
     }

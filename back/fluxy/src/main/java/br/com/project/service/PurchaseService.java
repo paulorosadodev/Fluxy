@@ -3,6 +3,7 @@ package br.com.project.service;
 import br.com.project.dto.request.PurchaseRequestDTO;
 import br.com.project.dto.response.PurchaseResponseDTO;
 import br.com.project.model.Purchase;
+import br.com.project.repository.EmployerRepository;
 import br.com.project.repository.PurchaseRepository;
 import br.com.project.util.MapperUtils;
 import org.springframework.stereotype.Service;
@@ -14,10 +15,22 @@ import java.util.List;
 public class PurchaseService {
 
     private final PurchaseRepository purchaseRepository;
+
+    private final FuncionarioService funcionarioService;
+    private final ClienteService clienteService;
+    private final ProductService productService;
+
     private final MapperUtils mapperUtils;
 
-    public PurchaseService(PurchaseRepository purchaseRepository, MapperUtils mapperUtils) {
+    public PurchaseService(PurchaseRepository purchaseRepository,
+                           FuncionarioService funcionarioService,
+                           ClienteService clienteService,
+                           ProductService productService,
+                           MapperUtils mapperUtils) {
         this.purchaseRepository = purchaseRepository;
+        this.funcionarioService = funcionarioService;
+        this.clienteService = clienteService;
+        this.productService = productService;
         this.mapperUtils = mapperUtils;
     }
 
@@ -28,18 +41,23 @@ public class PurchaseService {
             purchase.setDate(requestDTO.date());
             purchase.setTime(requestDTO.time());
             purchase.setInstallments(requestDTO.installments());
-            purchase.setPaymentType(requestDTO.type());
+            purchase.setPaymentType(requestDTO.paymentType());
             purchase.setProductQuantity(requestDTO.productAmount());
-            purchase.setProductId(requestDTO.fkProductId());
-            purchase.setClientId(requestDTO.fkClientId());
-            purchase.setOperationalEmployeeId(requestDTO.fkOperationalIdEmployee());
+            purchase.setProductId(requestDTO.productId());
+            purchase.setClientId(clienteService.buscarIdPorMatricula(requestDTO.customerId()));
+            if (requestDTO.customerId() == null || requestDTO.customerId().isBlank()) {
+                throw new RuntimeException("A matrícula do cliente (fkClientId) está ausente.");
+            }
+            purchase.setOperationalEmployeeId(funcionarioService.buscarIdPorMatricula(requestDTO.employeeId()));
 
             Integer purchaseId = purchaseRepository.save(purchase);
             purchase.setNumber(purchaseId);
 
+            productService.decreaseStock(requestDTO.productId(), requestDTO.productAmount());
+
             return mapperUtils.map(purchase, PurchaseResponseDTO.class);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao salvar compra: " + e.getMessage(), e);
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
@@ -49,7 +67,7 @@ public class PurchaseService {
                     .orElseThrow(() -> new RuntimeException("Compra não encontrada com número" + number));
             return mapperUtils.map(purchase, PurchaseResponseDTO.class);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao buscar compra: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -58,7 +76,7 @@ public class PurchaseService {
             List<Purchase> purchases = purchaseRepository.findAll();
             return mapperUtils.mapList(purchases, PurchaseResponseDTO.class);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao listar compras: " + e.getMessage(), e);
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -68,21 +86,20 @@ public class PurchaseService {
             Purchase purchase = purchaseRepository.findByNumber(number)
                     .orElseThrow(() -> new RuntimeException("Compra não encontrada"));
 
-            purchase.setClientId(requestDTO.fkClientId());
             purchase.setDate(requestDTO.date());
             purchase.setTime(requestDTO.time());
             purchase.setInstallments(requestDTO.installments());
-            purchase.setPaymentType(requestDTO.type());
+            purchase.setPaymentType(requestDTO.paymentType());
             purchase.setProductQuantity(requestDTO.productAmount());
-            purchase.setProductId(requestDTO.fkProductId());
-            purchase.setClientId(requestDTO.fkClientId());
-            purchase.setOperationalEmployeeId(requestDTO.fkOperationalIdEmployee());
-
+            purchase.setProductId(requestDTO.productId());
+            purchase.setClientId(clienteService.buscarIdPorMatricula(requestDTO.customerId()));
+            purchase.setOperationalEmployeeId(funcionarioService.buscarIdPorMatricula(requestDTO.employeeId()));
             purchase.setNumber(number);
             purchaseRepository.update(purchase);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao atualizar compra: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
+
     }
 
     @Transactional
@@ -90,7 +107,7 @@ public class PurchaseService {
         try {
             purchaseRepository.deleteByNumber(number);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao deletar compra: " + e.getMessage(), e);
+            throw new RuntimeException(e.getMessage());
         }
     }
 }

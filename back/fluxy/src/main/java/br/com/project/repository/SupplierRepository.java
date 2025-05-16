@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,6 +53,9 @@ public class SupplierRepository {
                     supplier.getCnpj(),
                     supplier.getName()
             );
+
+            insertPhone(idPessoa, supplier.getPhone());
+
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
@@ -103,6 +107,10 @@ public class SupplierRepository {
                     supplier.getName(),
                     id
             );
+
+            deletePhoneByIdPerson(id);
+            insertPhone(id, supplier.getPhone());
+
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
@@ -110,6 +118,7 @@ public class SupplierRepository {
 
     public void deleteSupplier(Integer id) {
         try {
+            deletePhoneByIdPerson(id);
             String sql = "DELETE FROM fornecedor WHERE id_fornecedor = ?";
             jdbcTemplate.update(sql, id);
         } catch (Exception e) {
@@ -127,16 +136,21 @@ public class SupplierRepository {
     }
 
     private RowMapper<Supplier> supplierRowMapper() {
-        return (ResultSet rs, int rowNum) -> new Supplier(
-                rs.getInt("id_pessoa"),
-                rs.getString("cnpj"),
-                rs.getString("nome"),
-                rs.getString("rua"),
-                rs.getString("numero"),
-                rs.getString("bairro"),
-                rs.getString("cidade"),
-                rs.getString("cep")
-        );
+        return (ResultSet rs, int rowNum) -> {
+            Supplier supplier = new Supplier(
+                    rs.getInt("id_pessoa"),
+                    rs.getString("cnpj"),
+                    rs.getString("nome"),
+                    rs.getString("rua"),
+                    rs.getString("numero"),
+                    rs.getString("bairro"),
+                    rs.getString("cidade"),
+                    rs.getString("cep"),
+                    new ArrayList<>()
+            );
+            supplier.setPhone(findPhoneByIdPerson(supplier.getIdSupplier()));
+            return supplier;
+        };
     }
 
     public boolean existsByCnpj(String cnpj) {
@@ -144,6 +158,39 @@ public class SupplierRepository {
             String sql = "SELECT COUNT(*) FROM fornecedor WHERE cnpj = ?";
             Integer count = jdbcTemplate.queryForObject(sql, Integer.class, cnpj);
             return count != null && count > 0;
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    private void insertPhone(Integer idPerson, List<String> phones) {
+        if (phones != null && !phones.isEmpty()) {
+            for (String numero : phones) {
+                if (numero != null && !numero.isBlank()) {
+                    String sql = "INSERT INTO telefone (numero, id_telefone) VALUES (?, ?)";
+                    jdbcTemplate.update(sql, numero.trim(), idPerson);
+                }
+            }
+        }
+    }
+
+    private List<String> findPhoneByIdPerson(Integer idPerson) {
+        try {
+            String sql = "SELECT numero FROM telefone WHERE id_telefone = ?";
+            return jdbcTemplate.query(
+                    sql,
+                    (rs, rn) -> rs.getString("numero"),
+                    idPerson
+            );
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    private void deletePhoneByIdPerson(Integer idPerson) {
+        try {
+            String sql = "DELETE FROM telefone WHERE id_telefone = ?";
+            jdbcTemplate.update(sql, idPerson);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }

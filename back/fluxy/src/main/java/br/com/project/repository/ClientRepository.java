@@ -74,4 +74,34 @@ public class ClientRepository {
             );
         }
     }
+
+    public Integer findIdByPersonType(String identifier) {
+        try {
+            String sql;
+            Object[] params;
+
+            if (identifier.length() == 11) {
+                sql =   "SELECT pe.id_pessoa" +
+                        "FROM pessoa pe" +
+                        "JOIN fisico pf ON pe.id_pessoa = pf.fk_cliente_id" +
+                        "WHERE pf.cpf = ?";
+                params = new Object[] { identifier };
+            }
+            else if (identifier.length() == 14) {
+                sql =   "SELECT pe.id_pessoa" +
+                        "FROM pessoa pe" +
+                        "JOIN juridico pj ON pe.id_pessoa = pj.fk_cliente_id" +
+                        "WHERE pj.cnpj = ?";
+                params = new Object[] { identifier };
+            }
+            else {
+                throw new IllegalArgumentException("Id inválido");
+            }
+
+            Integer id = jdbcTemplate.queryForObject(sql, params, Integer.class);
+            return id != null ? id : -1;
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
 }

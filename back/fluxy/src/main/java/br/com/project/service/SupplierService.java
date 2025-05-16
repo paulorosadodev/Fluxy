@@ -2,6 +2,7 @@ package br.com.project.service;
 
 import br.com.project.dto.request.SupplierRequestDTO;
 import br.com.project.model.Supplier;
+import br.com.project.repository.PhoneRepository;
 import br.com.project.repository.SupplierRepository;
 import br.com.project.util.MapperUtils;
 import org.springframework.stereotype.Service;
@@ -15,20 +16,35 @@ public class SupplierService {
 
     private final SupplierRepository supplierRepository;
     private final MapperUtils mapperUtils;
+    private final PhoneRepository phoneRepository;
 
-    public SupplierService(SupplierRepository supplierRepository, MapperUtils mapperUtils) {
+    public SupplierService(SupplierRepository supplierRepository, MapperUtils mapperUtils, PhoneRepository phoneRepository) {
         this.supplierRepository = supplierRepository;
         this.mapperUtils = mapperUtils;
+        this.phoneRepository = phoneRepository;
     }
 
     @Transactional
     public void save(SupplierRequestDTO requestDTO) {
         try {
-            if (supplierRepository.existsByCnpj(requestDTO.getCnpj())){
+            if (supplierRepository.existsByCnpj(requestDTO.cnpj())) {
                 throw new IllegalArgumentException("CNPJ já cadastrado");
             }
 
-            Supplier supplier = mapperUtils.map(requestDTO, Supplier.class);
+            if (phoneRepository.existsByPhone(requestDTO.phone())) {
+                throw new IllegalArgumentException("Telefone já cadastrado.");
+            }
+
+            Supplier supplier = new Supplier();
+            supplier.setCnpj(requestDTO.cnpj());
+            supplier.setName(requestDTO.name());
+            supplier.setStreet(requestDTO.street());
+            supplier.setNumber(requestDTO.number());
+            supplier.setNeighborhood(requestDTO.neighborhood());
+            supplier.setCity(requestDTO.city());
+            supplier.setCep(requestDTO.cep());
+            supplier.setPhone(requestDTO.phone());
+
             Integer idPessoa = supplierRepository.savePerson(supplier);
             supplierRepository.saveSupplier(idPessoa, supplier);
         } catch (Exception e) {
@@ -56,6 +72,7 @@ public class SupplierService {
     public void update(Integer id, SupplierRequestDTO requestDTO) {
         try {
             Supplier supplier = mapperUtils.map(requestDTO, Supplier.class);
+            supplier.setPhone(requestDTO.phone()); // importante
             supplierRepository.updatePerson(id, supplier);
             supplierRepository.updateSupplier(id, supplier);
         } catch (Exception e) {

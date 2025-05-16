@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
@@ -241,7 +242,10 @@ public class FuncionarioService {
     }
 
     public Integer buscarIdPorMatricula(String matricula) {
-        return employerRepository.findEmployeeIdByMatricula(matricula)
-                .orElseThrow(() -> new RuntimeException("Funcionário com matrícula " + matricula + " não encontrado"));
+        try {
+            return employerRepository.findEmployeeIdByMatricula(matricula);
+        } catch (Exception e) {
+            return null;
+        }
     }
 }
