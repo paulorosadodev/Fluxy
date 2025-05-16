@@ -18,12 +18,19 @@ public class PurchaseService {
 
     private final FuncionarioService funcionarioService;
     private final ClienteService clienteService;
+    private final ProductService productService;
+
     private final MapperUtils mapperUtils;
 
-    public PurchaseService(PurchaseRepository purchaseRepository, FuncionarioService funcionarioService, ClienteService clienteService, MapperUtils mapperUtils) {
+    public PurchaseService(PurchaseRepository purchaseRepository,
+                           FuncionarioService funcionarioService,
+                           ClienteService clienteService,
+                           ProductService productService,
+                           MapperUtils mapperUtils) {
         this.purchaseRepository = purchaseRepository;
         this.funcionarioService = funcionarioService;
         this.clienteService = clienteService;
+        this.productService = productService;
         this.mapperUtils = mapperUtils;
     }
 
@@ -45,6 +52,8 @@ public class PurchaseService {
 
             Integer purchaseId = purchaseRepository.save(purchase);
             purchase.setNumber(purchaseId);
+
+            productService.decreaseStock(requestDTO.productId(), requestDTO.productAmount());
 
             return mapperUtils.map(purchase, PurchaseResponseDTO.class);
         } catch (Exception e) {

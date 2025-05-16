@@ -166,4 +166,18 @@ public class ProductService {
             throw new RuntimeException(e.getMessage());
         }
     }
+
+    @Transactional
+    public void decreaseStock(Integer productId, int quantity) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+
+        int currentStock = product.getStockQuantity();
+        if (currentStock < quantity) {
+            throw new RuntimeException("Quantidade de estoque insuficiente");
+        }
+
+        product.setStockQuantity(currentStock - quantity);
+        productRepository.update(product);
+    }
 }
