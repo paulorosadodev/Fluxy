@@ -1,85 +1,90 @@
 package br.com.project.controller;
 
 import br.com.project.dto.request.PurchaseRequestDTO;
-import br.com.project.dto.response.ProductResponseDTO;
 import br.com.project.dto.response.PurchaseResponseDTO;
-import br.com.project.model.Purchase;
-import br.com.project.service.ProductService;
 import br.com.project.service.PurchaseService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/purchases")
 public class PurchaseController {
 
-    private final PurchaseService purchaseService;
+    private final PurchaseService service;
 
-    public PurchaseController(PurchaseService purchaseService) {
-        this.purchaseService = purchaseService;
+    public PurchaseController(PurchaseService service) {
+        this.service = service;
     }
 
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody PurchaseRequestDTO requestDTO) {
+    public ResponseEntity<?> save(@RequestBody PurchaseRequestDTO dto) {
         try {
-            PurchaseResponseDTO responseDTO = purchaseService.save(requestDTO);
-            return ResponseEntity.created(URI.create("/purchases/" + responseDTO.number())).body(responseDTO);
-        } catch (RuntimeException e) {
+            PurchaseResponseDTO responseDTO = service.save(dto);
+            URI location = URI.create("/purchases/" + responseDTO.getNumber());
+            return ResponseEntity.created(location).body(responseDTO);
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Erro ao salvar compra: " + e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body("Erro ao salvar compra: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro interno ao salvar compra: " + e.getMessage());
         }
     }
 
     @GetMapping("/{number}")
     public ResponseEntity<?> findByNumber(@PathVariable Integer number) {
         try {
-            PurchaseResponseDTO response = purchaseService.findByNumber(number);
-            return ResponseEntity.ok(response);
+            PurchaseResponseDTO responseDTO = service.findByNumber(number);
+            return ResponseEntity.ok(responseDTO);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body("Erro ao buscar número: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro ao buscar compra: " + e.getMessage());
         }
     }
 
     @GetMapping
-    public ResponseEntity<List<PurchaseResponseDTO>> findAll() {
+    public ResponseEntity<?> findAll() {
         try {
-            List<PurchaseResponseDTO> purchases = purchaseService.findAll();
-            return ResponseEntity.ok(purchases);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
+            List<PurchaseResponseDTO> responseList = service.findAll();
+            return ResponseEntity.ok(responseList);
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro ao listar compras: " + e.getMessage());
         }
     }
 
     @PutMapping("/{number}")
-    public ResponseEntity<?> update(@PathVariable Integer number, @RequestBody PurchaseRequestDTO requestDTO) {
+    public ResponseEntity<?> update(@PathVariable Integer number, @RequestBody PurchaseRequestDTO dto) {
         try {
-            purchaseService.update(number, requestDTO);
+            service.update(number, dto);
             return ResponseEntity.ok().build();
-        } catch (RuntimeException e) {
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Erro ao atualizar compra: " + e.getMessage());
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro interno ao atualizar compra: " + e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body("Erro ao atualizar compra: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro inesperado ao atualizar compra: " + e.getMessage());
         }
     }
 
     @DeleteMapping("/{number}")
-    public ResponseEntity<Void> deleteByNumber(@PathVariable Integer number) {
+    public ResponseEntity<?> deleteByNumber(@PathVariable Integer number) {
         try {
-            purchaseService.deleteByNumber(number);
+            service.deleteByNumber(number);
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro ao deletar compra: " + e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro inesperado ao deletar compra: " + e.getMessage());
         }
     }
 }

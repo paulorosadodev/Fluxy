@@ -48,7 +48,7 @@ public class PurchaseService {
 
             return mapperUtils.map(purchase, PurchaseResponseDTO.class);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao salvar compra: " + e.getMessage(), e);
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
@@ -58,7 +58,7 @@ public class PurchaseService {
                     .orElseThrow(() -> new RuntimeException("Compra não encontrada com número" + number));
             return mapperUtils.map(purchase, PurchaseResponseDTO.class);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao buscar compra: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -67,7 +67,7 @@ public class PurchaseService {
             List<Purchase> purchases = purchaseRepository.findAll();
             return mapperUtils.mapList(purchases, PurchaseResponseDTO.class);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao listar compras: " + e.getMessage(), e);
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -88,7 +88,7 @@ public class PurchaseService {
             purchase.setNumber(number);
             purchaseRepository.update(purchase);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao atualizar compra: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
 
     }
@@ -98,7 +98,7 @@ public class PurchaseService {
         try {
             purchaseRepository.deleteByNumber(number);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao deletar compra: " + e.getMessage(), e);
+            throw new RuntimeException(e.getMessage());
         }
     }
 }
