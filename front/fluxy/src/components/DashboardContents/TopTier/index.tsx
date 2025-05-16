@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { SortInput, SortSelect, TopTierWrapper, MotionListWrapper, MotionListItem } from "./styles";
 import { fetchLeastExpensiveProducts, fetchMostExpensiveProducts } from "../../../services/endpoints/product/dashboard";
 import { formatMoney } from "../../../utils";
-import { Tag, CurrencyCircleDollar } from "phosphor-react";
+import { CurrencyCircleDollar } from "phosphor-react";
 
 type Product = {
     name: string;

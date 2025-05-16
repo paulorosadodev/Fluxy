@@ -90,6 +90,15 @@ export function isValidCPF(cpf: string): boolean {
     return true;
 }
 
+export function cleanCPF(cpf: string): string {
+    return cpf.replace(/\D/g, ""); 
+}
+
+export function cleanCNPJ(cnpj: string): string {
+    return cnpj.replace(/\D/g, ""); 
+}
+
+
 export function isValidCEP(cep: string): boolean {
     cep = cep.replace(/[^\d]+/g, "");
 

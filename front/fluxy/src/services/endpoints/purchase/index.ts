@@ -1,3 +1,4 @@
+import { cleanCNPJ, cleanCPF, isValidCPF } from "../../../utils";
 import { api } from "../../api";
 
 interface PurchasePayload {
@@ -20,12 +21,13 @@ export const addPurchase = async (data: PurchasePayload) => {
     const formattedData = {
         ...data,
         productId: data.productId.split("|")[0]?.trim(),
-        customerId: data.customerId.split("|")[1]?.trim(),
+        customerId: isValidCPF(data.customerId.split("|")[1]?.trim()) ? cleanCPF(data.customerId.split("|")[1]?.trim()) : cleanCNPJ(data.customerId.split("|")[1]?.trim()),
         employeeId: data.employeeId.split("|")[1]?.trim(),
     };
 
+    console.log(formattedData);
+
     try {
-        console.log(formattedData);
         const response = await api.post("/purchases", formattedData);
         return response;
     } catch (error: any) {
