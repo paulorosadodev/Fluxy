@@ -3,12 +3,13 @@ package br.com.project.service;
 import br.com.project.dto.request.PurchaseRequestDTO;
 import br.com.project.dto.response.PurchaseResponseDTO;
 import br.com.project.model.Purchase;
-import br.com.project.repository.EmployerRepository;
 import br.com.project.repository.PurchaseRepository;
 import br.com.project.util.MapperUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -38,13 +39,21 @@ public class PurchaseService {
     public PurchaseResponseDTO save(PurchaseRequestDTO requestDTO) {
         try {
             Purchase purchase = new Purchase();
-            purchase.setDate(requestDTO.date());
-            purchase.setTime(requestDTO.time());
+            purchase.setDate(requestDTO.date() != null ? requestDTO.date() : LocalDate.now());
+            purchase.setTime(requestDTO.time() != null ? requestDTO.time() : LocalTime.now());
             purchase.setInstallments(requestDTO.installments());
             purchase.setPaymentType(requestDTO.paymentType());
             purchase.setProductQuantity(requestDTO.productAmount());
             purchase.setProductId(requestDTO.productId());
-            purchase.setClientId(clienteService.buscarIdPorMatricula(requestDTO.customerId()));
+
+            System.out.println("Matrícula recebida: " + requestDTO.customerId());
+            Integer clientId = clienteService.buscarIdPorMatricula(requestDTO.customerId());
+            System.out.println("ID do cliente encontrado: " + clientId);
+            if (clientId == null) {
+                throw new RuntimeException("Cliente não encontrado com matrícula " + requestDTO.customerId());
+            }
+
+            purchase.setClientId(clientId);
             if (requestDTO.customerId() == null || requestDTO.customerId().isBlank()) {
                 throw new RuntimeException("A matrícula do cliente (fkClientId) está ausente.");
             }

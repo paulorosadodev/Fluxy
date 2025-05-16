@@ -77,20 +77,22 @@ public class ClientRepository {
 
     public Integer findIdByPersonType(String identifier) {
         try {
+            identifier = identifier.replaceAll("[^\\d]", "");
             String sql;
             Object[] params;
 
             if (identifier.length() == 11) {
-                sql =   "SELECT pe.id_pessoa" +
-                        "FROM pessoa pe" +
-                        "JOIN fisico pf ON pe.id_pessoa = pf.fk_cliente_id" +
+                sql =   "SELECT c.id_cliente" +
+                        "FROM cliente c" +
+                        "JOIN pessoa pe ON pe.id_pessoa = c.id_cliente" +
+                        "JOIN fisico pf ON pf.fk_cliente_id = pe.id_pessoa" +
                         "WHERE pf.cpf = ?";
                 params = new Object[] { identifier };
             }
             else if (identifier.length() == 14) {
-                sql =   "SELECT pe.id_pessoa" +
-                        "FROM pessoa pe" +
-                        "JOIN juridico pj ON pe.id_pessoa = pj.fk_cliente_id" +
+                sql =   "SELECT c.id_cliente" +
+                        "FROM cliente c" +
+                        "JOIN juridico pj ON pj.fk_cliente_id = pe.id_pessoa" +
                         "WHERE pj.cnpj = ?";
                 params = new Object[] { identifier };
             }
