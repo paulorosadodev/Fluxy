@@ -82,19 +82,20 @@ public class ClientRepository {
             Object[] params;
 
             if (identifier.length() == 11) {
-                sql =   "SELECT c.id_cliente" +
-                        "FROM cliente c" +
-                        "JOIN pessoa pe ON pe.id_pessoa = c.id_cliente" +
-                        "JOIN fisico pf ON pf.fk_cliente_id = pe.id_pessoa" +
+                sql =   "SELECT c.id_cliente " +
+                        "FROM cliente c " +
+                        "JOIN pessoa pe ON pe.id_pessoa = c.id_cliente " +
+                        "JOIN fisico pf ON pf.fk_cliente_id = pe.id_pessoa " +
                         "WHERE pf.cpf = ?";
                 params = new Object[] { identifier };
             }
             else if (identifier.length() == 14) {
-                sql =   "SELECT c.id_cliente" +
-                        "FROM cliente c" +
-                        "JOIN juridico pj ON pj.fk_cliente_id = pe.id_pessoa" +
+                sql =   "SELECT c.id_cliente " +
+                        "FROM cliente c " +
+                        "JOIN pessoa pe ON pe.id_pessoa = c.id_cliente " +
+                        "JOIN juridico pj ON pj.fk_cliente_id = pe.id_pessoa " +
                         "WHERE pj.cnpj = ?";
-                params = new Object[] { identifier };
+                params = new Object[]{ identifier };
             }
             else {
                 throw new IllegalArgumentException("Id inválido");

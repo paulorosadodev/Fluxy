@@ -46,16 +46,14 @@ public class PurchaseService {
             purchase.setProductQuantity(requestDTO.productAmount());
             purchase.setProductId(requestDTO.productId());
 
-            System.out.println("Matrícula recebida: " + requestDTO.customerId());
             Integer clientId = clienteService.buscarIdPorMatricula(requestDTO.customerId());
-            System.out.println("ID do cliente encontrado: " + clientId);
             if (clientId == null) {
-                throw new RuntimeException("Cliente não encontrado com matrícula " + requestDTO.customerId());
+                    throw new RuntimeException("Cliente não encontrado com CPF " + requestDTO.customerId());
             }
 
             purchase.setClientId(clientId);
             if (requestDTO.customerId() == null || requestDTO.customerId().isBlank()) {
-                throw new RuntimeException("A matrícula do cliente (fkClientId) está ausente.");
+                throw new RuntimeException("A matrícula do cliente está ausente.");
             }
             purchase.setOperationalEmployeeId(funcionarioService.buscarIdPorMatricula(requestDTO.employeeId()));
 
