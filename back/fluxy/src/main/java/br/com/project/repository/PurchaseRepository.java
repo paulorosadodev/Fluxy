@@ -78,7 +78,7 @@ public class PurchaseRepository {
             String sql = "DELETE FROM compra WHERE numero = ?";
             jdbcTemplate.update(sql, number);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao deletar compra: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
 
     }
