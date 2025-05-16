@@ -1,4 +1,4 @@
-import { fetchProducts } from "./product";
+import { fetchCategories, fetchProducts } from "./product";
 import { fetchEmployees } from "./employee";
 import { fetchLegalEntityCustomers } from "./legalEntityCustomer";
 import { fetchNaturalPersonCustomers } from "./naturalPersonCustomer";
@@ -273,56 +273,7 @@ export const fetchData = async () => {
                 }
             }
         ],        
-        categories: [
-            { 
-                code: "Hortifruti",
-                name: "Hortifruti",
-            },
-            { 
-                code: "Limpeza",
-                name: "Limpeza",
-            },
-            { 
-                code: "Eletrodomésticos",
-                name: "Eletrodomésticos",
-            },
-            { 
-                code: "Grãos",
-                name: "Grãos",
-            },
-            { 
-                code: "Laticínios",
-                name: "Laticínios",
-            },
-            { 
-                code: "Padaria",
-                name: "Padaria",
-            },
-            { 
-                code: "Higiene",
-                name: "Higiene",
-            },
-            { 
-                code: "Bebidas",
-                name: "Bebidas",
-            },
-            { 
-                code: "Carnes",
-                name: "Carnes",
-            },
-            { 
-                code: "Congelados",
-                name: "Congelados",
-            },
-            { 
-                code: "Mercearia",
-                name: "Mercearia",
-            },
-            { 
-                code: "Pet Shop",
-                name: "Pet Shop",
-            }
-        ],        
+        categories: [],        
         productSupplies: [
             {   
                 id: 1,
@@ -432,6 +383,7 @@ export const fetchData = async () => {
     };
 
     data["products"] = (await fetchProducts());
+    data["categories"] = (await fetchCategories());
     data["employees"] = (await fetchEmployees());
     data["naturalPersonCustomers"] = (await fetchNaturalPersonCustomers());
     data["legalEntityCustomers"] = (await fetchLegalEntityCustomers());

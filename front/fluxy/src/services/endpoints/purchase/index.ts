@@ -25,6 +25,7 @@ export const addPurchase = async (data: PurchasePayload) => {
     };
 
     try {
+        console.log(formattedData);
         const response = await api.post("/purchases", formattedData);
         return response;
     } catch (error: any) {

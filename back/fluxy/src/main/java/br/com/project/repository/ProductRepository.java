@@ -1,7 +1,10 @@
 package br.com.project.repository;
 
+import br.com.project.dto.response.CategoryProductCountDTO;
+import br.com.project.dto.response.TopTierProductDTO;
 import br.com.project.model.Product;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -86,6 +89,66 @@ public class ProductRepository {
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
+    }
+
+    public int getTotalProductsCount() {
+        try {
+            String sql = "SELECT COUNT(*) FROM produto";
+            return jdbcTemplate.queryForObject(sql, Integer.class);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public double getAveragePrice() {
+        try {
+            String sql = "SELECT AVG(produto.preco) FROM produto";
+            return jdbcTemplate.queryForObject(sql, Double.class);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public double getTotalPrice() {
+        try {
+            String sql = "SELECT SUM(produto.preco * produto.qtd_estoque) FROM produto";
+            return jdbcTemplate.queryForObject(sql, Double.class);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public List<CategoryProductCountDTO> getProductsCountByCategory() {
+        String sql = "SELECT codigo_categoria, COUNT(*) AS quantidade FROM produto GROUP BY codigo_categoria";
+
+        return jdbcTemplate.query(sql, (rs, rowNum) ->
+                new CategoryProductCountDTO(
+                        rs.getString("codigo_categoria"),
+                        rs.getInt("quantidade")
+                )
+        );
+    }
+
+    public List<TopTierProductDTO> getMostExpensiveProducts() {
+        String sql = "SELECT nome, preco FROM produto ORDER BY preco DESC LIMIT 5";
+
+        return jdbcTemplate.query(sql, (rs, rowNum) ->
+                new TopTierProductDTO(
+                        rs.getString("nome"),
+                        rs.getDouble("preco")
+                )
+        );
+    }
+
+    public List<TopTierProductDTO> getLeastExpensiveProducts() {
+        String sql = "SELECT nome, preco FROM produto ORDER BY preco LIMIT 5";
+
+        return jdbcTemplate.query(sql, (rs, rowNum) ->
+                new TopTierProductDTO(
+                        rs.getString("nome"),
+                        rs.getDouble("preco")
+                )
+        );
     }
 
     public Product findByCodEa(String codEa) {

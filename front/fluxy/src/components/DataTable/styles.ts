@@ -98,7 +98,7 @@ export const DataTableWrapper = styled.div`
     overflow-y: auto; 
     width: 100%; 
     transition: all 3s;
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
 
     #not-found {
         position: absolute;

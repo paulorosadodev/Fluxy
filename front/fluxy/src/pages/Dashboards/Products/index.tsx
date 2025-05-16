@@ -12,6 +12,7 @@ import { addProduct, deleteProduct, editProduct } from "../../../services/endpoi
 import { useAuth } from "../../../hooks/useAuth";
 
 import { Lock } from "phosphor-react";
+import { Dashboard } from "../../../components/Dashboard";
 
 export default function ProductsDashboard() {
     
@@ -107,7 +108,18 @@ export default function ProductsDashboard() {
                         }
                         <div id="main">
                             <h1>Produtos</h1>
+                            <Dashboard dataDashboards={
+                                [
+                                    ["productsTotalCount", "productsCategoriesCount", "productsTotalStock"],
+                                    ["productsAveragePrice", "productsTotalPrice"],
+                                ]
+                            } />
                             <DataTable deleteRow={deleteProduct} data={products} columns={columns} entityName="produtos" popUpController={setShowPopUp} deletePopUpController={setShowDeletePopUp} setDeletePopUpMessage={setDeletePopUpMessage} setDeletePopUpType={setDeletePopUpType} formControllers={formControllers} selectedRowController={setSelectedRow}/>
+                            <Dashboard graphs={true} dataDashboards={
+                                [
+                                    ["productsCountByCategory", "topTierProducts"],
+                                ]
+                            } />
                             {showPopUp &&
                             <PopUp type="success" message={popUpMessage} show={showPopUp} onClose={() => setShowPopUp(false)} />
                             }

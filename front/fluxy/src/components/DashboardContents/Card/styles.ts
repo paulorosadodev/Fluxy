@@ -6,11 +6,11 @@ export const CardWrapper = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 1rem 0rem;
+    padding: 1rem 1rem;
     border-radius: 8px;
     color: ${(props) => props.theme["brown-800"]};
     border-left: 4px solid ${(props) => props.theme["purple-400"]};
-    min-width: 20rem;
+    min-width: 21rem;
 
     #icon {
         color: ${(props) => props.theme["teal-500"]};
@@ -19,7 +19,7 @@ export const CardWrapper = styled.div`
     #data {
         font-weight: bold;
         margin-left: 0.5rem;
-        margin-right: 0.3rem;
+        margin-right: 0.4rem;
         font-size: 1.5rem;
     }
 

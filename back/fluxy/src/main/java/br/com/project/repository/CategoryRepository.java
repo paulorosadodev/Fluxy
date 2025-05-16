@@ -47,6 +47,15 @@ public class CategoryRepository {
         }
     }
 
+    public int getTotalCategoriesCount() {
+        try {
+            String sql = "SELECT COUNT(*) FROM categoria";
+            return jdbcTemplate.queryForObject(sql, Integer.class);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
     public void update(Category category) {
         String sql = "UPDATE categoria SET nome = ? WHERE codigo = ?";
         try {

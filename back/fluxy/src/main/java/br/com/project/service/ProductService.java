@@ -1,7 +1,9 @@
 package br.com.project.service;
 
 import br.com.project.dto.request.ProductRequestDTO;
+import br.com.project.dto.response.CategoryProductCountDTO;
 import br.com.project.dto.response.ProductResponseDTO;
+import br.com.project.dto.response.TopTierProductDTO;
 import br.com.project.model.Category;
 import br.com.project.model.HistoricPriceProduct;
 import br.com.project.model.Product;
@@ -118,6 +120,54 @@ public class ProductService {
     public int getTotalStockQuantity() {
         try {
             return productRepository.getTotalStockQuantity();
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public int getTotalProductsCount() {
+        try {
+            return productRepository.getTotalProductsCount();
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public double getAveragePrice() {
+        try {
+            return productRepository.getAveragePrice();
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public double getTotalPrice() {
+        try {
+            return productRepository.getTotalPrice();
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public List<CategoryProductCountDTO> getProductsCountByCategory() {
+        try {
+            return productRepository.getProductsCountByCategory();
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public List<TopTierProductDTO> getMostExpensiveProducts() {
+        try {
+            return productRepository.getMostExpensiveProducts();
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public List<TopTierProductDTO> getLeastExpensiveProducts() {
+        try {
+            return productRepository.getLeastExpensiveProducts();
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }

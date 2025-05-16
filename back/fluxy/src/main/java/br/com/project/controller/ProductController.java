@@ -1,7 +1,10 @@
 package br.com.project.controller;
 
 import br.com.project.dto.request.ProductRequestDTO;
+import br.com.project.dto.response.CategoryProductCountDTO;
 import br.com.project.dto.response.ProductResponseDTO;
+import br.com.project.dto.response.TopTierProductDTO;
+import br.com.project.model.Product;
 import br.com.project.service.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -47,6 +50,68 @@ public class ProductController {
             return ResponseEntity.ok(totalStock);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body("Erro ao obter quantidade total em estoque: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/total-products")
+    public ResponseEntity<?> getTotalProductsCount() {
+        try {
+            int totalProducts = productService.getTotalProductsCount();
+            return ResponseEntity.ok(totalProducts);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao obter total de produtos: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/average-price")
+    public ResponseEntity<?> getAveragePrice() {
+        try {
+            double totalProducts = productService.getAveragePrice();
+            return ResponseEntity.ok(totalProducts);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao obter preço médio: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/total-price")
+    public ResponseEntity<?> getTotalPrice() {
+        try {
+            double totalProducts = productService.getTotalPrice();
+            return ResponseEntity.ok(totalProducts);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao obter preço total do estoque: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/products-count-by-category")
+    public ResponseEntity<?> getProductsCountByCategory() {
+        try {
+            List<CategoryProductCountDTO> totalProducts = productService.getProductsCountByCategory();
+            return ResponseEntity.ok(totalProducts);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao obter quantidade de produtos por " +
+                    "categoria: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/most-expensive-products")
+    public ResponseEntity<?> getMostExpensiveProducts() {
+        try {
+            List<TopTierProductDTO> totalProducts = productService.getMostExpensiveProducts();
+            return ResponseEntity.ok(totalProducts);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao obter produtos mais caros: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/least-expensive-products")
+    public ResponseEntity<?> getLeastExpensiveProducts() {
+        try {
+            List<TopTierProductDTO> totalProducts = productService.getLeastExpensiveProducts();
+            System.out.println(totalProducts);
+            return ResponseEntity.ok(totalProducts);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao obter produtos mais baratos: " + e.getMessage());
         }
     }
 
