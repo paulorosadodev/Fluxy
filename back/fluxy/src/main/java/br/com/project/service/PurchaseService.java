@@ -43,7 +43,7 @@ public class PurchaseService {
             purchase.setTime(requestDTO.time() != null ? requestDTO.time() : LocalTime.now());
             purchase.setInstallments(requestDTO.installments());
             purchase.setPaymentType(requestDTO.paymentType());
-            purchase.setProductQuantity(requestDTO.productAmount());
+            purchase.setProductAmount(requestDTO.productAmount());
             purchase.setProductId(requestDTO.productId());
 
             Integer clientId = clienteService.buscarIdPorMatricula(requestDTO.customerId());
@@ -55,7 +55,7 @@ public class PurchaseService {
             if (requestDTO.customerId() == null || requestDTO.customerId().isBlank()) {
                 throw new RuntimeException("A matrícula do cliente está ausente.");
             }
-            purchase.setOperationalEmployeeId(funcionarioService.buscarIdPorMatricula(requestDTO.employeeId()));
+            purchase.setEmployeeId(funcionarioService.buscarIdPorMatricula(requestDTO.employeeId()));
 
             Integer purchaseId = purchaseRepository.save(purchase);
             purchase.setNumber(purchaseId);
@@ -97,10 +97,10 @@ public class PurchaseService {
             purchase.setTime(requestDTO.time());
             purchase.setInstallments(requestDTO.installments());
             purchase.setPaymentType(requestDTO.paymentType());
-            purchase.setProductQuantity(requestDTO.productAmount());
+            purchase.setProductAmount(requestDTO.productAmount());
             purchase.setProductId(requestDTO.productId());
             purchase.setClientId(clienteService.buscarIdPorMatricula(requestDTO.customerId()));
-            purchase.setOperationalEmployeeId(funcionarioService.buscarIdPorMatricula(requestDTO.employeeId()));
+            purchase.setEmployeeId(funcionarioService.buscarIdPorMatricula(requestDTO.employeeId()));
             purchase.setNumber(number);
             purchaseRepository.update(purchase);
         } catch (Exception e) {

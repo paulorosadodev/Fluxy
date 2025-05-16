@@ -40,10 +40,10 @@ public class PurchaseRepository {
             ps.setTime(2, java.sql.Time.valueOf(purchase.getTime()));
             ps.setInt(3, purchase.getInstallments());
             ps.setString(4, purchase.getPaymentType());
-            ps.setInt(5, purchase.getProductQuantity());
+            ps.setInt(5, purchase.getProductAmount());
             ps.setInt(6, purchase.getProductId());
             ps.setInt(7, purchase.getClientId());
-            ps.setInt(8, purchase.getOperationalEmployeeId());
+            ps.setInt(8, purchase.getEmployeeId());
             return ps;
         }, keyHolder);
 
@@ -69,10 +69,10 @@ public class PurchaseRepository {
                 java.sql.Time.valueOf(purchase.getTime()),
                 purchase.getInstallments(),
                 purchase.getPaymentType(),
-                purchase.getProductQuantity(),
+                purchase.getProductAmount(),
                 purchase.getProductId(),
                 purchase.getClientId(),
-                purchase.getOperationalEmployeeId(),
+                purchase.getEmployeeId(),
                 purchase.getNumber()
         );
     }

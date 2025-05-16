@@ -16,8 +16,8 @@ public class Purchase {
     private LocalTime time;
     private Integer installments;
     private String paymentType;
-    private Integer productQuantity;
+    private Integer productAmount;
     private Integer productId;
     private Integer clientId;
-    private Integer operationalEmployeeId;
+    private Integer employeeId;
 }

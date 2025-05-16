@@ -18,7 +18,7 @@ public class PurchaseResponseDTO {
     private String type;
     private Integer productAmount;
 
-    private Integer fkProductId;
-    private Integer fkClientId;
-    private Integer fkOperationalIdEmployee;
+    private Integer productId;
+    private Integer clientId;
+    private Integer employee;
 }
