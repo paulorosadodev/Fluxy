@@ -21,19 +21,19 @@ const dashboardsController: Record<string, DashboardRenderer> = {
     productsTotalStock: {
         fetch: fetchProductsTotalStock,
         render: (data) => (
-            <Card icon={Package} data={data} text="produtos em estoque" />
+            <Card icon={Package} data={data} text={data > 1 ? "produtos em estoque" : "produto em estoque"} />
         ),
     },
     productsTotalCount: {
         fetch: fetchProductsCount,
         render: (data) => (
-            <Card icon={Notebook} data={data} text="produtos cadastrados" />
+            <Card icon={Notebook} data={data} text={data > 1 ? "produtos cadastrados" : "produto cadastrado"} />
         ),
     },
     productsCategoriesCount: {
         fetch: fetchCategoriesCount,
         render: (data) => (
-            <Card icon={Tag} data={data} text="categorias cadastradas" />
+            <Card icon={Tag} data={data} text={data > 1 ? "categorias cadastradas" : "categoria cadastrada"} />
         ),
     },
     productsAveragePrice: {

@@ -15,10 +15,14 @@ export const ProductsByCategoryChartWrapper = styled.div`
 
 export const InfoWrapper = styled.div`
     flex: 1;
+    height: 100%;
+    margin-top: 3rem;
 `;
 
 export const Title = styled.h3`
     margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+    white-space: nowrap;
 `;
 
 export const MotionCategoryList = styled(motion.ul)`

@@ -77,3 +77,18 @@ export const ProductName = styled.span`
     color: #222;
     margin-bottom: 0.25rem;
 `;
+
+export const MessageWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    gap: 1rem;
+
+    #svg {
+        margin-top: 4rem;
+        width: 4rem;
+        height: 4rem;
+        color: ${(props) => (props.theme["teal-500"])};
+    }
+`;
