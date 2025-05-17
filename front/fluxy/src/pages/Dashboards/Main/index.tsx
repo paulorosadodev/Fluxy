@@ -5,7 +5,11 @@ export default function MainDashboard() {
     return (
         <div id="main">
             <h1>Dashboard</h1>
-            <Dashboard dataDashboards={["productsTotalStock"]} />
+            <Dashboard dataDashboards={
+                [
+                    ["productsTotalStock"]
+                ]
+            } />
         </div>
     );
 }
