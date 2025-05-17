@@ -21,6 +21,7 @@ export const DashboardRow = styled.div`
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
+    width: 100%;
     
     & > div {
         min-width: 31rem;
