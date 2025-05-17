@@ -3,6 +3,7 @@ import { fetchEmployees } from "./employee";
 import { fetchLegalEntityCustomers } from "./legalEntityCustomer";
 import { fetchNaturalPersonCustomers } from "./naturalPersonCustomer";
 import { fetchSuppliers } from "./supplier";
+import { fetchPurchases } from "./purchase";
 
 export const fetchData = async () => {
     const data = {
@@ -11,268 +12,7 @@ export const fetchData = async () => {
         naturalPersonCustomers: [],
         legalEntityCustomers: [],
         suppliers: [],
-        purchases: [
-            {
-                number: 2,
-                customer: {
-                    cpf: "75248582059",
-                    name: "Carlos Souza",
-                    address: {
-                        street: "Avenida Central",
-                        number: "350",
-                        neighborhood: "Centro",
-                        city: "São Paulo",
-                        cep: "01015001"
-                    },
-                    phone: ["11987654321"]
-                },
-                product: {
-                    codEa: "7891234567001",
-                    name: "Maçã Fuji 1kg",
-                    category: { code: "Hortifruti", name: "Hortifruti" },
-                    price: 3.99,
-                    stockQuantity: 100
-                },
-                employee: {
-                    employeeNumber: "EMP000002",
-                    name: "Maria Silva",
-                    cpf: "39825433043",
-                    role: "Atendente",
-                    salary: 2500,
-                    address: {
-                        street: "Rua do Comércio",
-                        number: "85",
-                        neighborhood: "Centro",
-                        city: "São Paulo",
-                        cep: "01015002"
-                    },
-                    phone: ["11987654322"]
-                },
-                productAmount: 8,
-                date: "2025-03-15T14:30:00",
-                paymentMethod: {
-                    type: "Crédito",
-                    installments: 2
-                }
-            },
-            {
-                number: 3,
-                customer: {
-                    cpf: "50224698044",
-                    name: "Maria Oliveira",
-                    address: {
-                        street: "Rua das Flores",
-                        number: "12",
-                        neighborhood: "Jardim Paulista",
-                        city: "Campinas",
-                        cep: "13034060"
-                    },
-                    phone: ["19987654321"]
-                },
-                product: {
-                    codEa: "003",
-                    name: "Arroz",
-                    category: { code: "Mercearia", name: "Mercearia" },
-                    price: 25,
-                    stockQuantity: 200
-                },
-                employee: {
-                    employeeNumber: "EMP000003",
-                    name: "Carlos Souza",
-                    cpf: "96152518016",
-                    role: "Repositor",
-                    salary: 2200,
-                    address: {
-                        street: "Av. das Palmeiras",
-                        number: "60",
-                        neighborhood: "Centro",
-                        city: "Campinas",
-                        cep: "13034061"
-                    },
-                    phone: ["19988884444"]
-                },
-                productAmount: 2,
-                date: "2025-03-15T14:30:00",
-                paymentMethod: {
-                    type: "Debit Card",
-                    installments: 1
-                }
-            },
-            {
-                number: 4,
-                customer: {
-                    cnpj: "12345678000145",
-                    legalName: "Tech Solutions Ltda",
-                    stateRegistration: "451234567",
-                    address: {
-                        street: "Rua dos Trabalhadores",
-                        number: "245",
-                        neighborhood: "Zona Norte",
-                        city: "São Paulo",
-                        cep: "02152020"
-                    },
-                    phone: ["1132456789"]
-                },
-                product: {
-                    codEa: "004",
-                    name: "Notebook",
-                    category: { code: "Eletrônicos", name: "Eletrônicos" },
-                    price: 3500,
-                    stockQuantity: 15
-                },
-                employee: {
-                    employeeNumber: "EMP000004",
-                    name: "Ana Paula",
-                    cpf: "71215577036",
-                    role: "Vendedora",
-                    salary: 3200,
-                    address: {
-                        street: "Rua das Acácias",
-                        number: "18",
-                        neighborhood: "Pinheiros",
-                        city: "São Paulo",
-                        cep: "05422020"
-                    },
-                    phone: ["11998761234"]
-                },
-                productAmount: 1,
-                date: "2025-03-15T14:30:00",
-                paymentMethod: {
-                    type: "Credit Card",
-                    installments: 6
-                }
-            },
-            {
-                number: 5,
-                customer: {
-                    cpf: "38687054068",
-                    name: "João da Silva",
-                    address: {
-                        street: "Avenida Brasil",
-                        number: "1000",
-                        neighborhood: "Campo Grande",
-                        city: "Mato Grosso do Sul",
-                        cep: "79002001"
-                    },
-                    phone: ["6798765432"]
-                },
-                product: {
-                    codEa: "005",
-                    name: "Detergente",
-                    category: { code: "Limpeza", name: "Limpeza" },
-                    price: 2.5,
-                    stockQuantity: 500
-                },
-                employee: {
-                    employeeNumber: "EMP000005",
-                    name: "Lucas Mendes",
-                    cpf: "14780616000",
-                    role: "Caixa",
-                    salary: 2400,
-                    address: {
-                        street: "Rua Azul",
-                        number: "50",
-                        neighborhood: "Vila Nova",
-                        city: "Campo Grande",
-                        cep: "79002002"
-                    },
-                    phone: ["67999887766"]
-                },
-                productAmount: 20,
-                date: "2025-03-15T14:30:00",
-                paymentMethod: {
-                    type: "Pix",
-                    installments: 1
-                }
-            },
-            {
-                number: 6,
-                customer: {
-                    cpf: "75248582059",
-                    name: "Carlos Souza",
-                    address: {
-                        street: "Rua Faustino Porto",
-                        number: "200",
-                        neighborhood: "Boa Viagem",
-                        city: "Recife",
-                        cep: "51020270"
-                    },
-                    phone: ["81999972730"]
-                },
-                product: {
-                    codEa: "006",
-                    name: "Sabonete",
-                    category: { code: "Higiene", name: "Higiene" },
-                    price: 1.8,
-                    stockQuantity: 300
-                },
-                employee: {
-                    employeeNumber: "EMP000005",
-                    name: "Lucas Mendes",
-                    cpf: "14780616000",
-                    role: "Caixa",
-                    salary: 3040.50,
-                    address: {
-                        street: "Rua Faustino Porto",
-                        number: "200",
-                        neighborhood: "Boa Viagem",
-                        city: "Recife",
-                        cep: "51020270"
-                    },
-                    phone: ["81999972730"]
-                },
-                productAmount: 15,
-                date: "2025-03-15T14:30:00",
-                paymentMethod: {
-                    type: "Cash",
-                    installments: 1
-                }
-            },
-            {
-                number: 7,
-                customer: {
-                    cnpj: "98765432000134",
-                    legalName: "Comércio & Cia Ltda",
-                    stateRegistration: "067823910",
-                    address: {
-                        street: "Rua Pedro II",
-                        number: "128",
-                        neighborhood: "Vila Progresso",
-                        city: "Rio de Janeiro",
-                        cep: "21010010"
-                    },
-                    phone: ["2176543210"]
-                },
-                product: {
-                    codEa: "007",
-                    name: "Café em pó",
-                    category: { code: "Alimentos", name: "Alimentos" },
-                    price: 8,
-                    stockQuantity: 100
-                },
-                employee: {
-                    employeeNumber: "006",
-                    name: "Roberto Souza",
-                    cpf: "99887766554",
-                    role: "Atendente",
-                    salary: 2600,
-                    address: {
-                        street: "Av. Atlântica",
-                        number: "500",
-                        neighborhood: "Copacabana",
-                        city: "Rio de Janeiro",
-                        cep: "22021001"
-                    },
-                    phone: ["21999988776"]
-                },
-                productAmount: 10,
-                date: "2025-03-15T14:30:00",
-                paymentMethod: {
-                    type: "Credit Card",
-                    installments: 2
-                }
-            }
-        ],        
+        purchases: [],        
         categories: [],        
         productSupplies: [
             {   
@@ -388,6 +128,19 @@ export const fetchData = async () => {
     data["naturalPersonCustomers"] = (await fetchNaturalPersonCustomers());
     data["legalEntityCustomers"] = (await fetchLegalEntityCustomers());
     data["suppliers"] = (await fetchSuppliers());
+    data["purchases"] = (await fetchPurchases()).map((purchase) => {
+    return {
+        ...purchase,
+        product: data["products"].find((product) => product.id === purchase.productId),
+        employee: data["employees"].find((employee) => employee.id === purchase.employee),
+        customer: data["naturalPersonCustomers"].find((customer) => customer.id === purchase.clientId) ?? ["legalEntityCustomers"].find((customer) => customer.id === purchase.clientId),
+        paymentMethod: {installments: purchase.installments, type:purchase.type},
+        date: `${purchase.date}T${purchase.time}`
+    };
+});
+    
+    console.log(data["purchases"])
+    console.log(data)
 
     return data;
 };

@@ -11,8 +11,9 @@ interface PurchasePayload {
     productId: string
 }
 
-export const fetchPurchase = async () => {
+export const fetchPurchases = async () => {
     const response = await api.get("/purchases", );
+    console.log(response)
     return response.data;
 };
 

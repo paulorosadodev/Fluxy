@@ -51,6 +51,7 @@ export default function PurchasesDashboard() {
         { header: "Funcionário", accessor: "employee", formatter: formatEmployee },
         { header: "Hora e Data", accessor: "date", formatter: formatDate },
     ];
+    console.log(purchases)
 
     const fields = [
         [
