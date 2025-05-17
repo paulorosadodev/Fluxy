@@ -39,8 +39,8 @@ public class PurchaseService {
     public PurchaseResponseDTO save(PurchaseRequestDTO requestDTO) {
         try {
             Purchase purchase = new Purchase();
-            purchase.setDate(requestDTO.date() != null ? requestDTO.date() : LocalDate.now());
-            purchase.setTime(requestDTO.time() != null ? requestDTO.time() : LocalTime.now());
+            purchase.setDate(LocalDate.now());
+            purchase.setTime(LocalTime.now());
             purchase.setInstallments(requestDTO.installments());
             purchase.setPaymentType(requestDTO.paymentType());
             purchase.setProductAmount(requestDTO.productAmount());
@@ -93,20 +93,30 @@ public class PurchaseService {
             Purchase purchase = purchaseRepository.findByNumber(number)
                     .orElseThrow(() -> new RuntimeException("Compra não encontrada"));
 
-            purchase.setDate(requestDTO.date());
-            purchase.setTime(requestDTO.time());
+            purchase.setDate(LocalDate.now());
+            purchase.setTime(LocalTime.now());
             purchase.setInstallments(requestDTO.installments());
             purchase.setPaymentType(requestDTO.paymentType());
             purchase.setProductAmount(requestDTO.productAmount());
             purchase.setProductId(requestDTO.productId());
-            purchase.setClientId(clienteService.buscarIdPorMatricula(requestDTO.customerId()));
-            purchase.setEmployeeId(funcionarioService.buscarIdPorMatricula(requestDTO.employeeId()));
+
+            Integer customerId = clienteService.buscarIdPorMatricula(requestDTO.customerId());
+            if (customerId == null) {
+                throw new RuntimeException("Cliente não encontrado com matrícula " + requestDTO.customerId());
+            }
+            purchase.setClientId(customerId);
+
+            Integer employeeId = funcionarioService.buscarIdPorMatricula(requestDTO.employeeId());
+            if (employeeId == null) {
+                throw new RuntimeException("Funcionário não encontrado com matrícula " + requestDTO.employeeId());
+            }
+            purchase.setEmployeeId(employeeId);
+
             purchase.setNumber(number);
             purchaseRepository.update(purchase);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
-
     }
 
     @Transactional
