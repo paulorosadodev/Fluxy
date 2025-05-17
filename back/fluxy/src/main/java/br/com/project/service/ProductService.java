@@ -239,4 +239,15 @@ public class ProductService {
         product.setStockQuantity(currentStock - quantity);
         productRepository.update(product);
     }
+
+    @Transactional
+    public void increaseStock(Integer productId, int quantity) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+
+        int currentStock = product.getStockQuantity();
+        product.setStockQuantity(currentStock + quantity);
+
+        productRepository.update(product);
+    }
 }

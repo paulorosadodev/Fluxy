@@ -93,12 +93,36 @@ public class PurchaseService {
             Purchase purchase = purchaseRepository.findByNumber(number)
                     .orElseThrow(() -> new RuntimeException("Compra não encontrada"));
 
+            // Valores antigos
+            Integer produtoAntigoId = purchase.getProductId();
+            int quantidadeAntiga = purchase.getProductAmount();
+
+            // Valores novos
+            Integer produtoNovoId = requestDTO.productId();
+            int quantidadeNova = requestDTO.productAmount();
+
+            // Ajustes no estoque
+            if (!produtoAntigoId.equals(produtoNovoId)) {
+                // Troca de produto: devolve estoque ao antigo, retira do novo
+                productService.increaseStock(produtoAntigoId, quantidadeAntiga);
+                productService.decreaseStock(produtoNovoId, quantidadeNova);
+            } else {
+                // Mesmo produto, ajusta pela diferença
+                int diferenca = quantidadeNova - quantidadeAntiga;
+                if (diferenca > 0) {
+                    productService.decreaseStock(produtoNovoId, diferenca);
+                } else if (diferenca < 0) {
+                    productService.increaseStock(produtoNovoId, -diferenca);
+                }
+            }
+
+            // Atualiza dados da compra
             purchase.setDate(LocalDate.now());
             purchase.setTime(LocalTime.now());
             purchase.setInstallments(requestDTO.installments());
             purchase.setPaymentType(requestDTO.paymentType());
-            purchase.setProductAmount(requestDTO.productAmount());
-            purchase.setProductId(requestDTO.productId());
+            purchase.setProductAmount(quantidadeNova);
+            purchase.setProductId(produtoNovoId);
 
             Integer customerId = clienteService.buscarIdPorMatricula(requestDTO.customerId());
             if (customerId == null) {
@@ -114,17 +138,23 @@ public class PurchaseService {
 
             purchase.setNumber(number);
             purchaseRepository.update(purchase);
+
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
     @Transactional
     public void deleteByNumber(Integer number) {
         try {
+            Purchase purchase = purchaseRepository.findByNumber(number)
+                    .orElseThrow(() -> new RuntimeException("Compra não encontrada"));
+
+            productService.increaseStock(purchase.getProductId(), purchase.getProductAmount());
             purchaseRepository.deleteByNumber(number);
+
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 }
