@@ -8,7 +8,7 @@ type DataItem = {
 };
 
 type ProductsByCategoryChartProps = {
-    data: DataItem[];
+    data?: DataItem[];
 };
 
 const listVariants = {
@@ -42,7 +42,7 @@ const COLORS = [
     "#CAC4CE",
 ];
 
-export const ProductsByCategoryChart = ({ data }: ProductsByCategoryChartProps) => {
+export const ProductsByCategoryChart = ({ data = [] }: ProductsByCategoryChartProps) => {
     const [ready, setReady] = useState(false);
 
     useEffect(() => {
@@ -50,23 +50,24 @@ export const ProductsByCategoryChart = ({ data }: ProductsByCategoryChartProps) 
             setReady(true);
         }, 100); 
         return () => clearTimeout(timer);
-    }, []);
+    });
 
     return (
-        <ProductsByCategoryChartWrapper>
-            <InfoWrapper>
-                <Title>Produtos por Categoria</Title>
-                <MotionCategoryList variants={listVariants} initial="hidden" animate="visible">
-                    {data.map((item, index) => (
-                        <MotionCategoryItem key={item.categoryCode} variants={itemVariants}>
-                            <ColorBox color={COLORS[index % COLORS.length]} />
-                            {item.categoryCode}
-                        </MotionCategoryItem>
-                    ))}
-                </MotionCategoryList>
-            </InfoWrapper>
-            <ChartWrapper>
-                {ready && 
+        data ? (
+            <ProductsByCategoryChartWrapper>
+                <InfoWrapper>
+                    <Title>Produtos por Categoria</Title>
+                    <MotionCategoryList variants={listVariants} initial="hidden" animate="visible">
+                        { data && data.map((item, index) => (
+                            <MotionCategoryItem key={item.categoryCode} variants={itemVariants}>
+                                <ColorBox color={COLORS[index % COLORS.length]} />
+                                {item.categoryCode}
+                            </MotionCategoryItem>
+                        ))}
+                    </MotionCategoryList>
+                </InfoWrapper>
+                <ChartWrapper>
+                    {ready && 
                     <ResponsiveContainer width="100%" height="100%">
                         <PieChart>
                             <Pie
@@ -82,16 +83,20 @@ export const ProductsByCategoryChart = ({ data }: ProductsByCategoryChartProps) 
                                 animationBegin={0}
                                 animationDuration={1000}
                                 animationEasing="ease-in-out"
+                                stroke={data.length === 1 ? "none" : "#fff"}
                             >
-                                {data.map((_, index) => (
+                                {data && data.map((_, index) => (
                                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                 ))}
                             </Pie>
                             <Tooltip />
                         </PieChart>
                     </ResponsiveContainer>
-                }
-            </ChartWrapper>
-        </ProductsByCategoryChartWrapper>
+                    }
+                </ChartWrapper>
+            </ProductsByCategoryChartWrapper>
+        ) : (
+            <></>
+        )
     );
 };

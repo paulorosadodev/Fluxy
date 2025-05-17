@@ -3,6 +3,7 @@ import { SortInput, SortSelect, TopTierWrapper, MotionListWrapper, MotionListIte
 import { fetchLeastExpensiveProducts, fetchMostExpensiveProducts } from "../../../services/endpoints/product/dashboard";
 import { formatMoney } from "../../../utils";
 import { CurrencyCircleDollar } from "phosphor-react";
+import { useData } from "../../../hooks/useData";
 
 type Product = {
     name: string;
@@ -29,6 +30,7 @@ export const TopTier = () => {
     const [sortField, setSortField] = useState<string>("most-expensive");
     const [mostExpensive, setMostExpensive] = useState<Product[]>();
     const [leastExpensive, setLeastExpensive] = useState<Product[]>();
+    const {products} = useData();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -40,57 +42,62 @@ export const TopTier = () => {
 
         fetchData();
 
-    }, []);
+    }, [products]);
 
     return (
-        <TopTierWrapper>
-            {
-                sortField === "most-expensive"  ? (
-                    <h2>Maiores preços</h2>
-                ) : (
-                    <h2>Menores preços</h2>
-                )
-            }
-            <SortInput>
-                <SortSelect value={String(sortField)} onChange={(e) => setSortField(e.target.value)}>
-                    <option value="most-expensive">Maior preço</option>
-                    <option value="least-expensive">Menor preço</option>
-                </SortSelect>
-            </SortInput>
-            <MotionListWrapper
-                variants={listVariants}
-                initial="hidden"
-                animate="visible"
-            >
-                {sortField === "most-expensive" && mostExpensive ? (
-                    mostExpensive.map((product, index) => (
-                        <MotionListItem key={index} variants={itemVariants}>
-                            <span>
-                                <CurrencyCircleDollar size={20} weight="bold" className="arrow up" />
-                                <strong>{formatMoney(Number(product.price))}</strong>
-                            </span>
-                            <span>
-                                {product.name}
-                            </span>
-                        </MotionListItem>
-                    ))
-                ) : (
-                    leastExpensive?.map((product, index) => (
-                        <MotionListItem key={index} variants={itemVariants}>
-                            <span>
-                                <CurrencyCircleDollar size={20} weight="bold" className="arrow down" />
-                                <strong>{formatMoney(Number(product.price))}</strong>
-                            </span>
-                            <span>
-                                {product.name}
-                            </span>
-                        </MotionListItem>
-                    ))
-                )}
-            </MotionListWrapper>
+        mostExpensive ? (
+
+            <TopTierWrapper>
+                {
+                    sortField === "most-expensive"  ? (
+                        <h2>Maiores preços</h2>
+                    ) : (
+                        <h2>Menores preços</h2>
+                    )
+                }
+                <SortInput>
+                    <SortSelect value={String(sortField)} onChange={(e) => setSortField(e.target.value)}>
+                        <option value="most-expensive">Maior preço</option>
+                        <option value="least-expensive">Menor preço</option>
+                    </SortSelect>
+                </SortInput>
+                <MotionListWrapper
+                    variants={listVariants}
+                    initial="hidden"
+                    animate="visible"
+                >
+                    {sortField === "most-expensive" && mostExpensive ? (
+                        mostExpensive.map((product, index) => (
+                            <MotionListItem key={index} variants={itemVariants}>
+                                <span>
+                                    <CurrencyCircleDollar size={20} weight="bold" className="arrow up" />
+                                    <strong>{formatMoney(Number(product.price))}</strong>
+                                </span>
+                                <span>
+                                    {product.name}
+                                </span>
+                            </MotionListItem>
+                        ))
+                    ) : (
+                        leastExpensive?.map((product, index) => (
+                            <MotionListItem key={index} variants={itemVariants}>
+                                <span>
+                                    <CurrencyCircleDollar size={20} weight="bold" className="arrow down" />
+                                    <strong>{formatMoney(Number(product.price))}</strong>
+                                </span>
+                                <span>
+                                    {product.name}
+                                </span>
+                            </MotionListItem>
+                        ))
+                    )}
+                </MotionListWrapper>
 
 
-        </TopTierWrapper>
+            </TopTierWrapper>
+        ) : (
+            <></>
+        )
     );
 
 };

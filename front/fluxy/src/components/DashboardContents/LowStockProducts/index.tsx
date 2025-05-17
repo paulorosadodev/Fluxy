@@ -1,6 +1,6 @@
-import { WarningCircle } from "phosphor-react";
+import { WarningCircle, CheckCircle } from "phosphor-react";
 import { useEffect, useState } from "react";
-import { LowStockWrapper, Title, MotionList, MotionListItem, ProductName, ProductInfo, AlertIcon } from "./styles";
+import { LowStockWrapper, Title, MotionList, MotionListItem, ProductName, ProductInfo, AlertIcon, MessageWrapper } from "./styles";
 import { Product } from "../../../@types";
 
 type LowStockProductsProps = {
@@ -29,7 +29,7 @@ function getStockClass(stockQuantity: number) {
     return "";
 }
 
-export const LowStockProducts = ({ data }: LowStockProductsProps) => {
+export const LowStockProducts = ({ data = []}: LowStockProductsProps) => {
     const [ready, setReady] = useState(false);
 
     useEffect(() => {
@@ -38,23 +38,34 @@ export const LowStockProducts = ({ data }: LowStockProductsProps) => {
     }, []);
 
     return (
-        <LowStockWrapper>
-            <Title>Produtos com Baixo Estoque</Title>
-            {ready && (
-                <MotionList variants={listVariants} initial="hidden" animate="visible">
-                    {data.map((product, index) => (
-                        <MotionListItem key={index} variants={itemVariants} className={getStockClass(product.stockQuantity)}>
-                            <AlertIcon>
-                                <WarningCircle id="warning-circle" className={getStockClass(product.stockQuantity)} size={24} />
-                            </AlertIcon>
-                            <ProductInfo>
-                                <ProductName>{product.name}</ProductName>
-                                <span>{product.stockQuantity} unidades</span>
-                            </ProductInfo>
-                        </MotionListItem>
-                    ))}
-                </MotionList>
-            )}
-        </LowStockWrapper>
+        data ? (
+            <LowStockWrapper>
+                <Title>Produtos com Baixo Estoque</Title>
+                {ready && (
+                    data.length > 0 ? (
+                        <MotionList variants={listVariants} initial="hidden" animate="visible">
+                            {data.map((product, index) => (
+                                <MotionListItem key={index} variants={itemVariants} className={getStockClass(product.stockQuantity)}>
+                                    <AlertIcon>
+                                        <WarningCircle id="warning-circle" className={getStockClass(product.stockQuantity)} size={24} />
+                                    </AlertIcon>
+                                    <ProductInfo>
+                                        <ProductName>{product.name}</ProductName>
+                                        <span>{product.stockQuantity} unidades</span>
+                                    </ProductInfo>
+                                </MotionListItem>
+                            ))}
+                        </MotionList>
+                    ) : (
+                        <MessageWrapper>
+                            <CheckCircle id="svg" />
+                            <p>Nenhum produto com estoque baixo</p>
+                        </MessageWrapper>
+                    )
+                )}
+            </LowStockWrapper>
+        ) : (
+            <></>
+        )
     );
 };
