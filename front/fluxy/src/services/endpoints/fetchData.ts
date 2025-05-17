@@ -133,7 +133,7 @@ export const fetchData = async () => {
         ...purchase,
         product: data["products"].find((product) => product.id === purchase.productId),
         employee: data["employees"].find((employee) => employee.id === purchase.employee),
-        customer: data["naturalPersonCustomers"].find((customer) => customer.id === purchase.clientId) ?? ["legalEntityCustomers"].find((customer) => customer.id === purchase.clientId),
+        customer: data["naturalPersonCustomers"].find((customer) => customer.id === purchase.clientId) ?? data["legalEntityCustomers"].find((customer) => customer.id === purchase.clientId),
         paymentMethod: {installments: purchase.installments, type:purchase.type},
         date: `${purchase.date}T${purchase.time}`
     };
