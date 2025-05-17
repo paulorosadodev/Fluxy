@@ -148,7 +148,7 @@ export const ClientsWrapper = styled.div`
 
         div {
             box-sizing: content-box;
-            width: 15rem;
+            width: calc((100% / 4) - 1rem);
             height: 5rem;
             object-fit: contain;
             background-color: ${(props) => props.theme["white"]};
