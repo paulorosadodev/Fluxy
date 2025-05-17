@@ -23,11 +23,11 @@ public class ProductSupplierRepository {
         String sql = "INSERT INTO entrega (fk_fornecedor_id, fk_produto_id, qnt_fornecida, valor_pago, data_reposicao) " +
                 "VALUES (?, ?, ?, ?, ?)";
         jdbcTemplate.update(sql,
-                productSupplier.getFornecedorId(),
-                productSupplier.getProdutoId(),
-                productSupplier.getQuantidadeFornecida(),
-                productSupplier.getValorPago(),
-                productSupplier.getDataReposicao()
+                productSupplier.getSupplierId(),
+                productSupplier.getProductId(),
+                productSupplier.getProductAmount(),
+                productSupplier.getPrice(),
+                productSupplier.getDate()
         );
     }
 
@@ -49,15 +49,15 @@ public class ProductSupplierRepository {
         String sql = "UPDATE entrega SET qnt_fornecida = ?, valor_pago = ?, data_reposicao = ? " +
                 "WHERE fk_fornecedor_id = ? AND fk_produto_id = ?";
         int rows = jdbcTemplate.update(sql,
-                productSupplier.getQuantidadeFornecida(),
-                productSupplier.getValorPago(),
-                productSupplier.getDataReposicao(),
-                productSupplier.getFornecedorId(),
-                productSupplier.getProdutoId()
+                productSupplier.getProductAmount(),
+                productSupplier.getPrice(),
+                productSupplier.getDate(),
+                productSupplier.getSupplierId(),
+                productSupplier.getProductId()
         );
         if (rows == 0) {
             throw new RuntimeException("Nenhum entrega atualizado. IDs: fornecedor " +
-                    productSupplier.getFornecedorId() + ", produto " + productSupplier.getProdutoId());
+                    productSupplier.getSupplierId() + ", produto " + productSupplier.getProductId());
         }
     }
 

@@ -19,7 +19,7 @@ public class ProductSupplierService {
     }
 
     public void salvar(ProductSupplierRequestDTO dto) {
-        if (dto.getFornecedorId() == null || dto.getProdutoId() == null) {
+        if (dto.getSupplierId() == null || dto.getProductId() == null) {
             throw new IllegalArgumentException("Fornecedor ID e Produto ID são obrigatórios.");
         }
         ProductSupplier entity = dtoToEntity(dto);
@@ -43,8 +43,8 @@ public class ProductSupplierService {
             throw new IllegalArgumentException("ProductSupplier não encontrado para atualização.");
         }
         ProductSupplier entity = dtoToEntity(dto);
-        entity.setFornecedorId(fornecedorId);
-        entity.setProdutoId(produtoId);
+        entity.setSupplierId(fornecedorId);
+        entity.setProductId(produtoId);
         repository.update(entity);
     }
 
@@ -56,23 +56,12 @@ public class ProductSupplierService {
         repository.deleteById(fornecedorId, produtoId);
     }
 
-    private ProductSupplier dtoToEntity(ProductSupplierRequestDTO dto) {
-        return new ProductSupplier(
-                dto.getFornecedorId(),
-                dto.getProdutoId(),
-                dto.getQuantidadeFornecida(),
-                dto.getValorPago(),
-                dto.getDataReposicao()
-        );
-    }
-
     private ProductSupplierResponseDTO entityToResponseDto(ProductSupplier entity) {
         ProductSupplierResponseDTO dto = new ProductSupplierResponseDTO();
-        dto.setFornecedorId(entity.getFornecedorId());
-        dto.setProdutoId(entity.getProdutoId());
-        dto.setQuantidadeFornecida(entity.getQuantidadeFornecida());
-        dto.setValorPago(entity.getValorPago());
-        dto.setDataReposicao(entity.getDataReposicao());
+        dto.setSupplierId(entity.getSupplierId());
+        dto.setProductId(entity.getProductId());
+        dto.setProductAmount(entity.getProductAmount());
+        dto.setPrice(entity.getPrice());
         return dto;
     }
 }
