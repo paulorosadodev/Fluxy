@@ -12,8 +12,7 @@ interface PurchasePayload {
 }
 
 export const fetchPurchases = async () => {
-    const response = await api.get("/purchases", );
-    console.log(response.data);
+    const response = await api.get("/purchases");
     return response.data;
 };
 
