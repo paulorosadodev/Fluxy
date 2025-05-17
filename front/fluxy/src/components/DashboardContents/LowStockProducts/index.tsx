@@ -51,7 +51,7 @@ export const LowStockProducts = ({ data = []}: LowStockProductsProps) => {
                                     </AlertIcon>
                                     <ProductInfo>
                                         <ProductName>{product.name}</ProductName>
-                                        <span>{product.stockQuantity} unidades</span>
+                                        <span>{product.stockQuantity} {product.stockQuantity > 1 ? "unidades" : "unidade"}</span>
                                     </ProductInfo>
                                 </MotionListItem>
                             ))}
