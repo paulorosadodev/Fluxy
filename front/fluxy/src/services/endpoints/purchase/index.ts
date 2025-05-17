@@ -13,7 +13,6 @@ interface PurchasePayload {
 
 export const fetchPurchases = async () => {
     const response = await api.get("/purchases", );
-    console.log(response)
     return response.data;
 };
 
@@ -25,8 +24,6 @@ export const addPurchase = async (data: PurchasePayload) => {
         customerId: isValidCPF(data.customerId.split("|")[1]?.trim()) ? cleanCPF(data.customerId.split("|")[1]?.trim()) : cleanCNPJ(data.customerId.split("|")[1]?.trim()),
         employeeId: data.employeeId.split("|")[1]?.trim(),
     };
-
-    console.log(formattedData);
 
     try {
         const response = await api.post("/purchases", formattedData);
@@ -55,6 +52,8 @@ export const editPurchase = async (data: PurchasePayload) => {
         ...data,
         productId: cleanedProductId,
     };
+
+    console.log(data);
 
     try {
         const response = await api.put(`/purchases/${data.id}`, formattedData);

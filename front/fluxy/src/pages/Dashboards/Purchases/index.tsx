@@ -51,7 +51,6 @@ export default function PurchasesDashboard() {
         { header: "Funcionário", accessor: "employee", formatter: formatEmployee },
         { header: "Hora e Data", accessor: "date", formatter: formatDate },
     ];
-    console.log(purchases)
 
     const fields = [
         [
@@ -121,9 +120,10 @@ export default function PurchasesDashboard() {
     if (selectedRow.length > 1 && formattedPurchases) {
         const selectedPurchase = formattedPurchases.filter((purchase) => String(purchase.number) === selectedRow.split(",")[0])[0];
         const selectedPurchaseProduct = products.filter((purchase) => String(purchase.codEa) === selectedPurchase.product.codEa)[0];
-
+        
+        
         if (selectedPurchase) {
-            editData = [String(selectedPurchase.id), String(formatCustomer(selectedPurchase.customer)), String(formatPurchaseProduct(selectedPurchaseProduct)), 
+            editData = [String(selectedPurchase.number), String(formatCustomer(selectedPurchase.customer)), String(formatPurchaseProduct(selectedPurchaseProduct)), 
                 String(selectedPurchase.productAmount), String(selectedPurchase.paymentMethod.type), String(selectedPurchase.paymentMethod.installments), String(formatEmployee(selectedPurchase.employee))];
         }
     }

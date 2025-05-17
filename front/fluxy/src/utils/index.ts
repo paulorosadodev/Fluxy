@@ -203,7 +203,6 @@ export function formatStateRegistration(ie: string) {
 }
 
 export function formatDate(date: string): string {
-    console.log(date)
 
     const cleanDate = date.replace("undefined", "");
 

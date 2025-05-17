@@ -2,6 +2,7 @@ package br.com.project.controller;
 
 import br.com.project.dto.request.ProductRequestDTO;
 import br.com.project.dto.response.CategoryProductCountDTO;
+import br.com.project.dto.response.LowStockProductDTO;
 import br.com.project.dto.response.ProductResponseDTO;
 import br.com.project.dto.response.TopTierProductDTO;
 import br.com.project.model.Product;
@@ -101,6 +102,16 @@ public class ProductController {
             return ResponseEntity.ok(totalProducts);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body("Erro ao obter produtos mais caros: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/low-stock-products")
+    public ResponseEntity<?> getLowStockProducts() {
+        try {
+            List<LowStockProductDTO> lowStockProducts = productService.getLowStockProducts();
+            return ResponseEntity.ok(lowStockProducts);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao obter produtos com baixo estoque: " + e.getMessage());
         }
     }
 

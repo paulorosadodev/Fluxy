@@ -7,7 +7,6 @@ export const ProductsByCategoryChartWrapper = styled.div`
     border-radius: 8px;
     width: 100%;
     padding-left: 2rem;
-    max-width: 500px;
     min-height: 300px;
     display: flex;
     justify-content: center;

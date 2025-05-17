@@ -117,7 +117,7 @@ export default function ProductsDashboard() {
                             <DataTable deleteRow={deleteProduct} data={products} columns={columns} entityName="produtos" popUpController={setShowPopUp} deletePopUpController={setShowDeletePopUp} setDeletePopUpMessage={setDeletePopUpMessage} setDeletePopUpType={setDeletePopUpType} formControllers={formControllers} selectedRowController={setSelectedRow}/>
                             <Dashboard graphs={true} dataDashboards={
                                 [
-                                    ["productsCountByCategory", "topTierProducts"],
+                                    ["productsCountByCategory", "topTierProducts", "lowStockProducts"],
                                 ]
                             } />
                             {showPopUp &&

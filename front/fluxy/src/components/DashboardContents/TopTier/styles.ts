@@ -56,7 +56,7 @@ export const ListWrapper = styled.ol`
     li {
         width: 100%;
         list-style-type: none;
-        background-color: ${(props) => props.theme["gray-100"]};
+        background-color: ${(props) => props.theme["white"]};
         border-radius: 10px;
         padding: 0.75rem 1rem;
         box-shadow: 0 2px 6px rgba(0,0,0,0.06);

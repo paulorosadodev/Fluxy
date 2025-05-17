@@ -1,10 +1,11 @@
 import { ReactNode, useEffect, useState } from "react";
 import { DashboardsWrapper, DashboardWrapper, DashboardRow } from "./styles";
-import { fetchAveragePrice, fetchCategoriesCount, fetchProductsCount, fetchProductsCountByCategory, fetchProductsTotalStock, fetchTotalPrice} from "../../services/endpoints/product/dashboard";
+import { fetchAveragePrice, fetchCategoriesCount, fetchLowStockProducts, fetchProductsCount, fetchProductsCountByCategory, fetchProductsTotalStock, fetchTotalPrice} from "../../services/endpoints/product/dashboard";
 import { Card } from "../DashboardContents/Card";
 import { Package, Notebook, Tag, CurrencyCircleDollar, CurrencyDollarSimple} from "phosphor-react";
 import { ProductsByCategoryChart } from "../DashboardContents/ProductsByCategoryChart";
 import { TopTier } from "../DashboardContents/TopTier";
+import { LowStockProducts } from "../DashboardContents/LowStockProducts";
 
 type DashboardProps = {
     dataDashboards: string[][];
@@ -56,6 +57,12 @@ const dashboardsController: Record<string, DashboardRenderer> = {
     topTierProducts: {
         render: () => (
             <TopTier />
+        ),
+    },
+    lowStockProducts: {
+        fetch: fetchLowStockProducts,
+        render: (data) => (
+            <LowStockProducts data={data} />
         ),
     },
 };

@@ -2,6 +2,7 @@ package br.com.project.service;
 
 import br.com.project.dto.request.ProductRequestDTO;
 import br.com.project.dto.response.CategoryProductCountDTO;
+import br.com.project.dto.response.LowStockProductDTO;
 import br.com.project.dto.response.ProductResponseDTO;
 import br.com.project.dto.response.TopTierProductDTO;
 import br.com.project.model.Category;
@@ -160,6 +161,14 @@ public class ProductService {
     public List<TopTierProductDTO> getMostExpensiveProducts() {
         try {
             return productRepository.getMostExpensiveProducts();
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public List<LowStockProductDTO> getLowStockProducts() {
+        try {
+            return productRepository.getLowStockProducts();
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }

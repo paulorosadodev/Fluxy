@@ -1,6 +1,7 @@
 package br.com.project.repository;
 
 import br.com.project.dto.response.CategoryProductCountDTO;
+import br.com.project.dto.response.LowStockProductDTO;
 import br.com.project.dto.response.TopTierProductDTO;
 import br.com.project.model.Product;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -147,6 +148,17 @@ public class ProductRepository {
                 new TopTierProductDTO(
                         rs.getString("nome"),
                         rs.getDouble("preco")
+                )
+        );
+    }
+
+    public List<LowStockProductDTO> getLowStockProducts() {
+        String sql = "SELECT nome, qtd_estoque FROM produto WHERE qtd_estoque <= 10 ";
+
+        return jdbcTemplate.query(sql, (rs, rowNum) ->
+                new LowStockProductDTO(
+                        rs.getString("nome"),
+                        rs.getInt("qtd_estoque")
                 )
         );
     }
