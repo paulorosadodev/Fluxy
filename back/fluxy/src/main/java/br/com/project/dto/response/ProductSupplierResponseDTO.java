@@ -11,9 +11,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductSupplierResponseDTO {
-    private Integer fornecedorId;
-    private Integer produtoId;
-    private Integer quantidadeFornecida;
-    private BigDecimal valorPago;
-    private LocalDate dataReposicao;
+    private Integer supplierId;
+    private Integer productId;
+    private Integer productAmount;
+    private BigDecimal price;
 }

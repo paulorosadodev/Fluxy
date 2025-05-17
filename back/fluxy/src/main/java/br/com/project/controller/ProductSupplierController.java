@@ -12,7 +12,7 @@ import java.util.List;
 import static org.springframework.http.HttpStatus.*;
 
 @RestController
-@RequestMapping("/entregas")
+@RequestMapping("/supply")
 public class ProductSupplierController {
 
     private final ProductSupplierService service;
