@@ -24,11 +24,6 @@ public class PurchaseRepository {
     }
 
     public Integer save(Purchase purchase) {
-        System.out.println(purchase);
-        /* System.out.println(purchase.getProductQuantity());
-        System.out.println(purchase.getProductId());
-        System.out.println(purchase.getClientId());
-        System.out.println(purchase.getOperationalEmployeeId()); */
         String sql = "INSERT INTO compra (data, hora, parcelas, tipo, qtd_produto, fk_produto_id, fk_cliente_id, fk_operacional_id_funcionario) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 

@@ -29,6 +29,10 @@ public class ProductSupplierRepository {
                     productSupplier.getPrice(),
                     productSupplier.getDate()
             );
+
+            String updateStockSql = "UPDATE produto SET quantidade = quantidade + ? WHERE id_produto = ?";
+            jdbcTemplate.update(updateStockSql, productSupplier.getProductAmount(), productSupplier.getProduct());
+
         } catch (Exception e) {
             throw new RuntimeException("Erro ao salvar o registro: " + e.getMessage(), e);
         }
