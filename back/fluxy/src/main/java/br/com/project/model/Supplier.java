@@ -10,7 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Supplier {
-    private Integer idSupplier;
+    private Integer id;
     private String cnpj;
     private String name;
     private String street;

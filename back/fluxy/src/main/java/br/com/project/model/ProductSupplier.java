@@ -10,6 +10,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductSupplier {
+    private Integer id;
     private Integer supplier;
     private Integer product;
     private Integer productAmount;

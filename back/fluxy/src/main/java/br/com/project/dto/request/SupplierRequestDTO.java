@@ -10,5 +10,5 @@ public record SupplierRequestDTO(
         String neighborhood,
         String city,
         String cep,
-        List<String> phone // novo campo para telefones
+        List<String> phone
 ) {}

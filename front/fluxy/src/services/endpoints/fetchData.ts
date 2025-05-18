@@ -40,7 +40,9 @@ export const fetchData = async () => {
     data["productSupplies"] = (await fetchSupplies()).map((supply: any) => {
         return {
             ...supply,
-            product: data["products"].find((product) => product.id === supply.productId)
+            product: data["products"].find((product) => product.id === supply.product),
+            supplier: data["suppliers"].find((supplier) => supplier.id == supply.supplier),
+            id: supply.product + supply.supplier
         };
     });
     data["purchases"] = (await fetchPurchases()).map((purchase: any) => {

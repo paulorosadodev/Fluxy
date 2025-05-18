@@ -25,8 +25,6 @@ public class ProductSupplierService {
         if (dto.getSupplier() == null || dto.getProduct() == null) {
             throw new IllegalArgumentException("Fornecedor ID e Produto ID são obrigatórios.");
         }
-        System.out.println("oi");
-        System.out.println(supplierRepository.findSupplierIdByCnpj(dto.getSupplier()));
 
         ProductSupplier entity = new ProductSupplier(
                 supplierRepository.findSupplierIdByCnpj(dto.getSupplier()),
@@ -71,6 +69,7 @@ public class ProductSupplierService {
 
     private ProductSupplierResponseDTO entityToResponseDto(ProductSupplier entity) {
         return new ProductSupplierResponseDTO(
+                entity.getId(),
                 Integer.toString(entity.getSupplier()),
                 entity.getProduct(),
                 entity.getProductAmount(),

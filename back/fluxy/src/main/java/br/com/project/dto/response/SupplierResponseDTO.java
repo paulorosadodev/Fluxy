@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class SupplierResponseDTO {
-    private Integer idSupplier;
+    private Integer id;
     private String cnpj;
     private String name;
     private String street;
