@@ -85,6 +85,7 @@ public class ProductSupplierRepository {
         @Override
         public ProductSupplier mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new ProductSupplier(
+                    rs.getInt("id"),
                     rs.getInt("fk_fornecedor_id"),
                     rs.getInt("fk_produto_id"),
                     rs.getInt("qnt_fornecida"),

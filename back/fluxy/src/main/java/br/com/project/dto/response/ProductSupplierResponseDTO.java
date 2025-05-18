@@ -11,6 +11,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductSupplierResponseDTO {
+    private Integer id;
     private String supplier;
     private Integer product;
     private Integer productAmount;

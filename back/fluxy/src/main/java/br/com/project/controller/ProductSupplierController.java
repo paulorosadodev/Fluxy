@@ -23,9 +23,7 @@ public class ProductSupplierController {
 
     @PostMapping
     public ResponseEntity<Void> save(@RequestBody ProductSupplierRequestDTO dto) {
-        System.out.println("vhena");
         try {
-            System.out.println("chenngngngn");
             service.salvar(dto);
             return ResponseEntity.status(CREATED).build();
         } catch (IllegalArgumentException e) {
@@ -39,6 +37,7 @@ public class ProductSupplierController {
     public ResponseEntity<List<ProductSupplierResponseDTO>> findAll() {
         try {
             List<ProductSupplierResponseDTO> productSuppliers = service.findAll();
+            System.out.println(productSuppliers);
             return ResponseEntity.ok(productSuppliers);
         } catch (Exception e) {
             throw new ResponseStatusException(INTERNAL_SERVER_ERROR, "Erro ao listar entrega.");

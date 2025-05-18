@@ -148,7 +148,7 @@ public class SupplierRepository {
                     rs.getString("cep"),
                     new ArrayList<>()
             );
-            supplier.setPhone(findPhoneByIdPerson(supplier.getIdSupplier()));
+            supplier.setPhone(findPhoneByIdPerson(supplier.getId()));
             return supplier;
         };
     }
