@@ -15,10 +15,12 @@ public class ProductSupplierService {
 
     private final ProductSupplierRepository repository;
     private final SupplierRepository supplierRepository;
+    private final ProductSupplierRepository productSupplierRepository;
 
-    public ProductSupplierService(ProductSupplierRepository repository, SupplierRepository supplierRepository) {
+    public ProductSupplierService(ProductSupplierRepository repository, SupplierRepository supplierRepository, ProductSupplierRepository productSupplierRepository) {
         this.repository = repository;
         this.supplierRepository = supplierRepository;
+        this.productSupplierRepository = productSupplierRepository;
     }
 
     public ProductSupplierResponseDTO salvar(ProductSupplierRequestDTO dto) {
@@ -40,11 +42,16 @@ public class ProductSupplierService {
             productSupplier.setDate(dto.getDate());
 
             repository.save(productSupplier);
+            increaseProductStock(Integer.valueOf(dto.getProduct()), dto.getProductAmount());
 
             return new ProductSupplierResponseDTO(productSupplier.getSupplier(), productSupplier.getProduct(), productSupplier.getProductAmount(), productSupplier.getPrice());
         } catch (Exception e) {
             throw new RuntimeException("Erro ao salvar a entrega: " + e.getMessage(), e);
         }
+    }
+
+    public void increaseProductStock(Integer productId, Integer quantity) {
+        repository.updateStock(productId, quantity);
     }
 
     public List<ProductSupplierResponseDTO> findAll() {
@@ -76,6 +83,11 @@ public class ProductSupplierService {
             throw new IllegalArgumentException("ProductSupplier não encontrado para exclusão.");
         }
         repository.deleteById(supplyId);
+        // atualizar qtd de produto na deleção
+    }
+
+    public void decreaseProductStock(Integer productId, Integer quantity) {
+        repository.decreaseStock(productId, quantity);
     }
 
     private ProductSupplierResponseDTO entityToResponseDto(ProductSupplier entity) {

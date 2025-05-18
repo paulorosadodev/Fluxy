@@ -1,6 +1,7 @@
 package br.com.project.repository;
 
 import br.com.project.model.ProductSupplier;
+import br.com.project.service.ProductSupplierService;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -21,21 +22,13 @@ public class ProductSupplierRepository {
 
     public void save(ProductSupplier productSupplier) {
         String sql = "INSERT INTO entrega (fk_fornecedor_id, fk_produto_id, qnt_fornecida, valor_pago, data_reposicao) VALUES (?, ?, ?, ?, ?)";
-        try {
-            jdbcTemplate.update(sql,
-                    productSupplier.getSupplier(),
-                    productSupplier.getProduct(),
-                    productSupplier.getProductAmount(),
-                    productSupplier.getPrice(),
-                    productSupplier.getDate()
-            );
-
-            String updateStockSql = "UPDATE produto SET qtd_estoque = qtd_estoque + ? WHERE id_produto = ?";
-            jdbcTemplate.update(updateStockSql, productSupplier.getProductAmount(), productSupplier.getProduct());
-
-        } catch (Exception e) {
-            throw new RuntimeException("Erro ao salvar o registro: " + e.getMessage(), e);
-        }
+        jdbcTemplate.update(sql,
+                productSupplier.getSupplier(),
+                productSupplier.getProduct(),
+                productSupplier.getProductAmount(),
+                productSupplier.getPrice(),
+                productSupplier.getDate()
+        );
     }
 
     public List<ProductSupplier> findAll() {
@@ -64,6 +57,16 @@ public class ProductSupplierRepository {
         jdbcTemplate.update(sql, entregaId);
     }
 
+    public void updateStock(Integer productId, Integer quantity) {
+        String updateStockSql = "UPDATE produto SET qtd_estoque = qtd_estoque + ? WHERE id_produto = ?";
+        jdbcTemplate.update(updateStockSql, quantity, productId);
+    }
+
+    public void decreaseStock(Integer productId, Integer quantity) {
+        String sql = "UPDATE produto SET qtd_estoque = qtd_estoque - ? WHERE id_produto = ?";
+        jdbcTemplate.update(sql, quantity, productId);
+    }
+
     private static class ProductSupplierRowMapper implements RowMapper<ProductSupplier> {
         @Override
         public ProductSupplier mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -78,3 +81,4 @@ public class ProductSupplierRepository {
         }
     }
 }
+
