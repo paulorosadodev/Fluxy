@@ -7,6 +7,7 @@ interface SupplyPayload {
     product: string;
     productAmount: number;
     price: number;
+    date: string
 }
 
 export const fetchSupplies = async () => {
