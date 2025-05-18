@@ -13,7 +13,7 @@ import java.time.LocalDate;
 public class ProductSupplierResponseDTO {
     private Integer id;
     private String supplier;
-    private Integer product;
+    private String product;
     private Integer productAmount;
     private BigDecimal price;
     private LocalDate date;

@@ -20,8 +20,6 @@ public class ProductSupplierRepository {
     }
 
     public void save(ProductSupplier productSupplier) {
-        System.out.println("nhec");
-        System.out.println(productSupplier.getSupplier());
         String sql = "INSERT INTO entrega (fk_fornecedor_id, fk_produto_id, qnt_fornecida, valor_pago, data_reposicao) VALUES (?, ?, ?, ?, ?)";
         try {
             jdbcTemplate.update(sql,
@@ -41,58 +39,36 @@ public class ProductSupplierRepository {
     }
 
     public List<ProductSupplier> findAll() {
-        try {
-            return jdbcTemplate.query("SELECT * FROM entrega", new ProductSupplierRowMapper());
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            throw new RuntimeException(e.getMessage());
-        }
+        return jdbcTemplate.query("SELECT * FROM entrega", new ProductSupplierRowMapper());
     }
 
-    public Optional<ProductSupplier> findBySupplierAndProduct(Integer fornecedorId, Integer produtoId) {
-        String sql = "SELECT * FROM entrega WHERE fk_fornecedor_id = ? AND fk_produto_id = ?";
-        try {
-            return jdbcTemplate.query(sql, new ProductSupplierRowMapper(), fornecedorId, produtoId).stream().findFirst();
-        } catch (Exception e) {
-            throw new RuntimeException("Erro ao buscar o registro: " + e.getMessage(), e);
-        }
+    public Optional<ProductSupplier> findById(Integer entregaId) {
+        String sql = "SELECT * FROM entrega WHERE id_entrega = ?";
+        return jdbcTemplate.query(sql, new ProductSupplierRowMapper(), entregaId).stream().findFirst();
     }
 
     public void update(ProductSupplier productSupplier) {
-        String sql = "UPDATE entrega SET qnt_fornecida = ?, valor_pago = ?, data_reposicao = ? WHERE fk_fornecedor_id = ? AND fk_produto_id = ?";
-        try {
-            int rows = jdbcTemplate.update(sql,
-                    productSupplier.getProductAmount(),
-                    productSupplier.getPrice(),
-                    productSupplier.getDate(),
-                    productSupplier.getSupplier(),
-                    productSupplier.getProduct()
-            );
-            if (rows == 0) {
-                throw new RuntimeException("Nenhum registro atualizado.");
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Erro ao atualizar o registro: " + e.getMessage(), e);
-        }
+        String sql = "UPDATE entrega SET fk_fornecedor_id = ?, fk_produto_id = ?, qnt_fornecida = ?, valor_pago = ?, data_reposicao = ? WHERE id_entrega = ?";
+        jdbcTemplate.update(sql,
+                productSupplier.getSupplier(),
+                productSupplier.getProduct(),
+                productSupplier.getProductAmount(),
+                productSupplier.getPrice(),
+                productSupplier.getDate(),
+                productSupplier.getId()
+        );
     }
 
-    public void deleteById(Integer fornecedorId, Integer produtoId) {
-        String sql = "DELETE FROM entrega WHERE fk_fornecedor_id = ? AND fk_produto_id = ?";
-        try {
-            int rows = jdbcTemplate.update(sql, fornecedorId, produtoId);
-            if (rows == 0) {
-                throw new RuntimeException("Nenhuma entrega foi deletada.");
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Erro ao deletar o registro: " + e.getMessage(), e);
-        }
+    public void deleteById(Integer entregaId) {
+        String sql = "DELETE FROM entrega WHERE id_entrega = ?";
+        jdbcTemplate.update(sql, entregaId);
     }
 
     private static class ProductSupplierRowMapper implements RowMapper<ProductSupplier> {
         @Override
         public ProductSupplier mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new ProductSupplier(
-                    rs.getInt("id"),
+                    rs.getInt("id_entrega"),
                     rs.getInt("fk_fornecedor_id"),
                     rs.getInt("fk_produto_id"),
                     rs.getInt("qnt_fornecida"),

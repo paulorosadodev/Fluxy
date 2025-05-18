@@ -36,21 +36,16 @@ public class ProductSupplierController {
     @GetMapping
     public ResponseEntity<List<ProductSupplierResponseDTO>> findAll() {
         try {
-            List<ProductSupplierResponseDTO> productSuppliers = service.findAll();
-            System.out.println(productSuppliers);
-            return ResponseEntity.ok(productSuppliers);
+            return ResponseEntity.ok(service.findAll());
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            throw new ResponseStatusException(INTERNAL_SERVER_ERROR, "Erro ao listar entrega." + e.getMessage() );
+            throw new ResponseStatusException(INTERNAL_SERVER_ERROR, "Erro ao listar entrega." + e.getMessage());
         }
     }
 
-    @PutMapping("/{fornecedorId}/{produtoId}")
-    public ResponseEntity<Void> update(@PathVariable Integer fornecedorId,
-                                       @PathVariable Integer produtoId,
-                                       @RequestBody ProductSupplierRequestDTO dto) {
+    @PutMapping("/{supplyId}")
+    public ResponseEntity<Void> update(@PathVariable Integer supplyId, @RequestBody ProductSupplierRequestDTO dto) {
         try {
-            service.update(fornecedorId, produtoId, dto);
+            service.update(supplyId, dto);
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(BAD_REQUEST, e.getMessage());
@@ -59,10 +54,11 @@ public class ProductSupplierController {
         }
     }
 
-    @DeleteMapping("/{fornecedorId}/{produtoId}")
-    public ResponseEntity<Void> delete(@PathVariable Integer fornecedorId, @PathVariable Integer produtoId) {
+    @DeleteMapping("/{supplyId}")
+    public ResponseEntity<Void> delete(@PathVariable Integer supplyId) {
         try {
-            service.deleteBySupplierAndProduct(fornecedorId, produtoId);
+
+            service.deleteById(supplyId);
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(NOT_FOUND, e.getMessage());

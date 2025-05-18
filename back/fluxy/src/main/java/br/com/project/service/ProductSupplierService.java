@@ -34,7 +34,7 @@ public class ProductSupplierService {
 
             ProductSupplier productSupplier = new ProductSupplier();
             productSupplier.setSupplier(supplierId);
-            productSupplier.setProduct(dto.getProduct());
+            productSupplier.setProduct(Integer.valueOf(dto.getProduct()));
             productSupplier.setProductAmount(dto.getProductAmount());
             productSupplier.setPrice(dto.getPrice());
             productSupplier.setDate(dto.getDate());
@@ -49,23 +49,21 @@ public class ProductSupplierService {
 
     public List<ProductSupplierResponseDTO> findAll() {
         try {
-            return repository.findAll().stream()
-                    .map(this::entityToResponseDto)
-                    .toList();
-        } catch (Exception e){
-            throw new RuntimeException("Erro ao listar a entrega: " + e.getMessage(), e);
+            return repository.findAll().stream().map(this::entityToResponseDto).toList();
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao listar as entregas: " + e.getMessage(), e);
         }
     }
 
-    public void update(Integer fornecedorId, Integer produtoId, ProductSupplierRequestDTO dto) {
-        Optional<ProductSupplier> existing = repository.findBySupplierAndProduct(fornecedorId, produtoId);
+    public void update(Integer supplyId, ProductSupplierRequestDTO dto) {
+        Optional<ProductSupplier> existing = repository.findById(supplyId);
         if (existing.isEmpty()) {
             throw new IllegalArgumentException("ProductSupplier não encontrado para atualização.");
         }
 
-        ProductSupplier productSupplier = new ProductSupplier();
-        productSupplier.setSupplier(fornecedorId);
-        productSupplier.setProduct(produtoId);
+        ProductSupplier productSupplier = existing.get();
+        productSupplier.setSupplier(supplierRepository.findSupplierIdByCnpj(dto.getSupplier()));
+        productSupplier.setProduct(Integer.valueOf(dto.getProduct()));
         productSupplier.setProductAmount(dto.getProductAmount());
         productSupplier.setPrice(dto.getPrice());
         productSupplier.setDate(dto.getDate());
@@ -73,18 +71,18 @@ public class ProductSupplierService {
         repository.update(productSupplier);
     }
 
-    public void deleteBySupplierAndProduct(Integer fornecedorId, Integer produtoId) {
-        if (repository.findBySupplierAndProduct(fornecedorId, produtoId).isEmpty()) {
+    public void deleteById(Integer supplyId) {
+        if (repository.findById(supplyId).isEmpty()) {
             throw new IllegalArgumentException("ProductSupplier não encontrado para exclusão.");
         }
-        repository.deleteById(fornecedorId, produtoId);
+        repository.deleteById(supplyId);
     }
 
     private ProductSupplierResponseDTO entityToResponseDto(ProductSupplier entity) {
         return new ProductSupplierResponseDTO(
                 entity.getId(),
                 Integer.toString(entity.getSupplier()),
-                entity.getProduct(),
+                Integer.toString(entity.getProduct()),
                 entity.getProductAmount(),
                 entity.getPrice(),
                 entity.getDate()
