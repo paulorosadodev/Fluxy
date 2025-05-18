@@ -38,8 +38,15 @@ export const addSupply = async (data: SupplyPayload) => {
 };
 
 export const editSupply = async (data: SupplyPayload) => {
+    
+    const formattedData = {
+        ...data,
+        product: data.product.split("|")[0]?.trim(),
+        supplier: cleanCNPJ(data.supplier.split("|")[1]?.trim()),
+    };
+
     try {
-        const response = await api.put(`/supply/${data.id}`, data);
+        const response = await api.put(`/supply/${data.id}`, formattedData);
         return response;
     } catch (error: any) {
         

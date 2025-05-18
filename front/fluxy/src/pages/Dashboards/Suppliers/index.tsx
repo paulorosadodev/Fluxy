@@ -176,7 +176,8 @@ export default function SuppliersDashboard() {
 
     let editSupplierData = [""];
     let editSupplyData = [""];
-
+    
+    console.log(productSupplies)
     if (supplierSelectedRow.length > 1) {
 
         const selectedSupplier = suppliers.filter((Supplier) => Supplier.cnpj === supplierSelectedRow.split(",")[1])[0];
@@ -191,9 +192,6 @@ export default function SuppliersDashboard() {
     if (supplySelectedRow.length > 1) {
 
         const selectedSupply = productSupplies.filter((Supply) => String(Supply.id) === supplySelectedRow.split(",")[0])[0];
-        console.log(selectedSupply);
-        console.log(supplySelectedRow);
-        console.log(productSupplies);
         editSupplyData = [
             String(selectedSupply.id), formatSupplier(selectedSupply.supplier), formatPurchaseProduct(selectedSupply.product), String(selectedSupply.productAmount), String(selectedSupply.price), selectedSupply.date
         ];
