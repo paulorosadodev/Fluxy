@@ -10,8 +10,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductSupplier {
-    private Integer supplierId;
-    private Integer productId;
+    private Integer supplier;
+    private Integer product;
     private Integer productAmount;
     private BigDecimal price;
     private LocalDate date;

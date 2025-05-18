@@ -89,4 +89,12 @@ public class SupplierService {
             throw new RuntimeException(e.getMessage());
         }
     }
+
+    public Integer buscarIdPorCnpj(String cnpj) {
+        try {
+            return supplierRepository.findSupplierIdByCnpj(cnpj);
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }

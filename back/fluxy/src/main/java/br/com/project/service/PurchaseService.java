@@ -101,13 +101,10 @@ public class PurchaseService {
             Integer produtoNovoId = requestDTO.productId();
             int quantidadeNova = requestDTO.productAmount();
 
-            // Ajustes no estoque
             if (!produtoAntigoId.equals(produtoNovoId)) {
-                // Troca de produto: devolve estoque ao antigo, retira do novo
                 productService.increaseStock(produtoAntigoId, quantidadeAntiga);
                 productService.decreaseStock(produtoNovoId, quantidadeNova);
             } else {
-                // Mesmo produto, ajusta pela diferença
                 int diferenca = quantidadeNova - quantidadeAntiga;
                 if (diferenca > 0) {
                     productService.decreaseStock(produtoNovoId, diferenca);
@@ -116,7 +113,6 @@ public class PurchaseService {
                 }
             }
 
-            // Atualiza dados da compra
             purchase.setDate(LocalDate.now());
             purchase.setTime(LocalTime.now());
             purchase.setInstallments(requestDTO.installments());

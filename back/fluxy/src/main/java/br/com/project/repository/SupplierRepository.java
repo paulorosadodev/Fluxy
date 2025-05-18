@@ -195,4 +195,25 @@ public class SupplierRepository {
             throw new RuntimeException(e.getMessage());
         }
     }
+
+    public Integer findSupplierIdByCnpj(String cnpj) {
+        try {
+            cnpj = cnpj.replaceAll("[^\\d]", "");
+
+            if (cnpj.length() != 14) {
+                throw new IllegalArgumentException("CNPJ inválido");
+            }
+
+            String sql = "SELECT f.id_fornecedor " +
+                    "FROM fornecedor f " +
+                    "JOIN pessoa p ON p.id_pessoa = f.id_fornecedor " +
+                    "WHERE f.cnpj = ?";
+
+            Integer id = jdbcTemplate.queryForObject(sql, new Object[]{ cnpj }, Integer.class);
+            return id != null ? id : -1;
+
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
 }

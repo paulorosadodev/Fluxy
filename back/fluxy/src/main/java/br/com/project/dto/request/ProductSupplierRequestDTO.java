@@ -7,8 +7,9 @@ import java.time.LocalDate;
 
 @Data
 public class ProductSupplierRequestDTO {
-    private Integer supplierId;
-    private Integer productId;
+    private String supplier;
+    private Integer product;
     private Integer productAmount;
     private BigDecimal price;
+    private LocalDate date;
 }

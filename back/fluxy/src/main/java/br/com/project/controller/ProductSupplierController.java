@@ -23,7 +23,9 @@ public class ProductSupplierController {
 
     @PostMapping
     public ResponseEntity<Void> save(@RequestBody ProductSupplierRequestDTO dto) {
+        System.out.println("vhena");
         try {
+            System.out.println("chenngngngn");
             service.salvar(dto);
             return ResponseEntity.status(CREATED).build();
         } catch (IllegalArgumentException e) {

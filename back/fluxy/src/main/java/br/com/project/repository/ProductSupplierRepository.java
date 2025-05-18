@@ -20,52 +20,64 @@ public class ProductSupplierRepository {
     }
 
     public void save(ProductSupplier productSupplier) {
-        String sql = "INSERT INTO entrega (fk_fornecedor_id, fk_produto_id, qnt_fornecida, valor_pago, data_reposicao) " +
-                "VALUES (?, ?, ?, ?, ?)";
-        jdbcTemplate.update(sql,
-                productSupplier.getSupplierId(),
-                productSupplier.getProductId(),
-                productSupplier.getProductAmount(),
-                productSupplier.getPrice(),
-                productSupplier.getDate()
-        );
+        String sql = "INSERT INTO entrega (fk_fornecedor_id, fk_produto_id, qnt_fornecida, valor_pago, data_reposicao) VALUES (?, ?, ?, ?, ?)";
+        try {
+            jdbcTemplate.update(sql,
+                    productSupplier.getSupplier(),
+                    productSupplier.getProduct(),
+                    productSupplier.getProductAmount(),
+                    productSupplier.getPrice(),
+                    productSupplier.getDate()
+            );
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao salvar o registro: " + e.getMessage(), e);
+        }
     }
 
     public List<ProductSupplier> findAll() {
-        String sql = "SELECT * FROM entrega";
-        return jdbcTemplate.query(sql, new ProductSupplierRowMapper());
+        try {
+            return jdbcTemplate.query("SELECT * FROM entrega", new ProductSupplierRowMapper());
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao buscar todos os registros: " + e.getMessage(), e);
+        }
     }
 
     public Optional<ProductSupplier> findBySupplierAndProduct(Integer fornecedorId, Integer produtoId) {
         String sql = "SELECT * FROM entrega WHERE fk_fornecedor_id = ? AND fk_produto_id = ?";
-        List<ProductSupplier> result = jdbcTemplate.query(sql, new ProductSupplierRowMapper(), fornecedorId, produtoId);
-        if (result.isEmpty()) {
-            return Optional.empty();
+        try {
+            return jdbcTemplate.query(sql, new ProductSupplierRowMapper(), fornecedorId, produtoId).stream().findFirst();
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao buscar o registro: " + e.getMessage(), e);
         }
-        return Optional.of(result.get(0));
     }
 
     public void update(ProductSupplier productSupplier) {
-        String sql = "UPDATE entrega SET qnt_fornecida = ?, valor_pago = ?, data_reposicao = ? " +
-                "WHERE fk_fornecedor_id = ? AND fk_produto_id = ?";
-        int rows = jdbcTemplate.update(sql,
-                productSupplier.getProductAmount(),
-                productSupplier.getPrice(),
-                productSupplier.getDate(),
-                productSupplier.getSupplierId(),
-                productSupplier.getProductId()
-        );
-        if (rows == 0) {
-            throw new RuntimeException("Nenhum entrega atualizado. IDs: fornecedor " +
-                    productSupplier.getSupplierId() + ", produto " + productSupplier.getProductId());
+        String sql = "UPDATE entrega SET qnt_fornecida = ?, valor_pago = ?, data_reposicao = ? WHERE fk_fornecedor_id = ? AND fk_produto_id = ?";
+        try {
+            int rows = jdbcTemplate.update(sql,
+                    productSupplier.getProductAmount(),
+                    productSupplier.getPrice(),
+                    productSupplier.getDate(),
+                    productSupplier.getSupplier(),
+                    productSupplier.getProduct()
+            );
+            if (rows == 0) {
+                throw new RuntimeException("Nenhum registro atualizado.");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao atualizar o registro: " + e.getMessage(), e);
         }
     }
 
     public void deleteById(Integer fornecedorId, Integer produtoId) {
         String sql = "DELETE FROM entrega WHERE fk_fornecedor_id = ? AND fk_produto_id = ?";
-        int rows = jdbcTemplate.update(sql, fornecedorId, produtoId);
-        if (rows == 0) {
-            throw new RuntimeException("Nenhuma entrega foi deletada. Fornecedor ID: " + fornecedorId + ", Produto ID: " + produtoId);
+        try {
+            int rows = jdbcTemplate.update(sql, fornecedorId, produtoId);
+            if (rows == 0) {
+                throw new RuntimeException("Nenhuma entrega foi deletada.");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao deletar o registro: " + e.getMessage(), e);
         }
     }
 
