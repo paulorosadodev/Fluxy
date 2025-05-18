@@ -20,6 +20,8 @@ public class ProductSupplierRepository {
     }
 
     public void save(ProductSupplier productSupplier) {
+        System.out.println("nhec");
+        System.out.println(productSupplier.getSupplier());
         String sql = "INSERT INTO entrega (fk_fornecedor_id, fk_produto_id, qnt_fornecida, valor_pago, data_reposicao) VALUES (?, ?, ?, ?, ?)";
         try {
             jdbcTemplate.update(sql,
@@ -30,7 +32,7 @@ public class ProductSupplierRepository {
                     productSupplier.getDate()
             );
 
-            String updateStockSql = "UPDATE produto SET quantidade = quantidade + ? WHERE id_produto = ?";
+            String updateStockSql = "UPDATE produto SET qtd_estoque = qtd_estoque + ? WHERE id_produto = ?";
             jdbcTemplate.update(updateStockSql, productSupplier.getProductAmount(), productSupplier.getProduct());
 
         } catch (Exception e) {
@@ -42,7 +44,8 @@ public class ProductSupplierRepository {
         try {
             return jdbcTemplate.query("SELECT * FROM entrega", new ProductSupplierRowMapper());
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao buscar todos os registros: " + e.getMessage(), e);
+            System.out.println(e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 

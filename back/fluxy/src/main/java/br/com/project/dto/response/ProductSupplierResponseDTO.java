@@ -17,4 +17,7 @@ public class ProductSupplierResponseDTO {
     private Integer productAmount;
     private BigDecimal price;
     private LocalDate date;
+
+    public ProductSupplierResponseDTO(Integer supplier, Integer product, Integer productAmount, BigDecimal price) {
+    }
 }

@@ -40,7 +40,8 @@ public class ProductSupplierController {
             System.out.println(productSuppliers);
             return ResponseEntity.ok(productSuppliers);
         } catch (Exception e) {
-            throw new ResponseStatusException(INTERNAL_SERVER_ERROR, "Erro ao listar entrega.");
+            System.out.println(e.getMessage());
+            throw new ResponseStatusException(INTERNAL_SERVER_ERROR, "Erro ao listar entrega." + e.getMessage() );
         }
     }
 

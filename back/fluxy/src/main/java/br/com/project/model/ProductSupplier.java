@@ -16,4 +16,5 @@ public class ProductSupplier {
     private Integer productAmount;
     private BigDecimal price;
     private LocalDate date;
+
 }

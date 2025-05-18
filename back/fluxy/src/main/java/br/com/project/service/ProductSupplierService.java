@@ -21,26 +21,40 @@ public class ProductSupplierService {
         this.supplierRepository = supplierRepository;
     }
 
-    public void salvar(ProductSupplierRequestDTO dto) {
-        if (dto.getSupplier() == null || dto.getProduct() == null) {
-            throw new IllegalArgumentException("Fornecedor ID e Produto ID são obrigatórios.");
+    public ProductSupplierResponseDTO salvar(ProductSupplierRequestDTO dto) {
+        try {
+            if (dto.getSupplier() == null || dto.getProduct() == null) {
+                throw new IllegalArgumentException("Fornecedor e Produto são obrigatórios.");
+            }
+
+            Integer supplierId = supplierRepository.findSupplierIdByCnpj(dto.getSupplier());
+            if (supplierId == null) {
+                throw new RuntimeException("Fornecedor não encontrado com o CNPJ " + dto.getSupplier());
+            }
+
+            ProductSupplier productSupplier = new ProductSupplier();
+            productSupplier.setSupplier(supplierId);
+            productSupplier.setProduct(dto.getProduct());
+            productSupplier.setProductAmount(dto.getProductAmount());
+            productSupplier.setPrice(dto.getPrice());
+            productSupplier.setDate(dto.getDate());
+
+            repository.save(productSupplier);
+
+            return new ProductSupplierResponseDTO(productSupplier.getSupplier(), productSupplier.getProduct(), productSupplier.getProductAmount(), productSupplier.getPrice());
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao salvar a entrega: " + e.getMessage(), e);
         }
-
-        ProductSupplier entity = new ProductSupplier(
-                supplierRepository.findSupplierIdByCnpj(dto.getSupplier()),
-                dto.getProduct(),
-                dto.getProductAmount(),
-                dto.getPrice(),
-                dto.getDate()
-        );
-
-        repository.save(entity);
     }
 
     public List<ProductSupplierResponseDTO> findAll() {
-        return repository.findAll().stream()
-                .map(this::entityToResponseDto)
-                .toList();
+        try {
+            return repository.findAll().stream()
+                    .map(this::entityToResponseDto)
+                    .toList();
+        } catch (Exception e){
+            throw new RuntimeException("Erro ao listar a entrega: " + e.getMessage(), e);
+        }
     }
 
     public void update(Integer fornecedorId, Integer produtoId, ProductSupplierRequestDTO dto) {
@@ -49,15 +63,14 @@ public class ProductSupplierService {
             throw new IllegalArgumentException("ProductSupplier não encontrado para atualização.");
         }
 
-        ProductSupplier entity = new ProductSupplier(
-                fornecedorId,
-                produtoId,
-                dto.getProductAmount(),
-                dto.getPrice(),
-                dto.getDate()
-        );
+        ProductSupplier productSupplier = new ProductSupplier();
+        productSupplier.setSupplier(fornecedorId);
+        productSupplier.setProduct(produtoId);
+        productSupplier.setProductAmount(dto.getProductAmount());
+        productSupplier.setPrice(dto.getPrice());
+        productSupplier.setDate(dto.getDate());
 
-        repository.update(entity);
+        repository.update(productSupplier);
     }
 
     public void deleteBySupplierAndProduct(Integer fornecedorId, Integer produtoId) {
