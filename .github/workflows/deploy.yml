@@ -22,7 +22,7 @@ jobs:
         distribution: 'temurin'
 
     - name: Build Spring Boot App
-      working-directory: back
+      working-directory: back/fluxy
       run: mvn clean package -DskipTests
 
     - name: Copy jar to EC2
