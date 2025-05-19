@@ -67,7 +67,7 @@ export const DataProvider = ({ children }: DataProviderProps) => {
         setIsLoading(true);
     
         const timeoutPromise = new Promise<null>(resolve => 
-            setTimeout(() => resolve(null), 3000)
+            setTimeout(() => resolve(null), 100000)
         );
     
         try {
