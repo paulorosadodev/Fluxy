@@ -18,7 +18,7 @@ export function Home() {
                 <HomeNavBar />
             </Header>
             <Banner>
-                <h2>{import.meta.env.VITE_API_URL}</h2>
+                <h2>Visualize, gerencie, cresça!</h2>
                 <AnimatedBackgroundChart />
             </Banner>
             <AboutWrapper id="about">
