@@ -31,7 +31,10 @@ export const fetchData = async () => {
         productSupplies: []
     };
 
+    console.log(data);
+
     data["products"] = (await fetchProducts());
+    console.log(data);
     data["categories"] = (await fetchCategories());
     data["employees"] = (await fetchEmployees());
     data["naturalPersonCustomers"] = (await fetchNaturalPersonCustomers());
@@ -54,6 +57,8 @@ export const fetchData = async () => {
             date: `${purchase.date}T${purchase.time}`
         };
     });
+
+    console.log(data);
 
 
     return data;
