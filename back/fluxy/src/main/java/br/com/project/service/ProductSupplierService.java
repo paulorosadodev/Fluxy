@@ -66,6 +66,8 @@ public class ProductSupplierService {
 
         ProductSupplier productSupplier = existing.get();
         int previousAmount = productSupplier.getProductAmount();
+        int previousProduct = productSupplier.getProduct();
+
         productSupplier.setSupplier(supplierRepository.findSupplierIdByCnpj(dto.getSupplier()));
         productSupplier.setProduct(Integer.valueOf(dto.getProduct()));
         productSupplier.setProductAmount(dto.getProductAmount());
@@ -73,14 +75,20 @@ public class ProductSupplierService {
         productSupplier.setDate(dto.getDate());
 
         repository.update(productSupplier);
-        int productId = productSupplier.getProduct();
-        int newAmount = dto.getProductAmount();
-        int difference = newAmount - previousAmount;
 
-        if (difference > 0) {
-            repository.increaseStock(productId, difference);
-        } else if (difference < 0) {
-            repository.decreaseStock(productId, -difference);
+        int newProduct = productSupplier.getProduct();
+        int newAmount = dto.getProductAmount();
+
+        if (previousProduct != newProduct) {
+            repository.decreaseStock(previousProduct, previousAmount);
+            repository.increaseStock(newProduct, newAmount);
+        } else {
+            int difference = newAmount - previousAmount;
+            if (difference > 0) {
+                repository.increaseStock(newProduct, difference);
+            } else if (difference < 0) {
+                repository.decreaseStock(newProduct, -difference);
+            }
         }
     }
 

@@ -93,11 +93,9 @@ public class PurchaseService {
             Purchase purchase = purchaseRepository.findByNumber(number)
                     .orElseThrow(() -> new RuntimeException("Compra não encontrada"));
 
-            // Valores antigos
             Integer produtoAntigoId = purchase.getProductId();
             int quantidadeAntiga = purchase.getProductAmount();
 
-            // Valores novos
             Integer produtoNovoId = requestDTO.productId();
             int quantidadeNova = requestDTO.productAmount();
 
