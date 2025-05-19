@@ -42,16 +42,12 @@ public class ProductSupplierService {
             productSupplier.setDate(dto.getDate());
 
             repository.save(productSupplier);
-            increaseProductStock(Integer.valueOf(dto.getProduct()), dto.getProductAmount());
+            repository.increaseStock(Integer.valueOf(dto.getProduct()), dto.getProductAmount());
 
             return new ProductSupplierResponseDTO(productSupplier.getSupplier(), productSupplier.getProduct(), productSupplier.getProductAmount(), productSupplier.getPrice());
         } catch (Exception e) {
             throw new RuntimeException("Erro ao salvar a entrega: " + e.getMessage(), e);
         }
-    }
-
-    public void increaseProductStock(Integer productId, Integer quantity) {
-        repository.updateStock(productId, quantity);
     }
 
     public List<ProductSupplierResponseDTO> findAll() {
@@ -69,6 +65,7 @@ public class ProductSupplierService {
         }
 
         ProductSupplier productSupplier = existing.get();
+        int previousAmount = productSupplier.getProductAmount();
         productSupplier.setSupplier(supplierRepository.findSupplierIdByCnpj(dto.getSupplier()));
         productSupplier.setProduct(Integer.valueOf(dto.getProduct()));
         productSupplier.setProductAmount(dto.getProductAmount());
@@ -76,18 +73,25 @@ public class ProductSupplierService {
         productSupplier.setDate(dto.getDate());
 
         repository.update(productSupplier);
+        int productId = productSupplier.getProduct();
+        int newAmount = dto.getProductAmount();
+        int difference = newAmount - previousAmount;
+
+        if (difference > 0) {
+            repository.increaseStock(productId, difference);
+        } else if (difference < 0) {
+            repository.decreaseStock(productId, -difference);
+        }
     }
 
     public void deleteById(Integer supplyId) {
         if (repository.findById(supplyId).isEmpty()) {
             throw new IllegalArgumentException("ProductSupplier não encontrado para exclusão.");
         }
+        Integer qtd = repository.findStockBySupplyId(supplyId);
+        Integer productId = repository.findProductIdByEntregaId(supplyId);
+        repository.decreaseStock(productId, qtd);
         repository.deleteById(supplyId);
-        // atualizar qtd de produto na deleção
-    }
-
-    public void decreaseProductStock(Integer productId, Integer quantity) {
-        repository.decreaseStock(productId, quantity);
     }
 
     private ProductSupplierResponseDTO entityToResponseDto(ProductSupplier entity) {

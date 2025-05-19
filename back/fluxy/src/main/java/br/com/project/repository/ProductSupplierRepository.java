@@ -57,7 +57,7 @@ public class ProductSupplierRepository {
         jdbcTemplate.update(sql, entregaId);
     }
 
-    public void updateStock(Integer productId, Integer quantity) {
+    public void increaseStock(Integer productId, Integer quantity) {
         String updateStockSql = "UPDATE produto SET qtd_estoque = qtd_estoque + ? WHERE id_produto = ?";
         jdbcTemplate.update(updateStockSql, quantity, productId);
     }
@@ -65,6 +65,16 @@ public class ProductSupplierRepository {
     public void decreaseStock(Integer productId, Integer quantity) {
         String sql = "UPDATE produto SET qtd_estoque = qtd_estoque - ? WHERE id_produto = ?";
         jdbcTemplate.update(sql, quantity, productId);
+    }
+
+    public Integer findStockBySupplyId  (Integer entregaId) {
+        String sql = "SELECT qnt_fornecida FROM entrega WHERE id_entrega = ?";
+        return jdbcTemplate.queryForObject(sql, Integer.class, entregaId);
+    }
+
+    public Integer findProductIdByEntregaId(Integer entregaId) {
+        String sql = "SELECT fk_produto_id FROM entrega WHERE id_entrega = ?";
+        return jdbcTemplate.queryForObject(sql, Integer.class, entregaId);
     }
 
     private static class ProductSupplierRowMapper implements RowMapper<ProductSupplier> {
