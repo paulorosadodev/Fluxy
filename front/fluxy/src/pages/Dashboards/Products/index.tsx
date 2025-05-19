@@ -97,6 +97,9 @@ export default function ProductsDashboard() {
         }
     }
 
+    console.log("oi");
+    console.log(products);
+
     return (
         <>  
             {
