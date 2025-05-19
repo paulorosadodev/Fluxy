@@ -31,7 +31,7 @@ jobs:
         host: ${{ secrets.EC2_HOST }}
         username: ${{ secrets.EC2_USER }}
         key: ${{ secrets.EC2_SSH_KEY }}
-        source: "back/target/demo-0.0.1-SNAPSHOT.jar"
+        source: "back/fluxy/target/demo-0.0.1-SNAPSHOT.jar"
         target: "/home/ec2-user"
 
     - name: SSH into EC2 to deploy and start app with ngrok
