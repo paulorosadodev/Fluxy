@@ -1,16 +1,24 @@
 package br.com.project.dto.response;
 
-import java.sql.Date;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-public record PurchaseResponseDTO(
-        Integer number,
-        Date date,
-        Integer hour,
-        Integer installments,
-        String type,
-        Integer productAmount,
+import java.time.LocalDate;
+import java.time.LocalTime;
 
-        Integer fkProductId,
-        Integer fkClientId,
-        Integer fkOperationalIdEmployee
-) {}
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class PurchaseResponseDTO {
+    private Integer number;
+    private LocalDate date;
+    private LocalTime time;
+    private Integer installments;
+    private String type;
+    private Integer productAmount;
+
+    private Integer productId;
+    private Integer clientId;
+    private Integer employee;
+}

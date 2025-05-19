@@ -17,15 +17,24 @@ public class LegalClientService {
 
     private final LegalClientRepository repository;
     private final PersonRepository personRepository;
+    private final LegalClientRepository legalClientRepository;
 
-    public LegalClientService(LegalClientRepository repository, PersonRepository personRepository) {
+    public LegalClientService(LegalClientRepository repository, PersonRepository personRepository, LegalClientRepository legalClientRepository) {
         this.repository = repository;
         this.personRepository = personRepository;
+        this.legalClientRepository = legalClientRepository;
     }
 
     @Transactional
     public Integer save(LegalClientRequestDTO dto) {
         try {
+            if (legalClientRepository.existsByCnpj(dto.cnpj())){
+                throw new IllegalArgumentException("CNPJ já cadastrado");
+            }
+            if (legalClientRepository.existsByStateRegistration(dto.stateRegistration())){
+                throw new IllegalArgumentException("Inscrição estadual já cadastrada");
+            }
+
             Person person = new Person();
             person.setStreet(dto.street());
             person.setNumber(dto.number());
@@ -50,7 +59,7 @@ public class LegalClientService {
             repository.save(client);
             return idPessoa;
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao salvar cliente jurídico: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -60,7 +69,7 @@ public class LegalClientService {
                     .orElseThrow(() -> new RuntimeException("Cliente jurídico com ID " + id + " não encontrado"));
             return toResponseDTO(client);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao buscar cliente jurídico: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -70,7 +79,7 @@ public class LegalClientService {
                     .map(this::toResponseDTO)
                     .toList();
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao listar clientes jurídicos: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -101,7 +110,7 @@ public class LegalClientService {
 
             repository.update(id, existing);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao atualizar cliente jurídico: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -111,7 +120,7 @@ public class LegalClientService {
             repository.deleteById(id);
             personRepository.deleteById(id);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao deletar cliente jurídico: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 

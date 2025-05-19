@@ -1,23 +1,33 @@
 import { api } from "../../api";
 
-interface ProductPayload {
+interface SupplierPayload {
     id: number;
     name: string;
-    codEa: string;
-    price: number;
-    stockQuantity: number;
-    categoryCode: string;
+    cnpj: string;
+    cep: number;
+    city: number;
+    neighborhood: string;
+    street: string;
+    number: string;
 }
 
-export const fetchSupplier = async () => {
-    const response = await api.get("/products", );
-    return response.data;
+export const fetchSuppliers = async () => {
+    const response = (await api.get("/suppliers")).data;
+
+    const formattedSuppliers = response.map((supplier: any) => {
+        return {
+            ...supplier,
+            address: {street: supplier.street, number: supplier.number, neighborhood: supplier.neighborhood, city: supplier.city, cep: supplier.cep}
+        };
+    });
+
+    return formattedSuppliers;
 };
 
-export const addSupplier = async (data: ProductPayload) => {
+export const addSupplier = async (data: SupplierPayload) => {
 
     try {
-        const response = await api.post("/products", data);
+        const response = await api.post("/suppliers", data);
         return response;
     } catch (error: any) {
         
@@ -26,13 +36,13 @@ export const addSupplier = async (data: ProductPayload) => {
         if (errorMessage) {
             throw new Error(errorMessage);
         }
-        throw new Error("Erro inesperado ao adicionar produto");
+        throw new Error("Erro inesperado ao adicionar fornecedor");
     }
 };
 
-export const editSupplier = async (data: ProductPayload) => {
+export const editSupplier = async (data: SupplierPayload) => {
     try {
-        const response = await api.put(`/products/${data.id}`, data);
+        const response = await api.put(`/suppliers/${data.id}`, data);
         return response;
     } catch (error: any) {
         
@@ -41,13 +51,13 @@ export const editSupplier = async (data: ProductPayload) => {
         if (errorMessage) {
             throw new Error(errorMessage);
         }
-        throw new Error("Erro inesperado ao editar produto");
+        throw new Error("Erro inesperado ao editar fornecedor");
     }
 };
 
-export const deleteSupplier = async (data: ProductPayload) => {
+export const deleteSupplier = async (data: SupplierPayload) => {
     try {
-        const response = await api.delete(`/products/${data}`);
+        const response = await api.delete(`/suppliers/${data}`);
         return response;
     } catch (error: any) {
         
@@ -56,6 +66,6 @@ export const deleteSupplier = async (data: ProductPayload) => {
         if (errorMessage) {
             throw new Error(errorMessage);
         }
-        throw new Error("Erro inesperado ao excluir produto");
+        throw new Error("Erro inesperado ao excluir fornecedor");
     }
 };

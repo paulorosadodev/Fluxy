@@ -9,9 +9,14 @@ import { z } from "zod";
 import { PopUp } from "../../../components/PopUp";
 
 import { addProduct, deleteProduct, editProduct } from "../../../services/endpoints/product";
+import { useAuth } from "../../../hooks/useAuth";
+
+import { Lock } from "phosphor-react";
+import { Dashboard } from "../../../components/Dashboard";
 
 export default function ProductsDashboard() {
-
+    
+    const {role} = useAuth();
     const { products, categories } = useData();
     const [isAddFormOpened, setIsAddFormOpened] = useState(false);
     const [isEditFormOpened, setIsEditFormOpened] = useState(false);
@@ -94,20 +99,47 @@ export default function ProductsDashboard() {
 
     return (
         <>  
-            <EntityForm type="Adicionar" title="Produto" fields={fields} open={isAddFormOpened} formControllers={formControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} onSubmitAPI={addProduct} />
-            {editData.length > 1 && 
-                <EntityForm type="Editar" title="Produto" fields={fields} open={isEditFormOpened} formControllers={formControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} data={editData} onSubmitAPI={editProduct} />
+            {
+                role.includes("products") ? (
+                    <>
+                        <EntityForm type="Adicionar" title="Produto" fields={fields} open={isAddFormOpened} formControllers={formControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} onSubmitAPI={addProduct} />
+                        {editData.length > 1 && 
+                        <EntityForm type="Editar" title="Produto" fields={fields} open={isEditFormOpened} formControllers={formControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} data={editData} onSubmitAPI={editProduct} />
+                        }
+                        <div id="main">
+                            <h1>Produtos</h1>
+                            <Dashboard dataDashboards={
+                                [
+                                    ["productsTotalCount", "productsCategoriesCount", "productsTotalStock"],
+                                    ["productsAveragePrice", "productsTotalPrice"],
+                                ]
+                            } />
+                            <DataTable deleteRow={deleteProduct} data={products} columns={columns} entityName="produtos" popUpController={setShowPopUp} deletePopUpController={setShowDeletePopUp} setDeletePopUpMessage={setDeletePopUpMessage} setDeletePopUpType={setDeletePopUpType} formControllers={formControllers} selectedRowController={setSelectedRow}/>
+                            {products.length > 0 && 
+                            <Dashboard graphs={true} dataDashboards={
+                                [
+                                    ["productsCountByCategory", "topTierProducts", "lowStockProducts"],
+                                ]
+                            } />
+                            }
+                            {showPopUp &&
+                            <PopUp type="success" message={popUpMessage} show={showPopUp} onClose={() => setShowPopUp(false)} />
+                            }
+                            {showDeletePopUp &&
+                            <PopUp type={deletePopUpType} message={deletePopUpMessage} show={showDeletePopUp} onClose={() => setShowDeletePopUp(false)} />
+                            }
+                        </div>
+                    </>
+                ) : (
+                    <div id="main">
+                        <div className="unauthorized-container">
+                            <Lock size={64} weight="duotone" className="unauthorized-icon" />
+                            <h2 className="unauthorized-title">Acesso negado</h2>
+                            <p className="unauthorized-text">Você não tem permissão para visualizar esta página.</p>
+                        </div>
+                    </div>
+                )
             }
-            <div id="main">
-                <h1>Produtos</h1>
-                <DataTable deleteRow={deleteProduct} data={products} columns={columns} entityName="produtos" popUpController={setShowPopUp} deletePopUpController={setShowDeletePopUp} setDeletePopUpMessage={setDeletePopUpMessage} setDeletePopUpType={setDeletePopUpType} formControllers={formControllers} selectedRowController={setSelectedRow}/>
-                {showPopUp &&
-                    <PopUp type="success" message={popUpMessage} show={showPopUp} onClose={() => setShowPopUp(false)} />
-                }
-                {showDeletePopUp &&
-                    <PopUp type={deletePopUpType} message={deletePopUpMessage} show={showDeletePopUp} onClose={() => setShowDeletePopUp(false)} />
-                }
-            </div>
         </>
     );
 }

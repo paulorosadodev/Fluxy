@@ -11,7 +11,7 @@ import { useState } from "react";
 
 export default function AsideMenu() {
 
-    const { signOut } = useAuth();
+    const { signOut, role } = useAuth();
 
     const [isNavHovered, setIsNavHovered] = useState(false);
     const [isMenuOpened, setIsMenuOpened] = useState(false);
@@ -42,36 +42,46 @@ export default function AsideMenu() {
                                 <span className="menu-item">Início</span>
                             </NavLink>
                         </li>
-                        <li>
-                            <NavLink to="/dashboard/produtos" onClick={closeMenu}>
-                                <Package size={32} />
-                                <span className="menu-item">Produtos</span>
-                            </NavLink>
-                        </li>
-                        <li>
-                            <NavLink to="/dashboard/fornecedores" onClick={closeMenu}>
-                                <Truck size={32} />
-                                <span className="menu-item">Fornecedores</span>
-                            </NavLink>
-                        </li>
-                        <li>
-                            <NavLink to="/dashboard/funcionarios" onClick={closeMenu}>
-                                <UsersThree size={32} />
-                                <span className="menu-item">Funcionários</span>
-                            </NavLink>
-                        </li>
-                        <li>
-                            <NavLink to="/dashboard/clientes" onClick={closeMenu}>
-                                <User size={32} />
-                                <span className="menu-item">Clientes</span>
-                            </NavLink>
-                        </li>
-                        <li>
-                            <NavLink to="/dashboard/compras" onClick={closeMenu}>
-                                <ShoppingCart size={32} />
-                                <span className="menu-item">Compras</span>
-                            </NavLink>
-                        </li>
+                        {role.includes("products") && 
+                            <li>
+                                <NavLink to="/dashboard/produtos" onClick={closeMenu}>
+                                    <Package size={32} />
+                                    <span className="menu-item">Produtos</span>
+                                </NavLink>
+                            </li>
+                        }
+                        {role.includes("suppliers") && 
+                            <li>
+                                <NavLink to="/dashboard/fornecedores" onClick={closeMenu}>
+                                    <Truck size={32} />
+                                    <span className="menu-item">Fornecedores</span>
+                                </NavLink>
+                            </li>
+                        }
+                        {role.includes("employees") && 
+                            <li>
+                                <NavLink to="/dashboard/funcionarios" onClick={closeMenu}>
+                                    <UsersThree size={32} />
+                                    <span className="menu-item">Funcionários</span>
+                                </NavLink>
+                            </li>
+                        }
+                        {role.includes("customers") && 
+                            <li>
+                                <NavLink to="/dashboard/clientes" onClick={closeMenu}>
+                                    <User size={32} />
+                                    <span className="menu-item">Clientes</span>
+                                </NavLink>
+                            </li>
+                        }
+                        {role.includes("purchases") && 
+                            <li>
+                                <NavLink to="/dashboard/compras" onClick={closeMenu}>
+                                    <ShoppingCart size={32} />
+                                    <span className="menu-item">Compras</span>
+                                </NavLink>
+                            </li>
+                        }
                     </ul>
                 </nav>
 

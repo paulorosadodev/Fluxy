@@ -41,35 +41,14 @@ public class CategoryController {
         }
     }
 
-    @GetMapping("/{code}")
-    public ResponseEntity<Category> findByCode(@PathVariable String code) {
-        return service.findByCode(code)
-                .map(ResponseEntity::ok)
-                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Categoria não encontrada."));
-    }
-
-    @PutMapping("/{code}")
-    public ResponseEntity<Void> update(@PathVariable String code, @RequestBody Category category) {
+    @GetMapping("/total-categories")
+    public ResponseEntity<?> getTotalCategoriesCount() {
         try {
-            category.setCode(code);
-            service.update(category);
-            return ResponseEntity.ok().build();
-        } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(BAD_REQUEST, e.getMessage());
+            int totalCategories = service.getTotalCategoriesCount();
+            return ResponseEntity.ok(totalCategories);
         } catch (Exception e) {
-            throw new ResponseStatusException(INTERNAL_SERVER_ERROR, "Erro ao atualizar categoria.");
+            return ResponseEntity.internalServerError().body("Erro ao obter total de categorias: " + e.getMessage());
         }
     }
 
-    @DeleteMapping("/{code}")
-    public ResponseEntity<Void> deleteByCode(@PathVariable String code) {
-        try {
-            service.deleteByCode(code);
-            return ResponseEntity.ok().build();
-        } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(NOT_FOUND, e.getMessage());
-        } catch (Exception e) {
-            throw new ResponseStatusException(INTERNAL_SERVER_ERROR, "Erro ao deletar categoria.");
-        }
-    }
 }

@@ -1,5 +1,23 @@
 import { Address, Customer, Employee, PaymentMethod, Product, Supplier } from "../@types";
 
+const SECRET_KEY = import.meta.env.VITE_SECRET_KEY;
+
+export function encryptRole(role: string): string {
+    const combined = `${SECRET_KEY}:${role}`;
+    return btoa(unescape(encodeURIComponent(combined))); 
+}
+
+export function decryptRole(encrypted: string): string {
+    try {
+        const decoded = decodeURIComponent(escape(atob(encrypted)));
+        const [key, role] = decoded.split(":");
+        if (key !== SECRET_KEY) throw new Error("Chave inválida");
+        return role;
+    } catch {
+        return "";
+    }
+}
+
 export function removeNonDigits(value: string)  {
     return value.replace(/\D/g, "");
 }
@@ -71,6 +89,15 @@ export function isValidCPF(cpf: string): boolean {
 
     return true;
 }
+
+export function cleanCPF(cpf: string): string {
+    return cpf.replace(/\D/g, ""); 
+}
+
+export function cleanCNPJ(cnpj: string): string {
+    return cnpj.replace(/\D/g, ""); 
+}
+
 
 export function isValidCEP(cep: string): boolean {
     cep = cep.replace(/[^\d]+/g, "");
@@ -176,7 +203,7 @@ export function formatStateRegistration(ie: string) {
 }
 
 export function formatDate(date: string): string {
-    
+
     const cleanDate = date.replace("undefined", "");
 
     const [fullDate, time] = cleanDate.split("T"); 

@@ -39,6 +39,14 @@ public class CategoryService {
         repository.update(category);
     }
 
+    public int getTotalCategoriesCount() {
+        try {
+            return repository.getTotalCategoriesCount();
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
     public void deleteByCode(String code) {
         Optional<Category> existing = repository.findByCode(code);
         if (existing.isEmpty()) {

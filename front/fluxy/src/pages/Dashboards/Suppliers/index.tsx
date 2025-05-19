@@ -9,10 +9,13 @@ import { EntityForm } from "../../../components/EntityForm";
 
 import { addSupplier, deleteSupplier, editSupplier } from "../../../services/endpoints/supplier";
 import { addSupply, deleteSupply, editSupply } from "../../../services/endpoints/supply";
+import { useAuth } from "../../../hooks/useAuth";
+import { Lock } from "phosphor-react";
 
 export default function SuppliersDashboard() {
 
     const {suppliers, productSupplies, products} = useData();
+    const {role} = useAuth();
     const [isSupplierAddFormOpened, setIsSupplierAddFormOpened] = useState(false);
     const [isSupplierEditFormOpened, setIsSupplierEditFormOpened] = useState(false);
     const [isSupplyAddFormOpened, setIsSupplyAddFormOpened] = useState(false);
@@ -173,9 +176,11 @@ export default function SuppliersDashboard() {
 
     let editSupplierData = [""];
     let editSupplyData = [""];
-
+    
+    console.log(productSupplies)
     if (supplierSelectedRow.length > 1) {
-        const selectedSupplier = suppliers.filter((Supplier) => Supplier.cnpj === supplierSelectedRow.split(",")[0])[0];
+
+        const selectedSupplier = suppliers.filter((Supplier) => Supplier.cnpj === supplierSelectedRow.split(",")[1])[0];
 
         editSupplierData = [
             String(selectedSupplier.id), selectedSupplier.name, selectedSupplier.cnpj, ...selectedSupplier.phone, selectedSupplier.address.cep, 
@@ -187,7 +192,6 @@ export default function SuppliersDashboard() {
     if (supplySelectedRow.length > 1) {
 
         const selectedSupply = productSupplies.filter((Supply) => String(Supply.id) === supplySelectedRow.split(",")[0])[0];
-    
         editSupplyData = [
             String(selectedSupply.id), formatSupplier(selectedSupply.supplier), formatPurchaseProduct(selectedSupply.product), String(selectedSupply.productAmount), String(selectedSupply.price), selectedSupply.date
         ];
@@ -196,28 +200,42 @@ export default function SuppliersDashboard() {
 
     return (
         <>
-            <EntityForm type="Adicionar" title="Fornecedor" fields={supplierFields} open={isSupplierAddFormOpened} formControllers={suppliersFormControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} onSubmitAPI={addSupplier} />
-            {editSupplierData.length > 1 && 
-                <EntityForm type="Editar" title="Fornecedor" fields={supplierFields} open={isSupplierEditFormOpened} formControllers={suppliersFormControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} data={editSupplierData} onSubmitAPI={editSupplier} />
-            }
-            <EntityForm type="Adicionar" title="Entrega" fields={supplyFields} open={isSupplyAddFormOpened} formControllers={suppliesFormControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} onSubmitAPI={addSupply} />
-            {editSupplyData.length > 1 && 
-                <EntityForm type="Editar" title="Entrega" fields={supplyFields} open={isSupplyEditFormOpened} formControllers={suppliesFormControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} data={editSupplyData} onSubmitAPI={editSupply} />
-            }
-            <div id="main">
-                <h1>Fornecedores</h1>
-                <DataTable deleteRow={deleteSupplier} data={suppliers} columns={columnsSuppliers} entityName="fornecedores" popUpController={setShowPopUp} formControllers={suppliersFormControllers} selectedRowController={setSupplierSelectedRow} deletePopUpController={setShowDeletePopUp} setDeletePopUpMessage={setDeletePopUpMessage} setDeletePopUpType={setDeletePopUpType} />
+            {
+                role.includes("suppliers") ? (
+                    <>
+                        <EntityForm type="Adicionar" title="Fornecedor" fields={supplierFields} open={isSupplierAddFormOpened} formControllers={suppliersFormControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} onSubmitAPI={addSupplier} />
+                        {editSupplierData.length > 1 && 
+                        <EntityForm type="Editar" title="Fornecedor" fields={supplierFields} open={isSupplierEditFormOpened} formControllers={suppliersFormControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} data={editSupplierData} onSubmitAPI={editSupplier} />
+                        }
+                        <EntityForm type="Adicionar" title="Entrega" fields={supplyFields} open={isSupplyAddFormOpened} formControllers={suppliesFormControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} onSubmitAPI={addSupply} />
+                        {editSupplyData.length > 1 && 
+                        <EntityForm type="Editar" title="Entrega" fields={supplyFields} open={isSupplyEditFormOpened} formControllers={suppliesFormControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} data={editSupplyData} onSubmitAPI={editSupply} />
+                        }
+                        <div id="main">
+                            <h1>Fornecedores</h1>
+                            <DataTable deleteRow={deleteSupplier} data={suppliers} columns={columnsSuppliers} entityName="fornecedores" popUpController={setShowPopUp} formControllers={suppliersFormControllers} selectedRowController={setSupplierSelectedRow} deletePopUpController={setShowDeletePopUp} setDeletePopUpMessage={setDeletePopUpMessage} setDeletePopUpType={setDeletePopUpType} />
 
-                <h1>Entregas</h1>
-                <DataTable deleteRow={deleteSupply} data={productSupplies} columns={columnsSupply} entityName="entregas" popUpController={setShowPopUp} formControllers={suppliesFormControllers} selectedRowController={setSupplySelectedRow} deletePopUpController={setShowDeletePopUp} setDeletePopUpMessage={setDeletePopUpMessage} setDeletePopUpType={setDeletePopUpType} />
+                            <h1>Entregas</h1>
+                            <DataTable deleteRow={deleteSupply} data={productSupplies} columns={columnsSupply} entityName="entregas" popUpController={setShowPopUp} formControllers={suppliesFormControllers} selectedRowController={setSupplySelectedRow} deletePopUpController={setShowDeletePopUp} setDeletePopUpMessage={setDeletePopUpMessage} setDeletePopUpType={setDeletePopUpType} />
 
-                {showPopUp &&
-                    <PopUp type="success" message={popUpMessage} show={showPopUp} onClose={() => setShowPopUp(false)} />
-                }
-                {showDeletePopUp &&
-                    <PopUp type={deletePopUpType} message={deletePopUpMessage} show={showDeletePopUp} onClose={() => setShowDeletePopUp(false)} />
-                }
-            </div>
+                            {showPopUp &&
+                            <PopUp type="success" message={popUpMessage} show={showPopUp} onClose={() => setShowPopUp(false)} />
+                            }
+                            {showDeletePopUp &&
+                            <PopUp type={deletePopUpType} message={deletePopUpMessage} show={showDeletePopUp} onClose={() => setShowDeletePopUp(false)} />
+                            }
+                        </div>
+                    </>
+                ): (
+                    <div id="main">
+                        <div className="unauthorized-container">
+                            <Lock size={64} weight="duotone" className="unauthorized-icon" />
+                            <h2 className="unauthorized-title">Acesso negado</h2>
+                            <p className="unauthorized-text">Você não tem permissão para visualizar esta página.</p>
+                        </div>
+                    </div>
+                )
+            }
         </>
     );
 }

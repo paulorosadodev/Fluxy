@@ -47,7 +47,7 @@ public class EmployerRepository {
             return keyHolder.getKey() != null ? keyHolder.getKey().intValue() : null;
 
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao salvar funcionário: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -78,7 +78,7 @@ public class EmployerRepository {
             return result.stream().findFirst();
 
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao buscar funcionário por ID: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -107,7 +107,7 @@ public class EmployerRepository {
             return jdbcTemplate.query(sql, new FuncionarioRowMapper());
 
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao listar funcionários: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -137,7 +137,7 @@ public class EmployerRepository {
             );
 
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao atualizar funcionário: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -146,7 +146,7 @@ public class EmployerRepository {
             String sql = "DELETE FROM funcionario WHERE id_funcionario = ?";
             jdbcTemplate.update(sql, id);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao deletar funcionário: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -184,7 +184,17 @@ public class EmployerRepository {
             String sql = "SELECT numero FROM telefone WHERE id_telefone = ?";
             return jdbcTemplate.query(sql, (rs, rn) -> rs.getString("numero"), idPerson);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao buscar telefones do funcionário: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public Integer findEmployeeIdByMatricula(String matricula) {
+        try {
+            String sql = "SELECT id_funcionario FROM funcionario WHERE matricula = ?";
+            Integer id = jdbcTemplate.queryForObject(sql, Integer.class, matricula);
+            return id != null ? id : -1;
+        } catch (Exception e) {
+            return null;
         }
     }
 
@@ -194,7 +204,13 @@ public class EmployerRepository {
             Integer count = jdbcTemplate.queryForObject(sql, Integer.class, cpf);
             return count != null && count > 0;
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao verificar existência de CPF: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
+    }
+
+    public boolean existsByPhoneNumber(String phoneNumber) {
+        String sql = "SELECT COUNT(*) FROM telefone WHERE numero = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, phoneNumber);
+        return count != null && count > 0;
     }
 }

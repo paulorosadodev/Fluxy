@@ -14,8 +14,6 @@ interface SignInUpPageProps {
 
 export function SignInUpPage({ children, title } : SignInUpPageProps) {
 
-    const isSignUp = title === "Registre-se";
-
     return(
         <>
             <SignInUpWrapper>
@@ -26,15 +24,6 @@ export function SignInUpPage({ children, title } : SignInUpPageProps) {
                     </Link>
                     <h1>{title}</h1>
                     {children}
-                    {
-                        isSignUp ? 
-                            <p>
-                                Já tem uma conta? <Link to={"/login"}>Entre aqui</Link>
-                            </p> :
-                            <p>
-                                Não tem uma conta? <Link to={"/register"}>Registre-se aqui</Link>
-                            </p>
-                    }
                 </FormWrapper>
             </SignInUpWrapper>
         </>

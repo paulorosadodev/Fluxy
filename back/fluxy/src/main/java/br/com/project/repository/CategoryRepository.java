@@ -24,7 +24,7 @@ public class CategoryRepository {
         try {
             jdbcTemplate.update(sql, category.getCode(), category.getName());
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao salvar categoria: " + e.getMessage(), e);
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
@@ -34,7 +34,7 @@ public class CategoryRepository {
             List<Category> result = jdbcTemplate.query(sql, new CategoryRowMapper(), code);
             return result.stream().findFirst();
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao buscar categoria por código: " + code, e);
+            throw new RuntimeException(code, e);
         }
     }
 
@@ -43,7 +43,16 @@ public class CategoryRepository {
         try {
             return jdbcTemplate.query(sql, new CategoryRowMapper());
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao buscar todas as categorias.", e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    public int getTotalCategoriesCount() {
+        try {
+            String sql = "SELECT COUNT(*) FROM categoria";
+            return jdbcTemplate.queryForObject(sql, Integer.class);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -55,7 +64,7 @@ public class CategoryRepository {
                 throw new RuntimeException("Nenhuma categoria foi atualizada. Código: " + category.getCode());
             }
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao atualizar categoria: " + e.getMessage(), e);
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
@@ -67,7 +76,7 @@ public class CategoryRepository {
                 throw new RuntimeException("Nenhuma categoria foi deletada. Código: " + code);
             }
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao deletar categoria: " + e.getMessage(), e);
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 

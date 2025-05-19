@@ -1,29 +1,115 @@
 package br.com.project.service;
 
+import br.com.project.dto.request.ProductSupplierRequestDTO;
+import br.com.project.dto.response.ProductSupplierResponseDTO;
 import br.com.project.model.ProductSupplier;
 import br.com.project.repository.ProductSupplierRepository;
+import br.com.project.repository.SupplierRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductSupplierService {
 
     private final ProductSupplierRepository repository;
+    private final SupplierRepository supplierRepository;
+    private final ProductSupplierRepository productSupplierRepository;
 
-    public ProductSupplierService(ProductSupplierRepository repository) {
+    public ProductSupplierService(ProductSupplierRepository repository, SupplierRepository supplierRepository, ProductSupplierRepository productSupplierRepository) {
         this.repository = repository;
+        this.supplierRepository = supplierRepository;
+        this.productSupplierRepository = productSupplierRepository;
     }
 
-    public void save(ProductSupplier link) {
-        repository.save(link);
+    public ProductSupplierResponseDTO salvar(ProductSupplierRequestDTO dto) {
+        try {
+            if (dto.getSupplier() == null || dto.getProduct() == null) {
+                throw new IllegalArgumentException("Fornecedor e Produto são obrigatórios.");
+            }
+
+            Integer supplierId = supplierRepository.findSupplierIdByCnpj(dto.getSupplier());
+            if (supplierId == null) {
+                throw new RuntimeException("Fornecedor não encontrado com o CNPJ " + dto.getSupplier());
+            }
+
+            ProductSupplier productSupplier = new ProductSupplier();
+            productSupplier.setSupplier(supplierId);
+            productSupplier.setProduct(Integer.valueOf(dto.getProduct()));
+            productSupplier.setProductAmount(dto.getProductAmount());
+            productSupplier.setPrice(dto.getPrice());
+            productSupplier.setDate(dto.getDate());
+
+            repository.save(productSupplier);
+            repository.increaseStock(Integer.valueOf(dto.getProduct()), dto.getProductAmount());
+
+            return new ProductSupplierResponseDTO(productSupplier.getSupplier(), productSupplier.getProduct(), productSupplier.getProductAmount(), productSupplier.getPrice());
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao salvar a entrega: " + e.getMessage(), e);
+        }
     }
 
-    public List<ProductSupplier> findAll() {
-        return repository.findAll();
+    public List<ProductSupplierResponseDTO> findAll() {
+        try {
+            return repository.findAll().stream().map(this::entityToResponseDto).toList();
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao listar as entregas: " + e.getMessage(), e);
+        }
     }
 
-    public void deleteBySupplierAndProduct(Integer supplierId, Integer productId) {
-        repository.deleteBySupplierAndProduct(supplierId, productId);
+    public void update(Integer supplyId, ProductSupplierRequestDTO dto) {
+        Optional<ProductSupplier> existing = repository.findById(supplyId);
+        if (existing.isEmpty()) {
+            throw new IllegalArgumentException("ProductSupplier não encontrado para atualização.");
+        }
+
+        ProductSupplier productSupplier = existing.get();
+        int previousAmount = productSupplier.getProductAmount();
+        int previousProduct = productSupplier.getProduct();
+
+        productSupplier.setSupplier(supplierRepository.findSupplierIdByCnpj(dto.getSupplier()));
+        productSupplier.setProduct(Integer.valueOf(dto.getProduct()));
+        productSupplier.setProductAmount(dto.getProductAmount());
+        productSupplier.setPrice(dto.getPrice());
+        productSupplier.setDate(dto.getDate());
+
+        repository.update(productSupplier);
+
+        int newProduct = productSupplier.getProduct();
+        int newAmount = dto.getProductAmount();
+
+        if (previousProduct != newProduct) {
+            repository.decreaseStock(previousProduct, previousAmount);
+            repository.increaseStock(newProduct, newAmount);
+        } else {
+            int difference = newAmount - previousAmount;
+            if (difference > 0) {
+                repository.increaseStock(newProduct, difference);
+            } else if (difference < 0) {
+                repository.decreaseStock(newProduct, -difference);
+            }
+        }
+    }
+
+    public void deleteById(Integer supplyId) {
+        if (repository.findById(supplyId).isEmpty()) {
+            throw new IllegalArgumentException("ProductSupplier não encontrado para exclusão.");
+        }
+        Integer qtd = repository.findStockBySupplyId(supplyId);
+        Integer productId = repository.findProductIdByEntregaId(supplyId);
+        repository.decreaseStock(productId, qtd);
+        repository.deleteById(supplyId);
+    }
+
+    private ProductSupplierResponseDTO entityToResponseDto(ProductSupplier entity) {
+        return new ProductSupplierResponseDTO(
+                entity.getId(),
+                Integer.toString(entity.getSupplier()),
+                Integer.toString(entity.getProduct()),
+                entity.getProductAmount(),
+                entity.getPrice(),
+                entity.getDate()
+        );
     }
 }

@@ -5,13 +5,20 @@ import br.com.project.dto.response.EmployeeResponseDTO;
 import br.com.project.model.Employer;
 import br.com.project.model.Person;
 import br.com.project.model.Phone;
+import br.com.project.model.User;
 import br.com.project.repository.EmployerRepository;
 import br.com.project.repository.PersonRepository;
 import br.com.project.repository.PhoneRepository;
+import br.com.project.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
+
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @Service
 public class FuncionarioService {
@@ -19,13 +26,19 @@ public class FuncionarioService {
     private final EmployerRepository employerRepository;
     private final PersonRepository personRepository;
     private final PhoneRepository phoneRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public FuncionarioService(EmployerRepository employerRepository,
                               PersonRepository personRepository,
-                              PhoneRepository phoneRepository) {
+                              PhoneRepository phoneRepository,
+                              UserRepository userRepository,
+                              PasswordEncoder passwordEncoder) {
         this.employerRepository = employerRepository;
         this.personRepository = personRepository;
         this.phoneRepository = phoneRepository;
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional
@@ -33,6 +46,11 @@ public class FuncionarioService {
         try {
             if (employerRepository.existsByCpf(dto.cpf())) {
                 throw new IllegalArgumentException("CPF já cadastrado");
+            }
+            for (int i = 0;i < dto.phone().toArray().length;i++){
+                if (employerRepository.existsByPhoneNumber((String) dto.phone().toArray()[i])){
+                    throw new IllegalArgumentException("Telefone já cadastrado");
+                }
             }
 
             Person person = new Person();
@@ -54,6 +72,15 @@ public class FuncionarioService {
             employer.setRole(dto.role());
             employer.setIdSupervisor(dto.fkSupervisor());
             employerRepository.save(employer);
+            String systemRole = mapearRoleSistema(dto.role(), dto.sectorOfActivity());
+            if (!systemRole.equals("none")) {
+                String senhaSomenteDigitos = dto.cpf().replaceAll("\\D", "");
+                User user = new User();
+                user.setName(employer.getEmployeeNumber());
+                user.setRole(systemRole);
+                user.setPassword(passwordEncoder.encode(senhaSomenteDigitos));
+                userRepository.save(user);
+            }
 
             if (dto.phone() != null && !dto.phone().isEmpty()) {
                 for (String num : dto.phone()) {
@@ -64,8 +91,50 @@ public class FuncionarioService {
             }
 
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao salvar funcionário: " + e.getMessage(), e);
+            throw new RuntimeException(e.getMessage());
         }
+    }
+
+    private String mapearRoleSistema(String role, String sector) {
+        role = role.toLowerCase();
+        sector = sector != null ? sector.toLowerCase() : "";
+
+        if (role.equals("vigilante") || sector.equals("limpeza")){
+            return "none";
+        }
+
+        if (role.contains("gerente")) {
+            return "admin";
+        }
+        if (role.equals("caixa")) {
+            return "purchases-customers-products";
+        }
+        if (role.equals("repositor")) {
+            return "products-productSupplies-suppliers";
+        }
+        if ((role.equals("açougueiro") && sector.equals("açougue")) ||
+                (role.equals("padeiro") && sector.equals("padaria"))) {
+            return "products-productSupplies";
+        }
+        if (role.equals("auxiliar")) {
+            if (sector.equals("estoque")) {
+                return "products-productSupplies-suppliers";
+            }
+            if (sector.equals("administração")) {
+                return "employees-customers-products-productSupplies-suppliers-purchases";
+            }
+            return "customers-products";
+        }
+        if (role.equals("estagiário")) {
+            if (sector.equals("estoque")) {
+                return "products-productSupplies-suppliers";
+            }
+            if (sector.equals("administração")) {
+                return "employees-customers-products-productSupplies-suppliers-purchases";
+            }
+            return "customers-products";
+        }
+        return "none";
     }
 
     public EmployeeResponseDTO buscarPorId(Integer id) {
@@ -74,7 +143,7 @@ public class FuncionarioService {
                     .orElseThrow(() -> new RuntimeException("Funcionário com ID " + id + " não encontrado"));
             return toResponseDTO(e);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao buscar funcionário por ID: " + e.getMessage(), e);
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
@@ -84,7 +153,7 @@ public class FuncionarioService {
                     .map(this::toResponseDTO)
                     .toList();
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao listar funcionários: " + e.getMessage(), e);
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
@@ -126,7 +195,7 @@ public class FuncionarioService {
             }
 
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao atualizar funcionário: " + e.getMessage(), e);
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
@@ -138,7 +207,7 @@ public class FuncionarioService {
             phoneRepository.deleteByIdPerson(existing.getIdPerson());
             employerRepository.deleteById(id);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao deletar funcionário: " + e.getMessage(), e);
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
@@ -170,5 +239,13 @@ public class FuncionarioService {
     private String gerarMatriculaAleatoria() {
         int num = (int) (Math.random() * 1_000_000);
         return String.format("EMP%06d", num);
+    }
+
+    public Integer buscarIdPorMatricula(String matricula) {
+        try {
+            return employerRepository.findEmployeeIdByMatricula(matricula);
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

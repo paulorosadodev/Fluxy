@@ -16,12 +16,18 @@ const Main = styled.main`
     overflow-y: auto;
     
     #main {
-        padding: 1rem 2rem;
+        padding: 3rem 3rem;
         margin-left: 5rem;
+        
+        .dashboard {
+            margin-top: 1rem;
+            margin-bottom: 2rem;
+        }
 
         @media (max-width: 880px) {
             margin-left: 0;
         }
+
     }
     
 `;

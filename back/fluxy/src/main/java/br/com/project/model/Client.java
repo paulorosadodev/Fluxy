@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Client {
     private Integer idClient;
-    private Integer idPerson; // 🔥 FK para Pessoa
+    private Integer idPerson;
 }

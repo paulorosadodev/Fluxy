@@ -58,7 +58,7 @@ public class LegalClientRepository {
             }
             return idPessoa;
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao salvar cliente jurídico: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -84,7 +84,7 @@ public class LegalClientRepository {
             List<LegalClient> result = jdbcTemplate.query(sql, new LegalClientRowMapper(), id);
             return result.stream().findFirst();
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao buscar cliente jurídico: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -108,7 +108,7 @@ public class LegalClientRepository {
 
             return jdbcTemplate.query(sql, new LegalClientRowMapper());
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao listar clientes jurídicos: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -134,7 +134,7 @@ public class LegalClientRepository {
                 }
             }
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao atualizar cliente jurídico: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -150,7 +150,7 @@ public class LegalClientRepository {
             jdbcTemplate.update(sqlCliente, id);
             jdbcTemplate.update(sqlPessoa, id);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao deletar cliente jurídico: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -183,6 +183,26 @@ public class LegalClientRepository {
                     rs.getString("cep"),
                     findPhonesByIdPerson(rs.getInt("id_cliente"))
             );
+        }
+    }
+
+    public boolean existsByCnpj(String cnpj) {
+        try {
+            String sql = "SELECT COUNT(*) FROM juridico WHERE cnpj = ?";
+            Integer count = jdbcTemplate.queryForObject(sql, Integer.class, cnpj);
+            return count != null && count > 0;
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public boolean existsByStateRegistration(String inscr_estadual) {
+        try {
+            String sql = "SELECT COUNT(*) FROM juridico WHERE inscr_estadual = ?";
+            Integer count = jdbcTemplate.queryForObject(sql, Integer.class, inscr_estadual);
+            return count != null && count > 0;
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
         }
     }
 }

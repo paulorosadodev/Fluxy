@@ -37,8 +37,6 @@ export function EntityForm({open, type, title, fields, formControllers, data, se
     const id = Number(data?.[0]);
     const rawData = useMemo(() => data?.slice(1), [data]);
 
-    console.log(rawData);
-
     const createValidationSchema = (fields: Field[][]) => {
         const shape: Record<string, z.ZodTypeAny> = {};
         
@@ -57,7 +55,7 @@ export function EntityForm({open, type, title, fields, formControllers, data, se
 
     const validationSchema = createValidationSchema(fields);
 
-    const { register, watch, control, handleSubmit, formState: { errors }, reset } = useForm({
+    const { register, watch, control, handleSubmit, setValue, formState: { errors }, reset } = useForm({
         resolver: zodResolver(validationSchema),
     });
 
@@ -67,6 +65,7 @@ export function EntityForm({open, type, title, fields, formControllers, data, se
     });
     
     const firstKey = Object.keys(errors)[0];
+
     const firstError = firstKey ? errors[firstKey] : undefined;
     let firstErrorMessage = Array.isArray(firstError) ? "Telefone(s) inválido(s)" : firstError?.message ?? "";
 
@@ -121,11 +120,20 @@ export function EntityForm({open, type, title, fields, formControllers, data, se
     };
 
     const watchedValues = watch();
+    
+    useEffect(() => {
+        if (watchedValues.paymentType !== "Crédito") {
+            setValue("installments", 1);
+        }
+    }, [watchedValues.paymentType]);
 
     const requiredFields = fields.flat().filter(field => field.validation); 
 
     const isFormFilled = requiredFields.every(field => {
         const value = watchedValues[field.value];
+        if (field.value == "installments") {
+            return true;
+        }
         return value !== undefined && value !== "" && value.length >= 1;
     });
 

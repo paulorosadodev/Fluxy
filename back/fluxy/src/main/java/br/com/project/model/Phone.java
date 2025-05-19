@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Phone {
     private Integer idPhone;
-    private Integer idPerson; // FK para Pessoa
+    private Integer idPerson;
     private String number;
     public Phone(Integer idPerson, String number) {
         this.idPerson = idPerson;

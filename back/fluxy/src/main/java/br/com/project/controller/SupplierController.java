@@ -19,32 +19,55 @@ public class SupplierController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> save(@RequestBody SupplierRequestDTO requestDTO) {
-        supplierService.save(requestDTO);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> save(@RequestBody SupplierRequestDTO requestDTO) {
+        try {
+            supplierService.save(requestDTO);
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException e){
+            return ResponseEntity.badRequest().body("Erro ao salvar fornecedor: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro interno ao salvar fornecedor: " + e.getMessage());
+        }
     }
 
     @GetMapping
-    public ResponseEntity<List<Supplier>> findAll() {
-        return ResponseEntity.ok(supplierService.findAll());
+    public ResponseEntity<?> findAll() {
+        try {
+            List<Supplier> suppliers = supplierService.findAll();
+            return ResponseEntity.ok(suppliers);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao listar fornecedores: " + e.getMessage());
+        }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Supplier> findById(@PathVariable Integer id) {
-        return supplierService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<?> findById(@PathVariable Integer id) {
+        try {
+            return supplierService.findById(id)
+                    .map(ResponseEntity::ok)
+                    .orElse(ResponseEntity.notFound().build());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao buscar fornecedor: " + e.getMessage());
+        }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> update(@PathVariable Integer id, @RequestBody SupplierRequestDTO requestDTO) {
-        supplierService.update(id, requestDTO);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody SupplierRequestDTO requestDTO) {
+        try {
+            supplierService.update(id, requestDTO);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erro ao atualizar fornecedor: " + e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
-        supplierService.delete(id);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> delete(@PathVariable Integer id) {
+        try {
+            supplierService.delete(id);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao deletar fornecedor: " + e.getMessage());
+        }
     }
 }

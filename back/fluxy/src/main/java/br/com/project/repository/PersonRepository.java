@@ -43,7 +43,7 @@ public class PersonRepository {
             return keyHolder.getKey().intValue(); // Retorna o ID gerado
 
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao salvar pessoa no banco de dados: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -53,7 +53,7 @@ public class PersonRepository {
             List<Person> result = jdbcTemplate.query(sql, new PersonRowMapper(), id);
             return result.stream().findFirst();
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao buscar pessoa: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -62,7 +62,7 @@ public class PersonRepository {
             String sql = "SELECT * FROM pessoa";
             return jdbcTemplate.query(sql, new PersonRowMapper());
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao listar pessoas: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -78,7 +78,7 @@ public class PersonRepository {
                     person.getIdPerson()
             );
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao atualizar pessoa: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -87,7 +87,7 @@ public class PersonRepository {
             String sql = "DELETE FROM pessoa WHERE id_pessoa = ?";
             jdbcTemplate.update(sql, id);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao deletar pessoa: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 

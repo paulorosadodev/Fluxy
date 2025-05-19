@@ -8,11 +8,13 @@ import { EntityForm } from "../../../components/EntityForm";
 
 import { addPurchase, deletePurchase, editPurchase } from "../../../services/endpoints/purchase";
 import { z } from "zod";
+import { Lock } from "phosphor-react";
+import { useAuth } from "../../../hooks/useAuth";
 
 export default function PurchasesDashboard() {
 
     const {purchases, products, employees, naturalPersonCustomers, legalEntityCustomers} = useData();
-
+    const {role} = useAuth();
     const [formattedPurchases, setFormattedPurchases] = useState<Purchase[]>([]);
     const [customers, setCustomers] = useState<Customer[]>([]);
     const [isAddFormOpened, setIsAddFormOpened] = useState(false);
@@ -91,6 +93,7 @@ export default function PurchasesDashboard() {
                 label: "Parcelas",
                 type: "number",
                 value: "installments",
+                defaultValue: 1,
                 placeholder: "Digite a quantidade de parcelas",
                 validation: z.coerce.number().int().min(1, { message: "Quantidade de parcelas deve ser pelo menos 1" }),
             }
@@ -117,29 +120,44 @@ export default function PurchasesDashboard() {
     if (selectedRow.length > 1 && formattedPurchases) {
         const selectedPurchase = formattedPurchases.filter((purchase) => String(purchase.number) === selectedRow.split(",")[0])[0];
         const selectedPurchaseProduct = products.filter((purchase) => String(purchase.codEa) === selectedPurchase.product.codEa)[0];
-
+        
+        
         if (selectedPurchase) {
-            editData = [String(selectedPurchase.id), String(formatCustomer(selectedPurchase.customer)), String(formatPurchaseProduct(selectedPurchaseProduct)), 
+            editData = [String(selectedPurchase.number), String(formatCustomer(selectedPurchase.customer)), String(formatPurchaseProduct(selectedPurchaseProduct)), 
                 String(selectedPurchase.productAmount), String(selectedPurchase.paymentMethod.type), String(selectedPurchase.paymentMethod.installments), String(formatEmployee(selectedPurchase.employee))];
         }
     }
 
     return (
         <>
-            <EntityForm type="Adicionar" title="Compra" fields={fields} open={isAddFormOpened} formControllers={formControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} onSubmitAPI={addPurchase} />
-            {editData.length > 1 && 
-                <EntityForm type="Editar" title="Compra" fields={fields} open={isEditFormOpened} formControllers={formControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} data={editData} onSubmitAPI={editPurchase} />
+            {
+                role.includes("purchases") ? (
+                    <>
+                        <EntityForm type="Adicionar" title="Compra" fields={fields} open={isAddFormOpened} formControllers={formControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} onSubmitAPI={addPurchase} />
+                        {editData.length > 1 && 
+                        <EntityForm type="Editar" title="Compra" fields={fields} open={isEditFormOpened} formControllers={formControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} data={editData} onSubmitAPI={editPurchase} />
+                        }
+                        <div id="main">
+                            <h1>Compras</h1>
+                            <DataTable deleteRow={deletePurchase} data={formattedPurchases} columns={columns} entityName="compras" popUpController={setShowPopUp} deletePopUpController={setShowDeletePopUp} setDeletePopUpMessage={setDeletePopUpMessage} setDeletePopUpType={setDeletePopUpType} formControllers={formControllers} selectedRowController={setSelectedRow}/>
+                            {showPopUp &&
+                            <PopUp type="success" message={popUpMessage} show={showPopUp} onClose={() => setShowPopUp(false)} />
+                            }
+                            {showDeletePopUp &&
+                            <PopUp type={deletePopUpType} message={deletePopUpMessage} show={showDeletePopUp} onClose={() => setShowDeletePopUp(false)} />
+                            }
+                        </div>
+                    </>
+                ) : (
+                    <div id="main">
+                        <div className="unauthorized-container">
+                            <Lock size={64} weight="duotone" className="unauthorized-icon" />
+                            <h2 className="unauthorized-title">Acesso negado</h2>
+                            <p className="unauthorized-text">Você não tem permissão para visualizar esta página.</p>
+                        </div>
+                    </div>
+                )
             }
-            <div id="main">
-                <h1>Compras</h1>
-                <DataTable deleteRow={deletePurchase} data={formattedPurchases} columns={columns} entityName="compras" popUpController={setShowPopUp} deletePopUpController={setShowDeletePopUp} setDeletePopUpMessage={setDeletePopUpMessage} setDeletePopUpType={setDeletePopUpType} formControllers={formControllers} selectedRowController={setSelectedRow}/>
-                {showPopUp &&
-                    <PopUp type="success" message={popUpMessage} show={showPopUp} onClose={() => setShowPopUp(false)} />
-                }
-                {showDeletePopUp &&
-                    <PopUp type={deletePopUpType} message={deletePopUpMessage} show={showDeletePopUp} onClose={() => setShowDeletePopUp(false)} />
-                }
-            </div>
         </>
     );
 }

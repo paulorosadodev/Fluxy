@@ -1,15 +1,17 @@
 package br.com.project.dto.request;
 
-import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 public record PurchaseRequestDTO(
-        Date date,
+        LocalDate date,
+        LocalTime time,
         Integer total,
         Integer installments,
-        String type,
+        String paymentType,
         Integer productAmount,
 
-        Integer fkProductId,
-        Integer fkClientId,
-        Integer fkOperationalIdEmployee
+        Integer productId,
+        String customerId,
+        String employeeId
 ) {}

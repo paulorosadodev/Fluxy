@@ -8,9 +8,12 @@ import { EntityForm } from "../../../components/EntityForm";
 import { PopUp } from "../../../components/PopUp";
 import { addNaturalPersonCustomer, deleteNaturalPersonCustomer, editNaturalPersonCustomer } from "../../../services/endpoints/naturalPersonCustomer";
 import { addLegalEntityCustomer, deleteLegalEntityCustomer, editLegalEntityCustomer } from "../../../services/endpoints/legalEntityCustomer";
+import { Lock } from "phosphor-react";
+import { useAuth } from "../../../hooks/useAuth";
 
 export default function CustomersDashboard() {
 
+    const {role} = useAuth();
     const {naturalPersonCustomers, legalEntityCustomers} = useData();
     const [isNaturalPersonAddFormOpened, setIsNaturalPersonAddFormOpened] = useState(false);
     const [isNaturalPersonEditFormOpened, setIsNaturalPersonEditFormOpened] = useState(false);
@@ -232,28 +235,45 @@ export default function CustomersDashboard() {
 
     return (
         <>  
-            <EntityForm type="Adicionar" title="Pessoa Física" fields={naturalPersonFields} open={isNaturalPersonAddFormOpened} formControllers={naturalPersonFormControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} onSubmitAPI={addNaturalPersonCustomer}/>
-            {editNaturalPersonData.length > 1 && 
-                <EntityForm type="Editar" title="Pessoa Física" fields={naturalPersonFields} open={isNaturalPersonEditFormOpened} formControllers={naturalPersonFormControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} data={editNaturalPersonData} onSubmitAPI={editNaturalPersonCustomer}/>
-            }
-            <EntityForm type="Adicionar" title="Pessoa Jurídica" fields={legalEntityFields} open={isLegalEntityAddFormOpened} formControllers={legalEntityFormControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} onSubmitAPI={addLegalEntityCustomer} />
-            {editLegalEntityData.length > 1 && 
-                <EntityForm type="Editar" title="Pessoa Jurídica" fields={legalEntityFields} open={isLegalEntityEditFormOpened} formControllers={legalEntityFormControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} data={editLegalEntityData} onSubmitAPI={editLegalEntityCustomer} />
-            }
-            <div id="main">
-                <h1>Clientes Pessoas Físicas</h1>
-                <DataTable deleteRow={deleteNaturalPersonCustomer} deletePopUpController={setShowDeletePopUp} setDeletePopUpMessage={setDeletePopUpMessage} setDeletePopUpType={setDeletePopUpType} data={naturalPersonCustomers} columns={columnsNaturalPerson} entityName="pessoas físicas" popUpController={setShowPopUp} formControllers={naturalPersonFormControllers} selectedRowController={setNaturalPersonSelectedRow} />
+            {
+                role.includes("customers") ? (
+                    <>
+                        <EntityForm type="Adicionar" title="Pessoa Física" fields={naturalPersonFields} open={isNaturalPersonAddFormOpened} formControllers={naturalPersonFormControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} onSubmitAPI={addNaturalPersonCustomer}/>
+                        {editNaturalPersonData.length > 1 && 
+                    <EntityForm type="Editar" title="Pessoa Física" fields={naturalPersonFields} open={isNaturalPersonEditFormOpened} formControllers={naturalPersonFormControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} data={editNaturalPersonData} onSubmitAPI={editNaturalPersonCustomer}/>
+                        }
 
-                <h1>Clientes Pessoas Jurídicas</h1>
-                <DataTable deleteRow={deleteLegalEntityCustomer} deletePopUpController={setShowDeletePopUp} setDeletePopUpMessage={setDeletePopUpMessage} setDeletePopUpType={setDeletePopUpType} data={legalEntityCustomers} columns={columnsLegalEntity} entityName="pessoas jurídicas" popUpController={setShowPopUp} formControllers={legalEntityFormControllers} selectedRowController={setLegalEntitySelectedRow} />
+                        <EntityForm type="Adicionar" title="Pessoa Jurídica" fields={legalEntityFields} open={isLegalEntityAddFormOpened} formControllers={legalEntityFormControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} onSubmitAPI={addLegalEntityCustomer} />
+                        {editLegalEntityData.length > 1 && 
+                    <EntityForm type="Editar" title="Pessoa Jurídica" fields={legalEntityFields} open={isLegalEntityEditFormOpened} formControllers={legalEntityFormControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} data={editLegalEntityData} onSubmitAPI={editLegalEntityCustomer} />
+                        }
 
-                {showPopUp &&
-                    <PopUp type="success" message={popUpMessage} show={showPopUp} onClose={() => setShowPopUp(false)} />
-                }
-                {showDeletePopUp &&
-                    <PopUp type={deletePopUpType} message={deletePopUpMessage} show={showDeletePopUp} onClose={() => setShowDeletePopUp(false)} />
-                }
-            </div>
+                        <div id="main">
+                            <h1>Clientes Pessoas Físicas</h1>
+                            <DataTable deleteRow={deleteNaturalPersonCustomer} deletePopUpController={setShowDeletePopUp} setDeletePopUpMessage={setDeletePopUpMessage} setDeletePopUpType={setDeletePopUpType} data={naturalPersonCustomers} columns={columnsNaturalPerson} entityName="pessoas físicas" popUpController={setShowPopUp} formControllers={naturalPersonFormControllers} selectedRowController={setNaturalPersonSelectedRow} />
+
+                            <h1>Clientes Pessoas Jurídicas</h1>
+                            <DataTable deleteRow={deleteLegalEntityCustomer} deletePopUpController={setShowDeletePopUp} setDeletePopUpMessage={setDeletePopUpMessage} setDeletePopUpType={setDeletePopUpType} data={legalEntityCustomers} columns={columnsLegalEntity} entityName="pessoas jurídicas" popUpController={setShowPopUp} formControllers={legalEntityFormControllers} selectedRowController={setLegalEntitySelectedRow} />
+
+                            {showPopUp &&
+                        <PopUp type="success" message={popUpMessage} show={showPopUp} onClose={() => setShowPopUp(false)} />
+                            }
+                            {showDeletePopUp &&
+                        <PopUp type={deletePopUpType} message={deletePopUpMessage} show={showDeletePopUp} onClose={() => setShowDeletePopUp(false)} />
+                            }
+                        </div>
+                    </>
+                ) : (
+                    <div id="main">
+                        <div className="unauthorized-container">
+                            <Lock size={64} weight="duotone" className="unauthorized-icon" />
+                            <h2 className="unauthorized-title">Acesso negado</h2>
+                            <p className="unauthorized-text">Você não tem permissão para visualizar esta página.</p>
+                        </div>
+                    </div>
+                )
+            }
         </>
     );
+
 }

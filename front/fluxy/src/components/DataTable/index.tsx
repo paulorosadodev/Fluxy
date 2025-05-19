@@ -158,7 +158,7 @@ export function DataTable<T extends Record<string, any>>({ data, columns, entity
                                 {columns.map((column, colIndex) => {
                                     const cellValue = row[column.accessor];
                                     const formattedValue = column.formatter
-                                        ? column.accessor == "date" ? column.formatter(row["time"] + row["date"]) : column.formatter(cellValue) ?? "?"
+                                        ? column.accessor == "date" ? column.formatter(row["date"]) : column.formatter(cellValue) ?? "?"
                                         : (typeof cellValue === "object" && cellValue !== null)
                                             ? cellValue[Object.keys(cellValue)[1]]
                                             : cellValue ?? "?";

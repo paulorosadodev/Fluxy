@@ -1,10 +1,12 @@
 package br.com.project.controller;
 
 import br.com.project.dto.request.ProductRequestDTO;
+import br.com.project.dto.response.CategoryProductCountDTO;
+import br.com.project.dto.response.LowStockProductDTO;
 import br.com.project.dto.response.ProductResponseDTO;
+import br.com.project.dto.response.TopTierProductDTO;
+import br.com.project.model.Product;
 import br.com.project.service.ProductService;
-import org.apache.coyote.BadRequestException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,21 +28,114 @@ public class ProductController {
             ProductResponseDTO response = productService.save(requestDTO);
             return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.badRequest().body("Erro ao salvar produto: " + e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Erro ao salvar produto: " + e.getMessage());
+            return ResponseEntity.internalServerError().body("Erro ao salvar produto: " + e.getMessage());
         }
     }
 
     @GetMapping
-    public List<ProductResponseDTO> findAll() {
-        return productService.findAll();
+    public ResponseEntity<?> findAll() {
+        try {
+            List<ProductResponseDTO> products = productService.findAll();
+            return ResponseEntity.ok(products);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao listar produtos: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/total-stock")
+    public ResponseEntity<?> getTotalStockQuantity() {
+        try {
+            int totalStock = productService.getTotalStockQuantity();
+            return ResponseEntity.ok(totalStock);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao obter quantidade total em estoque: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/total-products")
+    public ResponseEntity<?> getTotalProductsCount() {
+        try {
+            int totalProducts = productService.getTotalProductsCount();
+            return ResponseEntity.ok(totalProducts);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao obter total de produtos: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/average-price")
+    public ResponseEntity<?> getAveragePrice() {
+        try {
+            double totalProducts = productService.getAveragePrice();
+            return ResponseEntity.ok(totalProducts);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao obter preço médio: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/total-price")
+    public ResponseEntity<?> getTotalPrice() {
+        try {
+            double totalProducts = productService.getTotalPrice();
+            return ResponseEntity.ok(totalProducts);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao obter preço total do estoque: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/products-count-by-category")
+    public ResponseEntity<?> getProductsCountByCategory() {
+        try {
+            List<CategoryProductCountDTO> totalProducts = productService.getProductsCountByCategory();
+            return ResponseEntity.ok(totalProducts);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao obter quantidade de produtos por " +
+                    "categoria: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/most-expensive-products")
+    public ResponseEntity<?> getMostExpensiveProducts() {
+        try {
+            List<TopTierProductDTO> totalProducts = productService.getMostExpensiveProducts();
+            return ResponseEntity.ok(totalProducts);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao obter produtos mais caros: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/low-stock-products")
+    public ResponseEntity<?> getLowStockProducts() {
+        try {
+            List<LowStockProductDTO> lowStockProducts = productService.getLowStockProducts();
+            return ResponseEntity.ok(lowStockProducts);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao obter produtos com baixo estoque: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/least-expensive-products")
+    public ResponseEntity<?> getLeastExpensiveProducts() {
+        try {
+            List<TopTierProductDTO> totalProducts = productService.getLeastExpensiveProducts();
+            System.out.println(totalProducts);
+            return ResponseEntity.ok(totalProducts);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao obter produtos mais baratos: " + e.getMessage());
+        }
     }
 
     @GetMapping("/{id}")
-    public ProductResponseDTO findById(@PathVariable Integer id) {
-        return productService.findById(id);
+    public ResponseEntity<?> findById(@PathVariable Integer id) {
+        try {
+            ProductResponseDTO response = productService.findById(id);
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao buscar produto: " + e.getMessage());
+        }
     }
 
     @PutMapping("/{id}")
@@ -49,10 +144,9 @@ public class ProductController {
             ProductResponseDTO response = productService.update(id, requestDTO);
             return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.badRequest().body("Erro ao atualizar produto: " + e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Erro ao atualizar produto: " + e.getMessage());
+            return ResponseEntity.internalServerError().body("Erro ao atualizar produto: " + e.getMessage());
         }
     }
 
@@ -60,13 +154,11 @@ public class ProductController {
     public ResponseEntity<?> delete(@PathVariable Integer id) {
         try {
             productService.delete(id);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.notFound().build();
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Erro ao deletar produto: " + e.getMessage());
+            return ResponseEntity.internalServerError().body("Erro ao deletar produto: " + e.getMessage());
         }
     }
-
 }

@@ -36,7 +36,7 @@ public class PessoaService {
 
             phones.forEach(telefoneService::salvar);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao salvar pessoa: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -55,7 +55,7 @@ public class PessoaService {
 
             phones.forEach(telefoneService::salvar);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao atualizar pessoa: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -65,7 +65,7 @@ public class PessoaService {
                     .orElseThrow(() -> new RuntimeException("Pessoa não encontrada"));
             return mapperUtils.map(person, PersonResponseDTO.class);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao buscar pessoa: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -74,7 +74,7 @@ public class PessoaService {
             List<Person> persons = pessoaRepository.findAll();
             return mapperUtils.mapList(persons, PersonResponseDTO.class);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao listar pessoas: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -83,7 +83,7 @@ public class PessoaService {
             telefoneService.deletarPorIdPessoa(id);
             pessoaRepository.deleteById(id);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao deletar pessoa: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 }

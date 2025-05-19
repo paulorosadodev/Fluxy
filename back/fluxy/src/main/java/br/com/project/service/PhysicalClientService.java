@@ -59,7 +59,7 @@ public class PhysicalClientService {
             repository.save(client);
             return idPessoa;
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao salvar cliente físico: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -69,7 +69,7 @@ public class PhysicalClientService {
                     .orElseThrow(() -> new RuntimeException("Cliente físico com ID " + id + " não encontrado."));
             return toResponseDTO(client);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao buscar cliente físico por ID: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -79,7 +79,7 @@ public class PhysicalClientService {
                     .map(this::toResponseDTO)
                     .toList();
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao listar clientes físicos: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -109,7 +109,7 @@ public class PhysicalClientService {
 
             repository.update(id, existing);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao atualizar cliente físico: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -119,7 +119,7 @@ public class PhysicalClientService {
             repository.deleteById(id);
             personRepository.deleteById(id);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao deletar cliente físico: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
