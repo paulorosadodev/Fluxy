@@ -114,6 +114,7 @@ public class ProductService {
             response.setCategory(categoryDTO);
             return response;
         } catch (Exception e) {
+            System.out.println(e);
             throw new RuntimeException(e.getMessage());
         }
     }

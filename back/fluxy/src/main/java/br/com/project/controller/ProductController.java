@@ -144,8 +144,10 @@ public class ProductController {
             ProductResponseDTO response = productService.update(id, requestDTO);
             return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
+            System.out.println(e);
             return ResponseEntity.badRequest().body("Erro ao atualizar produto: " + e.getMessage());
         } catch (Exception e) {
+            System.out.println(e);
             return ResponseEntity.internalServerError().body("Erro ao atualizar produto: " + e.getMessage());
         }
     }

@@ -79,7 +79,7 @@ public class ProductRepository {
                     product.getIdProduct()
             );
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException("Erro ao atualizar produto", e);
         }
     }
 
