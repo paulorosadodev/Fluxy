@@ -1,7 +1,9 @@
 package br.com.project.service;
 
 import br.com.project.dto.request.ClientRequestDTO;
+import br.com.project.dto.response.ClientCityCountDTO;
 import br.com.project.dto.response.ClientResponseDTO;
+import br.com.project.dto.response.TopTierClientDTO;
 import br.com.project.model.Client;
 import br.com.project.model.Phone;
 import br.com.project.repository.ClientRepository;
@@ -84,6 +86,54 @@ public class ClienteService {
             return clienteRepository.findIdByPersonType(matricula);
         } catch (Exception e) {
             return null;
+        }
+    }
+
+    public int getTotalClientsCount() {
+        try {
+            return clienteRepository.getTotalClientsCount();
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public List<ClientCityCountDTO> getTotalClientByCity() {
+        try {
+            return clienteRepository.getTotalClientByCity();
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public List<TopTierClientDTO> getTopTierClientsByPurchases() {
+        try {
+            return clienteRepository.getTopTierClientByPurchases();
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public int getTotalPhysicalClientsCount() {
+        try {
+            return clienteRepository.getTotalPhysicalClientsCount();
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public int getTotalJuridicalClientsCount() {
+        try {
+            return clienteRepository.getTotalJuridicalClientsCount();
+        } catch (Exception e) {
+             throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public List<TopTierClientDTO> getMostActiveClients() {
+        try {
+            return clienteRepository.getMostActiveClients();
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
         }
     }
 }

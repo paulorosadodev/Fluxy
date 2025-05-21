@@ -1,7 +1,9 @@
 package br.com.project.controller;
 
 import br.com.project.dto.request.ClientRequestDTO;
+import br.com.project.dto.response.ClientCityCountDTO;
 import br.com.project.dto.response.ClientResponseDTO;
+import br.com.project.dto.response.TopTierClientDTO;
 import br.com.project.service.ClienteService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -67,6 +69,66 @@ public class ClienteController {
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body("Erro ao deletar cliente: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/total-clients")
+    public ResponseEntity<?> getTotalClientsCount() {
+        try {
+            int totalClients = clienteService.getTotalClientsCount();
+            return ResponseEntity.ok(totalClients);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao buscar total de clientes: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/total-clients-by-city")
+    public ResponseEntity<?> getTotalClientByCity() {
+        try {
+            List<ClientCityCountDTO> totalClientOnCities = clienteService.getTotalClientByCity();
+            return ResponseEntity.ok(totalClientOnCities);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao buscar total de clientes por cidade: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/top-tier-clients")
+    public ResponseEntity<?> getTopTierClientsByPurchases() {
+        try {
+            List<TopTierClientDTO> topTierClients = clienteService.getTopTierClientsByPurchases();
+            return ResponseEntity.ok(topTierClients);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao buscar clientes de nível superior por compras: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/total-physical-clients")
+    public ResponseEntity<?> getTotalPhysicalClientsCount() {
+        try {
+            int totalPhysicalClients = clienteService.getTotalPhysicalClientsCount();
+            return ResponseEntity.ok(totalPhysicalClients);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao buscar total de clientes físicos: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/")
+    public ResponseEntity<?> getTotalJuridicalClientsCount() {
+        try {
+            int totalJuridicalClients = clienteService.getTotalJuridicalClientsCount();
+            return ResponseEntity.ok(totalJuridicalClients);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao buscar total de clientes jurídicos: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/most-active-clients")
+    public ResponseEntity<?> getMostActiveClients() {
+        try {
+            List<TopTierClientDTO> mostActiveClients = clienteService.getMostActiveClients();
+            return ResponseEntity.ok(mostActiveClients);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao buscar clientes mais ativos: " + e.getMessage());
         }
     }
 }
