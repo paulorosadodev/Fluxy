@@ -1,6 +1,8 @@
 package br.com.project.controller;
 
 import br.com.project.dto.request.SupplierRequestDTO;
+import br.com.project.dto.response.SupplierCountDTO;
+import br.com.project.dto.response.SupplierDeliveryCountDTO;
 import br.com.project.model.Supplier;
 import br.com.project.service.SupplierService;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +29,32 @@ public class SupplierController {
             return ResponseEntity.badRequest().body("Erro ao salvar fornecedor: " + e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body("Erro interno ao salvar fornecedor: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<SupplierCountDTO> getSupplierCount() {
+        int count = supplierService.countSuppliers();
+        return ResponseEntity.ok(new SupplierCountDTO(count));
+    }
+
+    @GetMapping("/most-deliveries")
+    public ResponseEntity<?> getSuppliersWithMostDeliveries() {
+        try {
+            List<SupplierDeliveryCountDTO> result = supplierService.getSuppliersByDeliveryCount();
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao buscar fornecedores por entregas: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/least-deliveries")
+    public ResponseEntity<?> getSuppliersWithLeastDeliveries() {
+        try {
+            List<SupplierDeliveryCountDTO> result = supplierService.getSuppliersByDeliveryCountAsc();
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao buscar fornecedores por entregas: " + e.getMessage());
         }
     }
 

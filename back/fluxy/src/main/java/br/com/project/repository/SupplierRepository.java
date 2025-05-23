@@ -1,5 +1,6 @@
 package br.com.project.repository;
 
+import br.com.project.dto.response.SupplierDeliveryCountDTO;
 import br.com.project.model.Supplier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -60,6 +61,51 @@ public class SupplierRepository {
             throw new RuntimeException(e.getMessage());
         }
     }
+
+    public int countSuppliers() {
+        try {
+            String sql = "SELECT COUNT(*) FROM fornecedor";
+            Integer count = jdbcTemplate.queryForObject(sql, Integer.class);
+            return count != null ? count : 0;
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public List<SupplierDeliveryCountDTO> findSuppliersByDeliveryCountDesc() {
+        String sql = """
+        SELECT f.id_fornecedor, f.nome, f.cnpj, COUNT(e.fk_fornecedor_id) AS total_entregas
+        FROM fornecedor f
+        JOIN entrega e ON f.id_fornecedor = e.fk_fornecedor_id
+        GROUP BY f.id_fornecedor, f.nome, f.cnpj
+        ORDER BY total_entregas DESC
+    """;
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> new SupplierDeliveryCountDTO(
+                rs.getInt("id_fornecedor"),
+                rs.getString("nome"),
+                rs.getString("cnpj"),
+                rs.getInt("total_entregas")
+        ));
+    }
+
+    public List<SupplierDeliveryCountDTO> findSuppliersByDeliveryCountAsc() {
+        String sql = """
+        SELECT f.id_fornecedor, f.nome, f.cnpj, COUNT(e.fk_fornecedor_id) AS total_entregas
+        FROM fornecedor f
+        LEFT JOIN entrega e ON f.id_fornecedor = e.fk_fornecedor_id
+        GROUP BY f.id_fornecedor, f.nome, f.cnpj
+        ORDER BY total_entregas ASC
+    """;
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> new SupplierDeliveryCountDTO(
+                rs.getInt("id_fornecedor"),
+                rs.getString("nome"),
+                rs.getString("cnpj"),
+                rs.getInt("total_entregas")
+        ));
+    }
+
 
     public List<Supplier> findAll() {
         try {

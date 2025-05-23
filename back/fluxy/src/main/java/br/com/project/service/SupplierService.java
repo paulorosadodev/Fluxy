@@ -1,6 +1,7 @@
 package br.com.project.service;
 
 import br.com.project.dto.request.SupplierRequestDTO;
+import br.com.project.dto.response.SupplierDeliveryCountDTO;
 import br.com.project.model.Supplier;
 import br.com.project.repository.PhoneRepository;
 import br.com.project.repository.SupplierRepository;
@@ -51,6 +52,19 @@ public class SupplierService {
             throw new RuntimeException(e.getMessage());
         }
     }
+
+    public int countSuppliers() {
+        return supplierRepository.countSuppliers();
+    }
+
+    public List<SupplierDeliveryCountDTO> getSuppliersByDeliveryCount() {
+        return supplierRepository.findSuppliersByDeliveryCountDesc();
+    }
+
+    public List<SupplierDeliveryCountDTO> getSuppliersByDeliveryCountAsc() {
+        return supplierRepository.findSuppliersByDeliveryCountAsc();
+    }
+
 
     public List<Supplier> findAll() {
         try {
