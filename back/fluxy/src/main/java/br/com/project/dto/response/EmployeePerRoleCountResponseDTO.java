@@ -4,12 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PriceHistoryResponseDTO {
-    private double preco;
-    private LocalDate data;
+public class EmployeePerRoleCountResponseDTO {
+    private String role;
+    private int quantity;
 }

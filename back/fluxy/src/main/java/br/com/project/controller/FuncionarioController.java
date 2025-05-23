@@ -1,7 +1,11 @@
 package br.com.project.controller;
 
 import br.com.project.dto.request.EmployeeRequestDTO;
+import br.com.project.dto.response.EmployeePerRoleCountResponseDTO;
+import br.com.project.dto.response.EmployeePerShiftCountResponseDTO;
+import br.com.project.dto.response.EmployeePurchaseCountResponseDTO;
 import br.com.project.dto.response.EmployeeResponseDTO;
+import br.com.project.model.Employer;
 import br.com.project.service.FuncionarioService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +33,36 @@ public class FuncionarioController {
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body("Erro interno ao salvar funcionário: " + e.getMessage());
         }
+    }
+
+    @GetMapping("/total")
+    public ResponseEntity<?> countEmployees() {
+        try {
+            int total = funcionarioService.contarFuncionarios();
+            return ResponseEntity.ok(total);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao contar funcionários: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/most-purchases")
+    public List<EmployeePurchaseCountResponseDTO> listEmployersByPurchases() {
+        return funcionarioService.getEmployersByPurchaseCountDesc();
+    }
+
+    @GetMapping("/total-salaries")
+    public Double getTotalSalaries() {
+        return funcionarioService.getTotalSalaries();
+    }
+
+    @GetMapping("/employee-per-shift")
+    public List<EmployeePerShiftCountResponseDTO> getEmployeeCountByShift() {
+        return funcionarioService.getEmployeeCountByShift();
+    }
+
+    @GetMapping("/employee-per-role")
+    public List<EmployeePerRoleCountResponseDTO> getEmployeeCountByRole() {
+        return funcionarioService.getEmployeeCountByRole();
     }
 
     @GetMapping("/{id}")

@@ -1,5 +1,8 @@
 package br.com.project.repository;
 
+import br.com.project.dto.response.EmployeePerRoleCountResponseDTO;
+import br.com.project.dto.response.EmployeePerShiftCountResponseDTO;
+import br.com.project.dto.response.EmployeePurchaseCountResponseDTO;
 import br.com.project.model.Employer;
 import br.com.project.model.Person;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -10,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Repository
@@ -49,6 +53,73 @@ public class EmployerRepository {
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
+    }
+
+    public int countEmployees() {
+        try {
+            String sql = "SELECT COUNT(*) FROM funcionario";
+            Integer count = jdbcTemplate.queryForObject(sql, Integer.class);
+            return count != null ? count : 0;
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public List<EmployeePurchaseCountResponseDTO> findEmployersOrderByPurchaseCountDesc() {
+        String sql = """
+            SELECT f.nome, COUNT(c.numero) AS total_compras
+            FROM funcionario f
+            LEFT JOIN compra c ON c.fk_operacional_id_funcionario = f.id_funcionario
+            GROUP BY f.id_funcionario, f.nome
+            ORDER BY total_compras DESC
+        """;
+
+        return jdbcTemplate.query(sql, (rs, rowNum) ->
+                new EmployeePurchaseCountResponseDTO(
+                        rs.getString("nome"),
+                        rs.getInt("total_compras")
+                )
+        );
+    }
+
+    public Double sumAllSalaries() {
+        try {
+            String sql = "SELECT SUM(salario) FROM funcionario";
+            Double total = jdbcTemplate.queryForObject(sql, Double.class);
+            return total != null ? total : 0.0;
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public List<EmployeePerShiftCountResponseDTO> countEmployeesByShift() {
+        String sql = """
+        SELECT turno, COUNT(*) AS quantidade
+        FROM funcionario
+        GROUP BY turno
+    """;
+
+        return jdbcTemplate.query(sql, (rs, rowNum) ->
+                new EmployeePerShiftCountResponseDTO(
+                        rs.getString("turno"),
+                        rs.getInt("quantidade")
+                )
+        );
+    }
+
+    public List<EmployeePerRoleCountResponseDTO> countEmployeesByRole() {
+        String sql = """
+        SELECT funcao, COUNT(*) AS quantidade
+        FROM funcionario
+        GROUP BY funcao
+    """;
+
+        return jdbcTemplate.query(sql, (rs, rowNum) ->
+                new EmployeePerRoleCountResponseDTO(
+                        rs.getString("funcao"),
+                        rs.getInt("quantidade")
+                )
+        );
     }
 
     public Optional<Employer> findById(Integer id) {

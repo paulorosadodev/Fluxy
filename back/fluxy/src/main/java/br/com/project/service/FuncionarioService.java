@@ -1,6 +1,9 @@
 package br.com.project.service;
 
 import br.com.project.dto.request.EmployeeRequestDTO;
+import br.com.project.dto.response.EmployeePerRoleCountResponseDTO;
+import br.com.project.dto.response.EmployeePerShiftCountResponseDTO;
+import br.com.project.dto.response.EmployeePurchaseCountResponseDTO;
 import br.com.project.dto.response.EmployeeResponseDTO;
 import br.com.project.model.Employer;
 import br.com.project.model.Person;
@@ -16,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
@@ -93,6 +97,26 @@ public class FuncionarioService {
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
+    }
+
+    public int contarFuncionarios() {
+        return employerRepository.countEmployees();
+    }
+
+    public List<EmployeePurchaseCountResponseDTO> getEmployersByPurchaseCountDesc() {
+        return employerRepository.findEmployersOrderByPurchaseCountDesc();
+    }
+
+    public Double getTotalSalaries() {
+        return employerRepository.sumAllSalaries();
+    }
+
+    public List<EmployeePerShiftCountResponseDTO> getEmployeeCountByShift() {
+        return employerRepository.countEmployeesByShift();
+    }
+
+    public List<EmployeePerRoleCountResponseDTO> getEmployeeCountByRole() {
+        return employerRepository.countEmployeesByRole();
     }
 
     private String mapearRoleSistema(String role, String sector) {

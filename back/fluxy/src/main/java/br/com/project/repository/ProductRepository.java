@@ -48,18 +48,13 @@ public class ProductRepository {
 
     public List<PriceHistoryResponseDTO> findHistoricoPreco(Integer produtoId) {
         String sql = """
-            SELECT valor_pago, data_reposicao
-            FROM entrega
-            WHERE fk_produto_id = ?
-            AND TIME(data_reposicao) = '00:00:00'
-            ORDER BY data_reposicao ASC
-            
+            SELECT preco, data FROM historico_preco_produto WHERE codigo_produto = ? AND TIME(data) not like '00:00:00' ORDER BY data ASC
         """;
 
         return jdbcTemplate.query(sql, (rs, rowNum) ->
                 new PriceHistoryResponseDTO(
-                        rs.getDouble("valor_pago"),
-                        rs.getDate("data_reposicao").toLocalDate()
+                        rs.getDouble("preco"),
+                        rs.getDate("data").toLocalDate()
                 ), produtoId
         );
     }
