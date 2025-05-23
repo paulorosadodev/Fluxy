@@ -1,10 +1,7 @@
 package br.com.project.service;
 
 import br.com.project.dto.request.ProductRequestDTO;
-import br.com.project.dto.response.CategoryProductCountDTO;
-import br.com.project.dto.response.LowStockProductDTO;
-import br.com.project.dto.response.ProductResponseDTO;
-import br.com.project.dto.response.TopTierProductDTO;
+import br.com.project.dto.response.*;
 import br.com.project.model.Category;
 import br.com.project.model.HistoricPriceProduct;
 import br.com.project.model.Product;
@@ -181,6 +178,10 @@ public class ProductService {
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
+    }
+
+    public List<PriceHistoryResponseDTO> getHistoricoPreco(Integer produtoId) {
+        return productRepository.findHistoricoPreco(produtoId);
     }
 
     public ProductResponseDTO findById(Integer id) {

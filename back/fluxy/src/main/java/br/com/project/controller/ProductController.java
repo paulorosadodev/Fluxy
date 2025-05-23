@@ -1,10 +1,8 @@
 package br.com.project.controller;
 
+import br.com.project.dto.request.ProductIdRequestDTO;
 import br.com.project.dto.request.ProductRequestDTO;
-import br.com.project.dto.response.CategoryProductCountDTO;
-import br.com.project.dto.response.LowStockProductDTO;
-import br.com.project.dto.response.ProductResponseDTO;
-import br.com.project.dto.response.TopTierProductDTO;
+import br.com.project.dto.response.*;
 import br.com.project.model.Product;
 import br.com.project.service.ProductService;
 import org.springframework.http.ResponseEntity;
@@ -124,6 +122,12 @@ public class ProductController {
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body("Erro ao obter produtos mais baratos: " + e.getMessage());
         }
+    }
+
+    @PostMapping("/price-history")
+    public ResponseEntity<List<PriceHistoryResponseDTO>> getHistoricoPreco(@RequestBody ProductIdRequestDTO request) {
+        List<PriceHistoryResponseDTO> historico = productService.getHistoricoPreco(request.getProdutoId());
+        return ResponseEntity.ok(historico);
     }
 
     @GetMapping("/{id}")

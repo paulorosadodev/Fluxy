@@ -1,8 +1,6 @@
 package br.com.project.repository;
 
-import br.com.project.dto.response.CategoryProductCountDTO;
-import br.com.project.dto.response.LowStockProductDTO;
-import br.com.project.dto.response.TopTierProductDTO;
+import br.com.project.dto.response.*;
 import br.com.project.model.Product;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -46,6 +44,24 @@ public class ProductRepository {
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
+    }
+
+    public List<PriceHistoryResponseDTO> findHistoricoPreco(Integer produtoId) {
+        String sql = """
+            SELECT valor_pago, data_reposicao
+            FROM entrega
+            WHERE fk_produto_id = ?
+            AND TIME(data_reposicao) = '00:00:00'
+            ORDER BY data_reposicao ASC
+            
+        """;
+
+        return jdbcTemplate.query(sql, (rs, rowNum) ->
+                new PriceHistoryResponseDTO(
+                        rs.getDouble("valor_pago"),
+                        rs.getDate("data_reposicao").toLocalDate()
+                ), produtoId
+        );
     }
 
     public Optional<Product> findById(Integer id) {
