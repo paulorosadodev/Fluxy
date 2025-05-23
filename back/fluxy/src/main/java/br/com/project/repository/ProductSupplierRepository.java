@@ -31,6 +31,25 @@ public class ProductSupplierRepository {
         );
     }
 
+    public Integer countTotalDeliveries() {
+        String sql = "SELECT COUNT(*) FROM entrega";
+        return jdbcTemplate.queryForObject(sql, Integer.class);
+    }
+
+    public Integer countDeliveriesByMonthAndYear(int month, int year) {
+        String sql = "SELECT COUNT(*) FROM entrega WHERE MONTH(data_reposicao) = ? AND YEAR(data_reposicao) = ?";
+        return jdbcTemplate.queryForObject(sql, Integer.class, month, year);
+    }
+
+    public List<ProductSupplier> findMostExpensiveDeliveries() {
+        String sql = """
+        SELECT * FROM entrega
+        ORDER BY valor_pago DESC
+    """;
+
+        return jdbcTemplate.query(sql, new ProductSupplierRowMapper());
+    }
+
     public List<ProductSupplier> findAll() {
         return jdbcTemplate.query("SELECT * FROM entrega", new ProductSupplierRowMapper());
     }

@@ -46,7 +46,31 @@ public class ProductSupplierService {
 
             return new ProductSupplierResponseDTO(productSupplier.getSupplier(), productSupplier.getProduct(), productSupplier.getProductAmount(), productSupplier.getPrice());
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao salvar a entrega: " + e.getMessage(), e);
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    public Integer getTotalDeliveries() {
+        try {
+            return repository.countTotalDeliveries();
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    public Integer getDeliveriesByMonthAndYear(int month, int year) {
+        try {
+            return repository.countDeliveriesByMonthAndYear(month, year);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    public List<ProductSupplier> getMostExpensiveDeliveries() {
+        try {
+            return repository.findMostExpensiveDeliveries();
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao buscar entregas mais caras: " + e.getMessage(), e);
         }
     }
 
@@ -54,7 +78,7 @@ public class ProductSupplierService {
         try {
             return repository.findAll().stream().map(this::entityToResponseDto).toList();
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao listar as entregas: " + e.getMessage(), e);
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 

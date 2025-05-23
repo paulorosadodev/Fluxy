@@ -32,7 +32,7 @@ public class SupplierController {
         }
     }
 
-    @GetMapping("/count")
+    @GetMapping("/total")
     public ResponseEntity<SupplierCountDTO> getSupplierCount() {
         int count = supplierService.countSuppliers();
         return ResponseEntity.ok(new SupplierCountDTO(count));
