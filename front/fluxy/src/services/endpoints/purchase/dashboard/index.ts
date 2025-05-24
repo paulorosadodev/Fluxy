@@ -3,7 +3,7 @@ import { api } from "../../../api";
 export const fetchTotalPurchases = async () => {
     try {
         const response = await api.get("/purchases/total");
-        return response.data;
+        return response.data.totalPurchases;
     } catch (error: any) {
         const errorMessage = error.response?.data;
 

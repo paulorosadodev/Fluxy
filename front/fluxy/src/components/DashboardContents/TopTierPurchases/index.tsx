@@ -24,8 +24,8 @@ export const TopTierPurchases = () => {
             const allCustomers = [...(naturalPersonCustomers ?? []), ...(legalEntityCustomers ?? [])];
             const customer = allCustomers.find(c => c.id === item.clientId);
             
-            const customerName = customer?.name || customer?.legalName || "Cliente não encontrado";
-            const productName = product?.name || "Produto não encontrado";
+            const customerName = customer?.name || customer?.legalName || "-";
+            const productName = product?.name || "-";
             
             return {
                 leftDisplay: formatMoney(totalCost),

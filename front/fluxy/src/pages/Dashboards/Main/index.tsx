@@ -8,7 +8,7 @@ export default function MainDashboard() {
             <Dashboard dataDashboards={
                 [
                     ["productsTotalCount", "suppliersTotalCount", "deliveriesTotalCount"],
-                    ["employeesTotalCount", "clientsTotalCount", "deliveriesTotalCount"]
+                    ["employeesTotalCount", "clientsTotalCount", "purchasesTotalCount"]
                 ]
             } />
         </div>

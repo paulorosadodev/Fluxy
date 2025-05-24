@@ -140,10 +140,15 @@ export default function PurchasesDashboard() {
                         }
                         <div id="main">
                             <h1>Compras</h1>
+                            <Dashboard dataDashboards={
+                                [
+                                    ["purchasesTotalCount"]
+                                ]
+                            } />
                             <DataTable deleteRow={deletePurchase} data={formattedPurchases} columns={columns} entityName="compras" popUpController={setShowPopUp} deletePopUpController={setShowDeletePopUp} setDeletePopUpMessage={setDeletePopUpMessage} setDeletePopUpType={setDeletePopUpType} formControllers={formControllers} selectedRowController={setSelectedRow}/>
                             <Dashboard dataDashboards={
                                 [
-                                    ["topTierPurchases"]
+                                    ["paymentTypesChart", "topTierPurchases"],
                                 ]
                             } />
                             {showPopUp &&

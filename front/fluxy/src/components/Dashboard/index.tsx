@@ -4,8 +4,9 @@ import { fetchAveragePrice, fetchCategoriesCount, fetchLowStockProducts, fetchPr
 import { fetchEmployeesCount, fetchTotalSalaries, fetchEmployeeCountByShift, fetchEmployeeCountByRole } from "../../services/endpoints/employee/dashboard";
 import { fetchSuppliersCount } from "../../services/endpoints/supplier/dashboard";
 import { fetchTotalDeliveries, fetchTotalDeliveryCostByMonth, fetchDeliveryMonthAverageCost, fetchDeliveriesByMonth, fetchTotalCost, fetchTotalAverageCost } from "../../services/endpoints/supply/dashboard";
+import { fetchTotalPurchases } from "../../services/endpoints/purchase/dashboard";
 import { Card } from "../DashboardContents/Card";
-import { Package, Notebook, Tag, CurrencyCircleDollar, CurrencyDollarSimple, Users, UserCircle, Buildings, User, Money, Truck, CaretCircleDoubleDown} from "phosphor-react";
+import { Package, Notebook, Tag, CurrencyCircleDollar, CurrencyDollarSimple, Users, UserCircle, Buildings, User, Money, Truck, CaretCircleDoubleDown, ShoppingCart} from "phosphor-react";
 import { ProductsByCategoryChart } from "../DashboardContents/ProductsByCategoryChart";
 import { EmployeesByShiftChart } from "../DashboardContents/EmployeesByShiftChart";
 import { EmployeesByRoleChart } from "../DashboardContents/EmployeesByRoleChart";
@@ -20,6 +21,7 @@ import { ProductPriceHistory } from "../DashboardContents/ProductPriceHistory";
 import { DeliveriesByMonth } from "../DashboardContents/DeliveriesByMonth";
 import { fetchTotalClientsByCity, fetchTotalClients, fetchTotalPhysicalClients, fetchTotalJuridicalClients } from "../../services/endpoints/customer/dashboard";
 import { ClientsByCityChart } from "../DashboardContents/ClientsByCityChart";
+import { PaymentTypesChart } from "../DashboardContents/PaymentTypesChart";
 
 type DashboardProps = {
     dataDashboards: string[][];
@@ -219,6 +221,17 @@ const dashboardsController: Record<string, DashboardRenderer> = {
             <Card icon={Money} data={data} text="folha salarial mensal" type="price" delay={delay} />
         ),
     },
+    purchasesTotalCount: {
+        fetch: fetchTotalPurchases,
+        render: (data, delay = 0) => (
+            <Card icon={ShoppingCart} data={data} text={data !== 1 ? "compras realizadas" : "compra realizada"} delay={delay} />
+        ),
+    },
+    paymentTypesChart: {
+        render: () => (
+            <PaymentTypesChart />
+        ),
+    },
 };
 
 export const Dashboard = ({ dataDashboards, graphs }: DashboardProps) => {
@@ -256,7 +269,8 @@ export const Dashboard = ({ dataDashboards, graphs }: DashboardProps) => {
                         "deliveriesMonthlyAverageCost",
                         "deliveriesMonthlyCount",
                         "deliveriesTotalCost",
-                        "deliveriesTotalAverageCost"
+                        "deliveriesTotalAverageCost",
+                        "purchasesTotalCount"
                     ].includes(key);
                     const delay = isCard ? cardIndex * DELAY_BETWEEN_CARDS : 0;
                     
@@ -289,7 +303,8 @@ export const Dashboard = ({ dataDashboards, graphs }: DashboardProps) => {
                         "deliveriesMonthlyAverageCost",
                         "deliveriesMonthlyCount",
                         "deliveriesTotalCost",
-                        "deliveriesTotalAverageCost"
+                        "deliveriesTotalAverageCost",
+                        "purchasesTotalCount"
                     ].includes(key);
                     const delay = isCard ? cardIndex * DELAY_BETWEEN_CARDS : 0;
                     const component = isCard ? controller.render(fallbackData, delay) : controller.render(fallbackData);
