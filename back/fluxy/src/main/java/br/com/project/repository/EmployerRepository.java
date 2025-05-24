@@ -67,12 +67,33 @@ public class EmployerRepository {
 
     public List<EmployeePurchaseCountResponseDTO> findEmployersOrderByPurchaseCountDesc() {
         String sql = """
-            SELECT f.nome, COUNT(c.numero) AS total_compras
-            FROM funcionario f
-            LEFT JOIN compra c ON c.fk_operacional_id_funcionario = f.id_funcionario
-            GROUP BY f.id_funcionario, f.nome
-            ORDER BY total_compras DESC
-        """;
+        SELECT f.nome, COUNT(c.numero) AS total_compras
+        FROM funcionario f
+        LEFT JOIN compra c ON c.fk_operacional_id_funcionario = f.id_funcionario
+        WHERE LOWER(f.funcao) NOT LIKE '%gerente%'
+        GROUP BY f.id_funcionario, f.nome
+        ORDER BY total_compras DESC
+        LIMIT 5
+    """;
+
+        return jdbcTemplate.query(sql, (rs, rowNum) ->
+                new EmployeePurchaseCountResponseDTO(
+                        rs.getString("nome"),
+                        rs.getInt("total_compras")
+                )
+        );
+    }
+
+    public List<EmployeePurchaseCountResponseDTO> findEmployersOrderByPurchaseCountAsc() {
+        String sql = """
+        SELECT f.nome, COUNT(c.numero) AS total_compras
+        FROM funcionario f
+        LEFT JOIN compra c ON c.fk_operacional_id_funcionario = f.id_funcionario
+        WHERE LOWER(f.funcao) NOT LIKE '%gerente%'
+        GROUP BY f.id_funcionario, f.nome
+        ORDER BY total_compras ASC
+        LIMIT 5
+    """;
 
         return jdbcTemplate.query(sql, (rs, rowNum) ->
                 new EmployeePurchaseCountResponseDTO(

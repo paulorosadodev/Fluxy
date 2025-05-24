@@ -107,6 +107,10 @@ public class FuncionarioService {
         return employerRepository.findEmployersOrderByPurchaseCountDesc();
     }
 
+    public List<EmployeePurchaseCountResponseDTO> getEmployersByPurchaseCountAsc() {
+        return employerRepository.findEmployersOrderByPurchaseCountAsc();
+    }
+
     public Double getTotalSalaries() {
         return employerRepository.sumAllSalaries();
     }

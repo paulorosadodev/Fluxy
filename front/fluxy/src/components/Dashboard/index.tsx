@@ -1,11 +1,17 @@
 import { ReactNode, useEffect, useState } from "react";
 import { DashboardsWrapper, DashboardWrapper, DashboardRow } from "./styles";
 import { fetchAveragePrice, fetchCategoriesCount, fetchLowStockProducts, fetchProductsCount, fetchProductsCountByCategory, fetchProductsTotalStock, fetchTotalPrice} from "../../services/endpoints/product/dashboard";
+import { fetchEmployeesCount, fetchTotalSalaries, fetchEmployeeCountByShift, fetchEmployeeCountByRole } from "../../services/endpoints/employee/dashboard";
+import { fetchSuppliersCount } from "../../services/endpoints/supplier/dashboard";
 import { Card } from "../DashboardContents/Card";
-import { Package, Notebook, Tag, CurrencyCircleDollar, CurrencyDollarSimple, Users, UserCircle, Buildings} from "phosphor-react";
+import { Package, Notebook, Tag, CurrencyCircleDollar, CurrencyDollarSimple, Users, UserCircle, Buildings, User, Money, Truck} from "phosphor-react";
 import { ProductsByCategoryChart } from "../DashboardContents/ProductsByCategoryChart";
+import { EmployeesByShiftChart } from "../DashboardContents/EmployeesByShiftChart";
+import { EmployeesByRoleChart } from "../DashboardContents/EmployeesByRoleChart";
 import { TopTierProducts } from "../DashboardContents/TopTierProducts";
 import { TopTierClients } from "../DashboardContents/TopTierClients";
+import { TopTierEmployees } from "../DashboardContents/TopTierEmployees";
+import { TopTierSuppliers } from "../DashboardContents/TopTierSuppliers";
 import { LowStockProducts } from "../DashboardContents/LowStockProducts";
 import { ProductPriceHistoryWithSelect } from "../DashboardContents/ProductPriceHistory/ProductPriceHistoryWithSelect";
 import { fetchTotalClientsByCity, fetchTotalClients, fetchTotalPhysicalClients, fetchTotalJuridicalClients } from "../../services/endpoints/customer/dashboard";
@@ -58,6 +64,18 @@ const dashboardsController: Record<string, DashboardRenderer> = {
             <ProductsByCategoryChart data={data} />
         ),
     },
+    employeesCountByShift: {
+        fetch: fetchEmployeeCountByShift,
+        render: (data) => (
+            <EmployeesByShiftChart data={data} />
+        ),
+    },
+    employeesCountByRole: {
+        fetch: fetchEmployeeCountByRole,
+        render: (data) => (
+            <EmployeesByRoleChart data={data} />
+        ),
+    },
     topTierProducts: {
         render: () => (
             <TopTierProducts />
@@ -66,6 +84,22 @@ const dashboardsController: Record<string, DashboardRenderer> = {
     topTierClients: {
         render: () => (
             <TopTierClients />
+        ),
+    },
+    topTierEmployees: {
+        render: () => (
+            <TopTierEmployees />
+        ),
+    },
+    topTierSuppliers: {
+        render: () => (
+            <TopTierSuppliers />
+        ),
+    },
+    suppliersTotalCount: {
+        fetch: fetchSuppliersCount,
+        render: (data, delay = 0) => (
+            <Card icon={Truck} data={data} text={data !== 1 ? "fornecedores cadastrados" : "fornecedor cadastrado"} delay={delay} />
         ),
     },
     lowStockProducts: {
@@ -103,6 +137,18 @@ const dashboardsController: Record<string, DashboardRenderer> = {
             <Card icon={Buildings} data={data} text={data !== 1 ? "clientes jurídicos" : "cliente jurídico"} delay={delay} />
         ),
     },
+    employeesTotalCount: {
+        fetch: fetchEmployeesCount,
+        render: (data, delay = 0) => (
+            <Card icon={User} data={data} text={data !== 1 ? "funcionários cadastrados" : "funcionário cadastrado"} delay={delay} />
+        ),
+    },
+    employeesTotalSalaries: {
+        fetch: fetchTotalSalaries,
+        render: (data, delay = 0) => (
+            <Card icon={Money} data={data} text="folha salarial mensal" type="price" delay={delay} />
+        ),
+    },
 };
 
 export const Dashboard = ({ dataDashboards, graphs }: DashboardProps) => {
@@ -131,7 +177,10 @@ export const Dashboard = ({ dataDashboards, graphs }: DashboardProps) => {
                         "productsTotalPrice",
                         "clientsTotalCount",
                         "clientsPhysicalCount", 
-                        "clientsJuridicalCount"
+                        "clientsJuridicalCount",
+                        "employeesTotalCount",
+                        "employeesTotalSalaries",
+                        "suppliersTotalCount"
                     ].includes(key);
                     const delay = isCard ? cardIndex * DELAY_BETWEEN_CARDS : 0;
                     
@@ -155,7 +204,10 @@ export const Dashboard = ({ dataDashboards, graphs }: DashboardProps) => {
                         "productsTotalPrice",
                         "clientsTotalCount",
                         "clientsPhysicalCount", 
-                        "clientsJuridicalCount"
+                        "clientsJuridicalCount",
+                        "employeesTotalCount",
+                        "employeesTotalSalaries",
+                        "suppliersTotalCount"
                     ].includes(key);
                     const delay = isCard ? cardIndex * DELAY_BETWEEN_CARDS : 0;
                     const component = isCard ? controller.render(fallbackData, delay) : controller.render(fallbackData);

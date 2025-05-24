@@ -9,6 +9,7 @@ import { PopUp } from "../../../components/PopUp";
 import { addEmployee, deleteEmployee, editEmployee } from "../../../services/endpoints/employee";
 import { useAuth } from "../../../hooks/useAuth";
 import { Lock } from "phosphor-react";
+import { Dashboard } from "../../../components/Dashboard";
 
 export default function EmployeesDashboard() {
 
@@ -202,7 +203,17 @@ export default function EmployeesDashboard() {
                         }
                         <div id="main">
                             <h1>Funcionários</h1>
+                            <Dashboard dataDashboards={
+                                [
+                                    ["employeesTotalCount", "employeesTotalSalaries"],
+                                ]
+                            } />
                             <DataTable deleteRow={deleteEmployee} data={employees} columns={columns} entityName="funcionários" popUpController={setShowPopUp} deletePopUpController={setShowDeletePopUp} setDeletePopUpMessage={setDeletePopUpMessage} setDeletePopUpType={setDeletePopUpType} formControllers={formControllers} selectedRowController={setSelectedRow}/>
+                            <Dashboard dataDashboards={
+                                [
+                                    ["employeesCountByShift", "topTierEmployees", "employeesCountByRole"],
+                                ]
+                            } />
                             {showPopUp &&
                             <PopUp type="success" message={popUpMessage} show={showPopUp} onClose={() => setShowPopUp(false)} />
                             }

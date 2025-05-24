@@ -79,6 +79,7 @@ public class SupplierRepository {
         JOIN entrega e ON f.id_fornecedor = e.fk_fornecedor_id
         GROUP BY f.id_fornecedor, f.nome, f.cnpj
         ORDER BY total_entregas DESC
+        LIMIT 5
     """;
 
         return jdbcTemplate.query(sql, (rs, rowNum) -> new SupplierDeliveryCountDTO(
@@ -96,6 +97,7 @@ public class SupplierRepository {
         LEFT JOIN entrega e ON f.id_fornecedor = e.fk_fornecedor_id
         GROUP BY f.id_fornecedor, f.nome, f.cnpj
         ORDER BY total_entregas ASC
+        LIMIT 5
     """;
 
         return jdbcTemplate.query(sql, (rs, rowNum) -> new SupplierDeliveryCountDTO(

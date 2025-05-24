@@ -46,8 +46,13 @@ public class FuncionarioController {
     }
 
     @GetMapping("/most-purchases")
-    public List<EmployeePurchaseCountResponseDTO> listEmployersByPurchases() {
+    public List<EmployeePurchaseCountResponseDTO> listEmployersByPurchasesDesc() {
         return funcionarioService.getEmployersByPurchaseCountDesc();
+    }
+
+    @GetMapping("/least-purchases")
+    public List<EmployeePurchaseCountResponseDTO> listEmployersByPurchasesAsc() {
+        return funcionarioService.getEmployersByPurchaseCountAsc();
     }
 
     @GetMapping("/total-salaries")
