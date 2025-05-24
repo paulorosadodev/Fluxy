@@ -3,6 +3,7 @@ package br.com.project.service;
 import br.com.project.dto.request.ClientRequestDTO;
 import br.com.project.dto.response.ClientCityCountDTO;
 import br.com.project.dto.response.ClientResponseDTO;
+import br.com.project.dto.response.ClientSpendingDTO;
 import br.com.project.dto.response.TopTierClientDTO;
 import br.com.project.model.Client;
 import br.com.project.model.Phone;
@@ -140,6 +141,22 @@ public class ClienteService {
     public List<TopTierClientDTO> getActiveClients() {
         try {
             return clienteRepository.getActiveClients();
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public List<ClientSpendingDTO> getTopTierSpendibleClient() {
+        try {
+            return clienteRepository.getTopTierSpendibleClient();
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public List<ClientSpendingDTO> getLowTierSpendibleClient() {
+        try {
+            return clienteRepository.getLowTierSpendibleClient();
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }

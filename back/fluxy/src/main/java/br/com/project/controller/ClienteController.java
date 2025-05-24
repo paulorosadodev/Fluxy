@@ -3,6 +3,7 @@ package br.com.project.controller;
 import br.com.project.dto.request.ClientRequestDTO;
 import br.com.project.dto.response.ClientCityCountDTO;
 import br.com.project.dto.response.ClientResponseDTO;
+import br.com.project.dto.response.ClientSpendingDTO;
 import br.com.project.dto.response.TopTierClientDTO;
 import br.com.project.service.ClienteService;
 import org.springframework.http.ResponseEntity;
@@ -139,6 +140,26 @@ public class ClienteController {
             return ResponseEntity.ok(mostActiveClients);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body("Erro ao buscar clientes ativos: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/top-tier-spendible-clients")
+    public ResponseEntity<?> getTopTierSpendibleClients() {
+        try {
+            List<ClientSpendingDTO> topTierSpendibleClients = clienteService.getTopTierSpendibleClient();
+            return ResponseEntity.ok(topTierSpendibleClients);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao buscar clientes de nível superior por gastos: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/low-tier-spendible-clients")
+    public ResponseEntity<?> getLowTierSpendibleClients() {
+        try {
+            List<ClientSpendingDTO> lowTierSpendibleClients = clienteService.getLowTierSpendibleClient();
+            return ResponseEntity.ok(lowTierSpendibleClients);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao buscar clientes de nível inferior por gastos: " + e.getMessage());
         }
     }
 }
