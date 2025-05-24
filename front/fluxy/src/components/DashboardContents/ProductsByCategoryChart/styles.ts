@@ -4,7 +4,6 @@ import styled from "styled-components";
 export const ProductsByCategoryChartWrapper = styled.div`
     background-color: ${(props) => props.theme["white-dark"]};
     height: 20rem;
-    border-radius: 8px;
     width: 100%;
     padding-left: 2rem;
     min-height: 300px;

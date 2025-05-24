@@ -203,18 +203,32 @@ export function formatStateRegistration(ie: string) {
 }
 
 export function formatDate(date: string): string {
-
     const cleanDate = date.replace("undefined", "");
 
-    const [fullDate, time] = cleanDate.split("T"); 
-    const [year, month, day] = fullDate.split("-");
+    if (cleanDate.includes("T")) {
+        const [fullDate, time] = cleanDate.split("T"); 
+        const [year, month, day] = fullDate.split("-");
+        
+        const formattedDay = day.padStart(2, "0");
+        const formattedMonth = month.padStart(2, "0");
 
-    const formattedDate = `${day}/${month}/${year}`;
+        const formattedDate = `${formattedDay}/${formattedMonth}/${year}`;
 
-    if (time) {
-        const [hour, minute] = time.split(":");
-        return `${hour}:${minute} - ${formattedDate}`;
+        if (time) {
+            const [hour, minute] = time.split(":");
+            return `${hour}:${minute} - ${formattedDate}`;
+        }
+
+        return formattedDate;
     }
-
-    return formattedDate;
+    
+    try {
+        const dateObj = new Date(cleanDate);
+        const day = dateObj.getDate().toString().padStart(2, "0");
+        const month = (dateObj.getMonth() + 1).toString().padStart(2, "0");
+        const year = dateObj.getFullYear();
+        return `${day}/${month}/${year}`;
+    } catch {
+        return cleanDate;
+    }
 }

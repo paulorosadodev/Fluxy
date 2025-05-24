@@ -1,16 +1,29 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
-export const CardWrapper = styled.div`
+const fadeInUp = keyframes`
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+`;
 
+export const CardWrapper = styled.div<{ delay?: number }>`
     background-color: ${(props) => props.theme["white-dark"]};
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 1rem 1rem;
-    border-radius: 8px;
     color: ${(props) => props.theme["brown-800"]};
     border-left: 4px solid ${(props) => props.theme["purple-400"]};
     min-width: 21rem;
+
+    opacity: 0;
+    animation: ${fadeInUp} 0.6s ease-out forwards;
+    animation-delay: ${(props) => props.delay || 0}ms;
 
     #icon {
         color: ${(props) => props.theme["teal-500"]};

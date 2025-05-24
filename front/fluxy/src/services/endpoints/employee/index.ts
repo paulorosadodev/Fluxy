@@ -35,8 +35,7 @@ export const addEmployee = async (data: EmployeePayload) => {
         return response;
     } catch (error: any) {
         const errorMessage = error.response?.data;
-        
-        console.log(errorMessage);
+
         if (errorMessage) {
             throw new Error(errorMessage);
         }

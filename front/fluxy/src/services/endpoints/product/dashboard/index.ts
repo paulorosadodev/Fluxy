@@ -131,7 +131,6 @@ export const fetchLeastExpensiveProducts = async () => {
 export const fetchLowStockProducts = async () => {
     try {
         const response = await api.get("/products/low-stock-products");
-        console.log(response);
         return response.data;
     } catch (error: any) {
         const errorMessage = error.response?.data;
@@ -142,5 +141,26 @@ export const fetchLowStockProducts = async () => {
         throw new Error("Erro inesperado ao recuperar produtos com baixo estoque");
     }
 };
+
+export const fetchProductPriceHistory = async (productId: string) => {
+
+    const requestBody = {
+        productId: Number(productId),
+    };
+
+    try {
+        const response = await api.post("/products/price-history", requestBody);
+
+        return response.data;
+    } catch (error: any) {
+        const errorMessage = error.response?.data;
+
+        if (errorMessage) {
+            throw new Error(errorMessage);
+        }
+        throw new Error("Erro inesperado ao recuperar histórico de preço");
+    }
+};
+
 
 

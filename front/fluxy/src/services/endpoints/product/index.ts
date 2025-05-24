@@ -11,7 +11,6 @@ interface ProductPayload {
 
 export const fetchProducts = async () => {
     const response = await api.get("/products");
-    console.log(response);
     return response.data;
 };
 

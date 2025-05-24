@@ -2,12 +2,11 @@ import { motion } from "framer-motion";
 import styled from "styled-components";
 
 export const TopTierWrapper = styled.div`
-
     background-color: ${(props) => props.theme["white-dark"]};
     display: flex;
     flex-direction: column;
     padding: 1.5rem 2rem;
-    border-radius: 8px;
+
     color: ${(props) => props.theme["brown-800"]};
     height: 20rem;
 

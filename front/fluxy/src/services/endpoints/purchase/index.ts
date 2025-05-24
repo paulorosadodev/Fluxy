@@ -55,8 +55,6 @@ export const editPurchase = async (data: PurchasePayload) => {
         employeeId: data.employeeId.split("|")[1]?.trim(),
     };
 
-    console.log(data);
-
     try {
         const response = await api.put(`/purchases/${data.id}`, formattedData);
         return response;

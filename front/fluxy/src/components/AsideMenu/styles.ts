@@ -55,7 +55,7 @@ export const AsideMenuWrapper = styled.aside`
     height: 100dvh;
     transition: width 0.3s ease;
     overflow: hidden;
-
+    z-index: 999;
     overflow-y: auto;
 
     &.expanded {

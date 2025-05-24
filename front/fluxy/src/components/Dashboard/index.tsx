@@ -6,6 +6,7 @@ import { Package, Notebook, Tag, CurrencyCircleDollar, CurrencyDollarSimple} fro
 import { ProductsByCategoryChart } from "../DashboardContents/ProductsByCategoryChart";
 import { TopTier } from "../DashboardContents/TopTier";
 import { LowStockProducts } from "../DashboardContents/LowStockProducts";
+import { ProductPriceHistoryWithSelect } from "../DashboardContents/ProductPriceHistory/ProductPriceHistoryWithSelect";
 
 type DashboardProps = {
     dataDashboards: string[][];
@@ -14,38 +15,38 @@ type DashboardProps = {
 
 type DashboardRenderer = {
     fetch?: () => Promise<any>;
-    render: (data?: any) => ReactNode;
+    render: (data?: any, delay?: number) => ReactNode;
 };
 
 const dashboardsController: Record<string, DashboardRenderer> = {
     productsTotalStock: {
         fetch: fetchProductsTotalStock,
-        render: (data) => (
-            <Card icon={Package} data={data} text={data > 1 ? "produtos em estoque" : "produto em estoque"} />
+        render: (data, delay = 0) => (
+            <Card icon={Package} data={data} text={data > 1 ? "produtos em estoque" : "produto em estoque"} delay={delay} />
         ),
     },
     productsTotalCount: {
         fetch: fetchProductsCount,
-        render: (data) => (
-            <Card icon={Notebook} data={data} text={data > 1 ? "produtos cadastrados" : "produto cadastrado"} />
+        render: (data, delay = 0) => (
+            <Card icon={Notebook} data={data} text={data > 1 ? "produtos cadastrados" : "produto cadastrado"} delay={delay} />
         ),
     },
     productsCategoriesCount: {
         fetch: fetchCategoriesCount,
-        render: (data) => (
-            <Card icon={Tag} data={data} text={data > 1 ? "categorias cadastradas" : "categoria cadastrada"} />
+        render: (data, delay = 0) => (
+            <Card icon={Tag} data={data} text={data > 1 ? "categorias cadastradas" : "categoria cadastrada"} delay={delay} />
         ),
     },
     productsAveragePrice: {
         fetch: fetchAveragePrice,
-        render: (data) => (
-            <Card icon={CurrencyCircleDollar} data={data} text="preço médio dos produtos" type="price" />
+        render: (data, delay = 0) => (
+            <Card icon={CurrencyCircleDollar} data={data} text="preço médio dos produtos" type="price" delay={delay} />
         ),
     },
     productsTotalPrice: {
         fetch: fetchTotalPrice,
-        render: (data) => (
-            <Card icon={CurrencyDollarSimple} data={data} text="valor total do estoque" type="price" />
+        render: (data, delay = 0) => (
+            <Card icon={CurrencyDollarSimple} data={data} text="valor total do estoque" type="price" delay={delay} />
         ),
     },
     productsCountByCategory: {
@@ -65,6 +66,11 @@ const dashboardsController: Record<string, DashboardRenderer> = {
             <LowStockProducts data={data} />
         ),
     },
+    productPriceHistory: {
+        render: () => (
+            <ProductPriceHistoryWithSelect />
+        ),
+    },
 };
 
 export const Dashboard = ({ dataDashboards, graphs }: DashboardProps) => {
@@ -72,6 +78,8 @@ export const Dashboard = ({ dataDashboards, graphs }: DashboardProps) => {
 
     const fetchData = async () => {
         const loaded: ReactNode[][] = [];
+        let cardIndex = 0; 
+        const DELAY_BETWEEN_CARDS = 100; 
 
         for (const row of dataDashboards) {
             const rowComponents: ReactNode[] = [];
@@ -82,17 +90,26 @@ export const Dashboard = ({ dataDashboards, graphs }: DashboardProps) => {
 
                 try {
                     let component;
+                    
+                    const isCard = ["productsTotalStock", "productsTotalCount", "productsCategoriesCount", "productsAveragePrice", "productsTotalPrice"].includes(key);
+                    const delay = isCard ? cardIndex * DELAY_BETWEEN_CARDS : 0;
+                    
                     if (controller.fetch) {
                         const data = await controller.fetch();
-                        component = controller.render(data);
+                        component = isCard ? controller.render(data, delay) : controller.render(data);
                     } else {
-                        component = controller.render();
+                        component = isCard ? controller.render(undefined, delay) : controller.render();
                     }
+                    
+                    if (isCard) cardIndex++; 
                     rowComponents.push(component);
                 } catch (error: any) {
                     console.error(`Erro ao buscar ${key}:`, error);
                     const fallbackData = 0;
-                    const component = controller.render(fallbackData);
+                    const isCard = ["productsTotalStock", "productsTotalCount", "productsCategoriesCount", "productsAveragePrice", "productsTotalPrice"].includes(key);
+                    const delay = isCard ? cardIndex * DELAY_BETWEEN_CARDS : 0;
+                    const component = isCard ? controller.render(fallbackData, delay) : controller.render(fallbackData);
+                    if (isCard) cardIndex++; 
                     rowComponents.push(component);
                 }
             }

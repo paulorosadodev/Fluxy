@@ -4,7 +4,7 @@ import { formatMoney, formatStock } from "../../../utils";
 
 import { useData } from "../../../hooks/useData";
 import { EntityForm } from "../../../components/EntityForm";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 import { PopUp } from "../../../components/PopUp";
 
@@ -26,6 +26,15 @@ export default function ProductsDashboard() {
     const [deletePopUpMessage, setDeletePopUpMessage] = useState("");
     const [deletePopUpType, setDeletePopUpType] = useState<"success" | "error">("error");
     const [selectedRow, setSelectedRow] = useState(""); 
+    const [showGraphs, setShowGraphs] = useState(false);
+
+    useEffect(() => {
+        if (products.length > 0) {
+            const timeout = setTimeout(() => setShowGraphs(true), 500); 
+            return () => clearTimeout(timeout);
+        }
+        setShowGraphs(false);
+    }, [products.length]);
 
     const columns: Column<Product>[] = [
         { header: "Código EA", accessor: "codEa" },
@@ -97,9 +106,6 @@ export default function ProductsDashboard() {
         }
     }
 
-    console.log("oi");
-    console.log(products);
-
     return (
         <>  
             {
@@ -118,10 +124,11 @@ export default function ProductsDashboard() {
                                 ]
                             } />
                             <DataTable deleteRow={deleteProduct} data={products} columns={columns} entityName="produtos" popUpController={setShowPopUp} deletePopUpController={setShowDeletePopUp} setDeletePopUpMessage={setDeletePopUpMessage} setDeletePopUpType={setDeletePopUpType} formControllers={formControllers} selectedRowController={setSelectedRow}/>
-                            {products.length > 0 && 
+                            {showGraphs && 
                             <Dashboard graphs={true} dataDashboards={
-                                [
-                                    ["productsCountByCategory", "topTierProducts", "lowStockProducts"],
+                                [   
+                                    ["productsCountByCategory", "lowStockProducts", "topTierProducts"],
+                                    ["productPriceHistory"]
                                 ]
                             } />
                             }

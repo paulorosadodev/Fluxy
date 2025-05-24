@@ -7,15 +7,16 @@ type CardProps = {
     text?: string;
     color?: "orange" | "red" | "violet" | "green" | "black";
     type?: string;
+    delay?: number;
 }
 
-export const Card = ({icon: Icon, data, text, color="black", type}: CardProps) => {
+export const Card = ({icon: Icon, data, text, color="black", type, delay = 0}: CardProps) => {
 
     const isPrice = type === "price";
-    const displayValue = isPrice ? < AnimatedNumber value={data ?? 0} isMoney={true} /> : <AnimatedNumber value={data ?? 0} />;
+    const displayValue = isPrice ? <AnimatedNumber value={data ?? 0} isMoney={true} /> : <AnimatedNumber value={data ?? 0} />;
 
     return (
-        <CardWrapper>
+        <CardWrapper delay={delay}>
             <Icon id="icon" className={color} size={28} />
             <span id="data" className={color}>
                 {displayValue}

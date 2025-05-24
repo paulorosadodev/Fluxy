@@ -115,6 +115,13 @@ export const DataTableWrapper = styled.div`
         border-radius: 8px;
     }
 
+    thead {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background-color: ${(props) => props.theme["purple-300"]};
+    }
+
     tr {
         background-color: white;
     }
@@ -123,6 +130,10 @@ export const DataTableWrapper = styled.div`
     th, td {
         padding: 0.5rem;
         text-align: left;
+    }
+
+    th {
+        border: none; /* Remove bordas do cabeçalho */
     }
     
     td {
@@ -154,6 +165,9 @@ export const DataTableWrapper = styled.div`
 
     @media (max-width: 880px) {
 
+        thead {
+            position: static;
+        }
         
         .responsive-table {
             border: 0;
