@@ -10,7 +10,6 @@ export function DeliveriesByMonth({ height = 320 }: DeliveriesByMonthProps) {
     const currentYear = currentDate.getFullYear();
     const currentMonth = currentDate.getMonth() + 1;
 
-    // Função para obter os dados de entregas para diferentes períodos
     const fetchDeliveriesData = async (period: string) => {
         const monthsToFetch = [];
         const startMonth = { month: currentMonth, year: currentYear };
@@ -36,12 +35,10 @@ export function DeliveriesByMonth({ height = 320 }: DeliveriesByMonthProps) {
             monthsCount = 3;
         }
 
-        // Gerar os pares mês/ano a serem buscados
         for (let i = 0; i < monthsCount; i++) {
-            let targetMonth = startMonth.month - i;
+            let targetMonth = startMonth.month - i; 
             let targetYear = startMonth.year;
 
-            // Ajustar mês e ano para valores válidos
             while (targetMonth <= 0) {
                 targetMonth += 12;
                 targetYear -= 1;
@@ -50,7 +47,6 @@ export function DeliveriesByMonth({ height = 320 }: DeliveriesByMonthProps) {
             monthsToFetch.push({ month: targetMonth, year: targetYear });
         }
 
-        // Buscar dados para cada mês e ano
         const promises = monthsToFetch.map(({ month, year }) => 
             fetchDeliveriesByMonth(month, year)
                 .then(count => ({
@@ -64,8 +60,7 @@ export function DeliveriesByMonth({ height = 320 }: DeliveriesByMonthProps) {
         );
 
         const results = await Promise.all(promises);
-        
-        // Ordenar por data (mais antiga para mais recente)
+
         return results.sort((a, b) => a.date.localeCompare(b.date));
     };
 
@@ -78,8 +73,9 @@ export function DeliveriesByMonth({ height = 320 }: DeliveriesByMonthProps) {
     ];
 
     const formatMonth = (dateString: string) => {
-        const date = new Date(dateString);
-        return new Intl.DateTimeFormat("pt-BR", { month: "short", year: "numeric" }).format(date);
+        const [year, month] = dateString.split("-").map(Number);
+        const correctedDate = new Date(year, month - 1); 
+        return new Intl.DateTimeFormat("pt-BR", { month: "short", year: "numeric" }).format(correctedDate);
     };
 
     return (
