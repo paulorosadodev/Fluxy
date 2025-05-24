@@ -3,8 +3,9 @@ import { DashboardsWrapper, DashboardWrapper, DashboardRow } from "./styles";
 import { fetchAveragePrice, fetchCategoriesCount, fetchLowStockProducts, fetchProductsCount, fetchProductsCountByCategory, fetchProductsTotalStock, fetchTotalPrice} from "../../services/endpoints/product/dashboard";
 import { fetchEmployeesCount, fetchTotalSalaries, fetchEmployeeCountByShift, fetchEmployeeCountByRole } from "../../services/endpoints/employee/dashboard";
 import { fetchSuppliersCount } from "../../services/endpoints/supplier/dashboard";
+import { fetchTotalDeliveries } from "../../services/endpoints/supply/dashboard";
 import { Card } from "../DashboardContents/Card";
-import { Package, Notebook, Tag, CurrencyCircleDollar, CurrencyDollarSimple, Users, UserCircle, Buildings, User, Money, Truck} from "phosphor-react";
+import { Package, Notebook, Tag, CurrencyCircleDollar, CurrencyDollarSimple, Users, UserCircle, Buildings, User, Money, Truck, CaretCircleDoubleDown} from "phosphor-react";
 import { ProductsByCategoryChart } from "../DashboardContents/ProductsByCategoryChart";
 import { EmployeesByShiftChart } from "../DashboardContents/EmployeesByShiftChart";
 import { EmployeesByRoleChart } from "../DashboardContents/EmployeesByRoleChart";
@@ -12,6 +13,7 @@ import { TopTierProducts } from "../DashboardContents/TopTierProducts";
 import { TopTierClients } from "../DashboardContents/TopTierClients";
 import { TopTierEmployees } from "../DashboardContents/TopTierEmployees";
 import { TopTierSuppliers } from "../DashboardContents/TopTierSuppliers";
+import { TopTierDeliveries } from "../DashboardContents/TopTierDeliveries";
 import { LowStockProducts } from "../DashboardContents/LowStockProducts";
 import { ProductPriceHistoryWithSelect } from "../DashboardContents/ProductPriceHistory/ProductPriceHistoryWithSelect";
 import { fetchTotalClientsByCity, fetchTotalClients, fetchTotalPhysicalClients, fetchTotalJuridicalClients } from "../../services/endpoints/customer/dashboard";
@@ -94,6 +96,17 @@ const dashboardsController: Record<string, DashboardRenderer> = {
     topTierSuppliers: {
         render: () => (
             <TopTierSuppliers />
+        ),
+    },
+    topTierDeliveries: {
+        render: () => (
+            <TopTierDeliveries />
+        ),
+    },
+    deliveriesTotalCount: {
+        fetch: fetchTotalDeliveries,
+        render: (data, delay = 0) => (
+            <Card icon={CaretCircleDoubleDown} data={data} text={data !== 1 ? "entregas realizadas" : "entrega realizada"} delay={delay} />
         ),
     },
     suppliersTotalCount: {
@@ -180,7 +193,8 @@ export const Dashboard = ({ dataDashboards, graphs }: DashboardProps) => {
                         "clientsJuridicalCount",
                         "employeesTotalCount",
                         "employeesTotalSalaries",
-                        "suppliersTotalCount"
+                        "suppliersTotalCount",
+                        "deliveriesTotalCount"
                     ].includes(key);
                     const delay = isCard ? cardIndex * DELAY_BETWEEN_CARDS : 0;
                     
@@ -207,7 +221,8 @@ export const Dashboard = ({ dataDashboards, graphs }: DashboardProps) => {
                         "clientsJuridicalCount",
                         "employeesTotalCount",
                         "employeesTotalSalaries",
-                        "suppliersTotalCount"
+                        "suppliersTotalCount",
+                        "deliveriesTotalCount"
                     ].includes(key);
                     const delay = isCard ? cardIndex * DELAY_BETWEEN_CARDS : 0;
                     const component = isCard ? controller.render(fallbackData, delay) : controller.render(fallbackData);

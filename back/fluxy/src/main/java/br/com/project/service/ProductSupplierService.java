@@ -2,6 +2,7 @@ package br.com.project.service;
 
 import br.com.project.dto.request.ProductSupplierRequestDTO;
 import br.com.project.dto.response.ProductSupplierResponseDTO;
+import br.com.project.dto.response.TopTierProductSupplyDTO;
 import br.com.project.model.ProductSupplier;
 import br.com.project.repository.ProductSupplierRepository;
 import br.com.project.repository.SupplierRepository;
@@ -74,11 +75,19 @@ public class ProductSupplierService {
         }
     }
 
-    public List<ProductSupplier> getMostExpensiveDeliveries() {
+    public List<TopTierProductSupplyDTO> getMostExpensiveDeliveries() {
         try {
             return repository.findMostExpensiveDeliveries();
         } catch (Exception e) {
             throw new RuntimeException("Erro ao buscar entregas mais caras: " + e.getMessage(), e);
+        }
+    }
+
+    public List<TopTierProductSupplyDTO> getLeastExpensiveDeliveries() {
+        try {
+            return repository.findLeastExpensiveDeliveries();
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao buscar entregas mais baratas: " + e.getMessage(), e);
         }
     }
 

@@ -216,7 +216,7 @@ export default function SuppliersDashboard() {
 
                             <Dashboard dataDashboards={
                                 [
-                                    ["suppliersTotalCount"],
+                                    ["suppliersTotalCount", "deliveriesTotalCount"],
                                 ]
                             } />
 
@@ -228,7 +228,7 @@ export default function SuppliersDashboard() {
 
                             <Dashboard dataDashboards={
                                 [
-                                    ["topTierSuppliers"],
+                                    ["topTierSuppliers", "topTierDeliveries"],
                                 ]
                             } />
 

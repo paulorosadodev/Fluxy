@@ -1,5 +1,6 @@
 package br.com.project.repository;
 
+import br.com.project.dto.response.TopTierProductSupplyDTO;
 import br.com.project.model.ProductSupplier;
 import br.com.project.service.ProductSupplierService;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -47,13 +48,40 @@ public class ProductSupplierRepository {
         return total != null ? total : 0.0;
     }
 
-    public List<ProductSupplier> findMostExpensiveDeliveries() {
+    public List<TopTierProductSupplyDTO> findMostExpensiveDeliveries() {
         String sql = """
-        SELECT * FROM entrega
-        ORDER BY valor_pago DESC
+        SELECT p.nome AS nome_produto, e.qnt_fornecida, e.valor_pago
+        FROM entrega e
+        JOIN produto p ON e.fk_produto_id = p.id_produto
+        ORDER BY e.valor_pago DESC
+        LIMIT 5
     """;
 
-        return jdbcTemplate.query(sql, new ProductSupplierRowMapper());
+        return jdbcTemplate.query(sql, (rs, rowNum) ->
+                new TopTierProductSupplyDTO(
+                        rs.getString("nome_produto"),
+                        rs.getInt("qnt_fornecida"),
+                        rs.getDouble("valor_pago")
+                )
+        );
+    }
+
+    public List<TopTierProductSupplyDTO> findLeastExpensiveDeliveries() {
+        String sql = """
+        SELECT p.nome AS nome_produto, e.qnt_fornecida, e.valor_pago
+        FROM entrega e
+        JOIN produto p ON e.fk_produto_id = p.id_produto
+        ORDER BY e.valor_pago ASC
+        LIMIT 5
+    """;
+
+        return jdbcTemplate.query(sql, (rs, rowNum) ->
+                new TopTierProductSupplyDTO(
+                        rs.getString("nome_produto"),
+                        rs.getInt("qnt_fornecida"),
+                        rs.getDouble("valor_pago")
+                )
+        );
     }
 
     public List<ProductSupplier> findAll() {

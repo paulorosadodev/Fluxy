@@ -3,6 +3,7 @@ package br.com.project.controller;
 import br.com.project.dto.request.MonthYearRequest;
 import br.com.project.dto.request.ProductSupplierRequestDTO;
 import br.com.project.dto.response.ProductSupplierResponseDTO;
+import br.com.project.dto.response.TopTierProductSupplyDTO;
 import br.com.project.model.ProductSupplier;
 import br.com.project.service.ProductSupplierService;
 import org.springframework.http.ResponseEntity;
@@ -85,12 +86,22 @@ public class ProductSupplierController {
     }
 
     @GetMapping("/mais-caras")
-    public ResponseEntity<List<ProductSupplier>> getMostExpensiveDeliveries() {
+    public ResponseEntity<List<TopTierProductSupplyDTO>> getMostExpensiveDeliveries() {
         try {
-            List<ProductSupplier> entregas = service.getMostExpensiveDeliveries();
+            List<TopTierProductSupplyDTO> entregas = service.getMostExpensiveDeliveries();
             return ResponseEntity.ok(entregas);
         } catch (Exception e) {
             throw new ResponseStatusException(INTERNAL_SERVER_ERROR, "Erro ao buscar entregas mais caras", e);
+        }
+    }
+
+    @GetMapping("/mais-barata")
+    public ResponseEntity<List<TopTierProductSupplyDTO>> getLeastExpensiveDeliveries() {
+        try {
+            List<TopTierProductSupplyDTO> entregas = service.getLeastExpensiveDeliveries();
+            return ResponseEntity.ok(entregas);
+        } catch (Exception e) {
+            throw new ResponseStatusException(INTERNAL_SERVER_ERROR, "Erro ao buscar entregas mais baratas", e);
         }
     }
 

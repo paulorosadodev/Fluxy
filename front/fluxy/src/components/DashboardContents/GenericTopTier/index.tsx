@@ -21,6 +21,10 @@ type TopTierConfig = {
     valueFormatter?: (value: string | number) => string;
     valueKey?: string;
     nameKey?: string;
+    customDisplayFormatter?: (item: any) => {
+        leftDisplay: string;
+        rightDisplay: string;
+    };
 };
 
 type TopTierProps = {
@@ -59,6 +63,7 @@ export const GenericTopTier = ({
     const valueKey = config.valueKey || "value";
     const nameKey = config.nameKey || "name";
     const valueFormatter = config.valueFormatter || ((value: string | number) => String(value));
+    const customDisplayFormatter = config.customDisplayFormatter;
 
     useEffect(() => {
         const fetchData = async () => {
@@ -99,21 +104,30 @@ export const GenericTopTier = ({
                     initial="hidden"
                     animate="visible"
                 >
-                    {currentData.map((item, index) => (
-                        <MotionListItem key={index} variants={itemVariants}>
-                            <span>
-                                <Icon 
-                                    size={20} 
-                                    weight="bold" 
-                                    className={`arrow ${sortField === config.sortOptions.high.value ? "up" : "down"}`} 
-                                />
-                                <strong>{valueFormatter(item[valueKey])}</strong>
-                            </span>
-                            <span>
-                                {item[nameKey]}
-                            </span>
-                        </MotionListItem>
-                    ))}
+                    {currentData.map((item, index) => {
+                        const displayData = customDisplayFormatter 
+                            ? customDisplayFormatter(item)
+                            : {
+                                leftDisplay: valueFormatter(item[valueKey]),
+                                rightDisplay: item[nameKey]
+                            };
+                        
+                        return (
+                            <MotionListItem key={index} variants={itemVariants}>
+                                <span>
+                                    <Icon 
+                                        size={20} 
+                                        weight="bold" 
+                                        className={`arrow ${sortField === config.sortOptions.high.value ? "up" : "down"}`} 
+                                    />
+                                    <strong>{displayData.leftDisplay}</strong>
+                                </span>
+                                <span>
+                                    {displayData.rightDisplay}
+                                </span>
+                            </MotionListItem>
+                        );
+                    })}
                 </MotionListWrapper>
             </TopTierWrapper>
         ) : (
