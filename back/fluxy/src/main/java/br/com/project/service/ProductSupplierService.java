@@ -66,6 +66,14 @@ public class ProductSupplierService {
         }
     }
 
+    public Double getTotalDeliveryCostByMonthAndYear(int month, int year) {
+        try {
+            return repository.sumDeliveryCostsByMonthAndYear(month, year);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
     public List<ProductSupplier> getMostExpensiveDeliveries() {
         try {
             return repository.findMostExpensiveDeliveries();

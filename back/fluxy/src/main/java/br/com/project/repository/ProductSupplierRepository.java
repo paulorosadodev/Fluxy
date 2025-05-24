@@ -41,6 +41,12 @@ public class ProductSupplierRepository {
         return jdbcTemplate.queryForObject(sql, Integer.class, month, year);
     }
 
+    public Double sumDeliveryCostsByMonthAndYear(int month, int year) {
+        String sql = "SELECT SUM(valor_pago) FROM entrega WHERE MONTH(data_reposicao) = ? AND YEAR(data_reposicao) = ?";
+        Double total = jdbcTemplate.queryForObject(sql, Double.class, month, year);
+        return total != null ? total : 0.0;
+    }
+
     public List<ProductSupplier> findMostExpensiveDeliveries() {
         String sql = """
         SELECT * FROM entrega

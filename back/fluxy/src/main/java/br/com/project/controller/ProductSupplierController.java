@@ -46,7 +46,7 @@ public class ProductSupplierController {
     }
 
     // é preciso enviar o mes e o ano pra esse funcionar
-    @PostMapping("/total-mensal")
+    @PostMapping("/monthly-total")
     public ResponseEntity<Integer> getDeliveriesByMonth(@RequestBody MonthYearRequest request) {
         try {
             int mes = request.getMonth();
@@ -62,6 +62,25 @@ public class ProductSupplierController {
             throw e;
         } catch (Exception e) {
             throw new ResponseStatusException(INTERNAL_SERVER_ERROR, "Erro ao obter entregas: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/monthly-total-cost")
+    public ResponseEntity<Double> getTotalDeliveryCostByMonth(@RequestBody MonthYearRequest request) {
+        try {
+            int mes = request.getMonth();
+            int ano = request.getYear();
+
+            if (mes < 1 || mes > 12) {
+                throw new ResponseStatusException(BAD_REQUEST, "O mês deve estar entre 1 e 12.");
+            }
+
+            Double total = service.getTotalDeliveryCostByMonthAndYear(mes, ano);
+            return ResponseEntity.ok(total);
+        } catch (ResponseStatusException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ResponseStatusException(INTERNAL_SERVER_ERROR, "Erro ao obter custo total das entregas: " + e.getMessage());
         }
     }
 
