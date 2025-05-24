@@ -11,7 +11,7 @@ export const TopTierClients = () => {
 
     const config = {
         title: {
-            high: "Clientes Top",
+            high: "Clientes com Mais Compras",
             low: "Clientes com Menos Compras"
         },
         sortOptions: {
@@ -19,7 +19,7 @@ export const TopTierClients = () => {
             low: { value: "low-tier", label: "Menos compras" }
         },
         icon: Users,
-        valueFormatter: (value: string | number) => `${value} compras`,
+        valueFormatter: (value: string | number) => `${value} ${Number(value) === 1 ? "compra" : "compras"}`,
         valueKey: "totalPurchases",
         nameKey: "name"
     };

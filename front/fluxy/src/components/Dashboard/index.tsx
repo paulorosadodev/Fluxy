@@ -1,8 +1,9 @@
 import { ReactNode, useEffect, useState } from "react";
 import { DashboardsWrapper, DashboardWrapper, DashboardRow } from "./styles";
 import { fetchAveragePrice, fetchCategoriesCount, fetchLowStockProducts, fetchProductsCount, fetchProductsCountByCategory, fetchProductsTotalStock, fetchTotalPrice} from "../../services/endpoints/product/dashboard";
+import { fetchEmployeesCount, fetchTotalSalaries } from "../../services/endpoints/employee/dashboard";
 import { Card } from "../DashboardContents/Card";
-import { Package, Notebook, Tag, CurrencyCircleDollar, CurrencyDollarSimple, Users, UserCircle, Buildings} from "phosphor-react";
+import { Package, Notebook, Tag, CurrencyCircleDollar, CurrencyDollarSimple, Users, UserCircle, Buildings, User, Money} from "phosphor-react";
 import { ProductsByCategoryChart } from "../DashboardContents/ProductsByCategoryChart";
 import { TopTierProducts } from "../DashboardContents/TopTierProducts";
 import { TopTierClients } from "../DashboardContents/TopTierClients";
@@ -103,6 +104,18 @@ const dashboardsController: Record<string, DashboardRenderer> = {
             <Card icon={Buildings} data={data} text={data !== 1 ? "clientes jurídicos" : "cliente jurídico"} delay={delay} />
         ),
     },
+    employeesTotalCount: {
+        fetch: fetchEmployeesCount,
+        render: (data, delay = 0) => (
+            <Card icon={User} data={data} text={data !== 1 ? "funcionários cadastrados" : "funcionário cadastrado"} delay={delay} />
+        ),
+    },
+    employeesTotalSalaries: {
+        fetch: fetchTotalSalaries,
+        render: (data, delay = 0) => (
+            <Card icon={Money} data={data} text="folha salarial mensal" type="price" delay={delay} />
+        ),
+    },
 };
 
 export const Dashboard = ({ dataDashboards, graphs }: DashboardProps) => {
@@ -131,7 +144,9 @@ export const Dashboard = ({ dataDashboards, graphs }: DashboardProps) => {
                         "productsTotalPrice",
                         "clientsTotalCount",
                         "clientsPhysicalCount", 
-                        "clientsJuridicalCount"
+                        "clientsJuridicalCount",
+                        "employeesTotalCount",
+                        "employeesTotalSalaries"
                     ].includes(key);
                     const delay = isCard ? cardIndex * DELAY_BETWEEN_CARDS : 0;
                     
@@ -155,7 +170,9 @@ export const Dashboard = ({ dataDashboards, graphs }: DashboardProps) => {
                         "productsTotalPrice",
                         "clientsTotalCount",
                         "clientsPhysicalCount", 
-                        "clientsJuridicalCount"
+                        "clientsJuridicalCount",
+                        "employeesTotalCount",
+                        "employeesTotalSalaries"
                     ].includes(key);
                     const delay = isCard ? cardIndex * DELAY_BETWEEN_CARDS : 0;
                     const component = isCard ? controller.render(fallbackData, delay) : controller.render(fallbackData);
