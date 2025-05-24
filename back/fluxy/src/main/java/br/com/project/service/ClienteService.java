@@ -113,6 +113,14 @@ public class ClienteService {
         }
     }
 
+    public List<TopTierClientDTO> getLowTierClientsByPurchases() {
+        try {
+            return clienteRepository.getLowTierClientByPurchases();
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
     public int getTotalPhysicalClientsCount() {
         try {
             return clienteRepository.getTotalPhysicalClientsCount();
@@ -129,9 +137,9 @@ public class ClienteService {
         }
     }
 
-    public List<TopTierClientDTO> getMostActiveClients() {
+    public List<TopTierClientDTO> getActiveClients() {
         try {
-            return clienteRepository.getMostActiveClients();
+            return clienteRepository.getActiveClients();
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }

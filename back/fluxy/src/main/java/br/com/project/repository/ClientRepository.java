@@ -154,6 +154,26 @@ public class ClientRepository {
         }
     }
 
+    public List<TopTierClientDTO> getLowTierClientByPurchases() {
+        try {
+            String sql = "SELECT " +
+                    "    COALESCE(pf.nome, pj.razao_social) AS nome_cliente, " +
+                    "    COUNT(co.numero) AS total_compras " +
+                    "FROM cliente c " +
+                    "         LEFT JOIN fisico pf ON c.id_cliente = pf.fk_cliente_id " +
+                    "         LEFT JOIN juridico pj ON c.id_cliente = pj.fk_cliente_id " +
+                    "         JOIN compra co ON c.id_cliente = co.fk_cliente_id " +
+                    "GROUP BY nome_cliente " +
+                    "ORDER BY total_compras ASC";
+            return jdbcTemplate.query(sql, (rs, rowNum) -> new TopTierClientDTO(
+                    rs.getString("nome_cliente"),
+                    rs.getInt("totalPurchases")
+            ));
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
     public int getTotalPhysicalClientsCount() {
         try {
             String sql = "SELECT COUNT(*) FROM cliente " +
@@ -176,14 +196,18 @@ public class ClientRepository {
         }
     }
 
-    public List<TopTierClientDTO> getMostActiveClients() {
+    public List<TopTierClientDTO> getActiveClients() {
         try {
-            String sql = "SELECT pf.nome, COUNT(*) AS total " +
-                    "FROM fisico pf " +
-                    "JOIN cliente c ON pf.fk_cliente_id = c.id_cliente " +
-                    "GROUP BY pf.nome " +
-                    "ORDER BY TOTAL DESC " +
-                    "LIMIT 5";
+            String sql = "SELECT DISTINCT c.id_cliente, " +
+                            "COALESCE(pf.nome, pj.razao_social) AS nome_cliente " +
+                            "MAX(co.data) AS ultima_compra " +
+                         "FROM cliente c " +
+                             "JOIN compra co ON  c.id_cliente = co.fk_cliente_id " +
+                             "LEFT JOIN fisico pf ON c.id_cliente = pf.fk_cliente_id " +
+                             "LEFT JOIN juridico pj ON c.id_cliente = pj.fk_cliente_id " +
+                         "WHERE co.data >= DATE_SUB(NOW(), INTERVAL 30 DAY) " +
+                         "GROUP BY c.id_cliente, nome_cliente " +
+                         "ORDER BY ultima_compra DESC";
             return jdbcTemplate.query(sql, (rs, rowNum) -> new TopTierClientDTO(
                     rs.getString("name"),
                     rs.getInt("totalPurchases")

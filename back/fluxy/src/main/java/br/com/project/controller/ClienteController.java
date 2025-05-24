@@ -102,6 +102,16 @@ public class ClienteController {
         }
     }
 
+    @GetMapping("/low-tier-clients")
+    public ResponseEntity<?> getLowTierClientsByPurchases() {
+        try {
+            List<TopTierClientDTO> lowTierClients = clienteService.getLowTierClientsByPurchases();
+            return ResponseEntity.ok(lowTierClients);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao buscar clientes de nível inferior por compras: " + e.getMessage());
+        }
+    }
+
     @GetMapping("/total-physical-clients")
     public ResponseEntity<?> getTotalPhysicalClientsCount() {
         try {
@@ -123,12 +133,12 @@ public class ClienteController {
     }
 
     @GetMapping("/most-active-clients")
-    public ResponseEntity<?> getMostActiveClients() {
+    public ResponseEntity<?> getActiveClients() {
         try {
-            List<TopTierClientDTO> mostActiveClients = clienteService.getMostActiveClients();
+            List<TopTierClientDTO> mostActiveClients = clienteService.getActiveClients();
             return ResponseEntity.ok(mostActiveClients);
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body("Erro ao buscar clientes mais ativos: " + e.getMessage());
+            return ResponseEntity.internalServerError().body("Erro ao buscar clientes ativos: " + e.getMessage());
         }
     }
 }
