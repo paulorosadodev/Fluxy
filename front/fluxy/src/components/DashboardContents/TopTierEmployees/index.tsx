@@ -12,11 +12,11 @@ export const TopTierEmployees = () => {
             low: "Funcionários que Venderam Menos"
         },
         sortOptions: {
-            high: { value: "most-purchases", label: "Mais compras" },
-            low: { value: "least-purchases", label: "Menos compras" }
+            high: { value: "most-purchases", label: "Mais vendas" },
+            low: { value: "least-purchases", label: "Menos vendas" }
         },
         icon: ShoppingCart,
-        valueFormatter: (value: string | number) => `${value} ${Number(value) === 1 ? "compra" : "compras"}`,
+        valueFormatter: (value: string | number) => `${value} ${Number(value) === 1 ? "venda" : "vendas"}`,
         valueKey: "totalPurchases",
         nameKey: "name"
     };

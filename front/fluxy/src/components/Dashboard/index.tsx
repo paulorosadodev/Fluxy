@@ -3,9 +3,9 @@ import { DashboardsWrapper, DashboardWrapper, DashboardRow } from "./styles";
 import { fetchAveragePrice, fetchCategoriesCount, fetchLowStockProducts, fetchProductsCount, fetchProductsCountByCategory, fetchProductsTotalStock, fetchTotalPrice} from "../../services/endpoints/product/dashboard";
 import { fetchEmployeesCount, fetchTotalSalaries, fetchEmployeeCountByShift, fetchEmployeeCountByRole } from "../../services/endpoints/employee/dashboard";
 import { fetchSuppliersCount } from "../../services/endpoints/supplier/dashboard";
-import { fetchTotalDeliveries, fetchTotalDeliveryCostByMonth } from "../../services/endpoints/supply/dashboard";
+import { fetchTotalDeliveries, fetchTotalDeliveryCostByMonth, fetchDeliveryMonthAverageCost, fetchDeliveriesByMonth, fetchTotalCost, fetchTotalAverageCost } from "../../services/endpoints/supply/dashboard";
 import { Card } from "../DashboardContents/Card";
-import { Package, Notebook, Tag, CurrencyCircleDollar, CurrencyDollarSimple, Users, UserCircle, Buildings, User, Money, Truck, CaretCircleDoubleDown, ShoppingCart} from "phosphor-react";
+import { Package, Notebook, Tag, CurrencyCircleDollar, CurrencyDollarSimple, Users, UserCircle, Buildings, User, Money, Truck, CaretCircleDoubleDown} from "phosphor-react";
 import { ProductsByCategoryChart } from "../DashboardContents/ProductsByCategoryChart";
 import { EmployeesByShiftChart } from "../DashboardContents/EmployeesByShiftChart";
 import { EmployeesByRoleChart } from "../DashboardContents/EmployeesByRoleChart";
@@ -118,7 +118,41 @@ const dashboardsController: Record<string, DashboardRenderer> = {
             return await fetchTotalDeliveryCostByMonth(currentMonth, currentYear);
         },
         render: (data, delay = 0) => (
-            <Card icon={ShoppingCart} data={data} text="abastecimento mensal" type="price" delay={delay} />
+            <Card icon={CurrencyDollarSimple} data={data} text="custo este mês" type="price" delay={delay} />
+        ),
+    },
+    deliveriesMonthlyAverageCost: {
+        fetch: async () => {
+            const currentDate = new Date();
+            const currentMonth = currentDate.getMonth() + 1; 
+            const currentYear = currentDate.getFullYear();
+            return await fetchDeliveryMonthAverageCost(currentMonth, currentYear);
+        },
+        render: (data, delay = 0) => (
+            <Card icon={CurrencyCircleDollar} data={data} text="custo médio este mês" type="price" delay={delay} />
+        ),
+    },
+    deliveriesMonthlyCount: {
+        fetch: async () => {
+            const currentDate = new Date();
+            const currentMonth = currentDate.getMonth() + 1; 
+            const currentYear = currentDate.getFullYear();
+            return await fetchDeliveriesByMonth(currentMonth, currentYear);
+        },
+        render: (data, delay = 0) => (
+            <Card icon={CaretCircleDoubleDown} data={data} text={data !== 1 ? "entregas este mês" : "entrega este mês"} delay={delay} />
+        ),
+    },
+    deliveriesTotalCost: {
+        fetch: fetchTotalCost,
+        render: (data, delay = 0) => (
+            <Card icon={CurrencyDollarSimple} data={data} text="custo total" type="price" delay={delay} />
+        ),
+    },
+    deliveriesTotalAverageCost: {
+        fetch: fetchTotalAverageCost,
+        render: (data, delay = 0) => (
+            <Card icon={CurrencyCircleDollar} data={data} text="custo médio total" type="price" delay={delay} />
         ),
     },
     suppliersTotalCount: {
@@ -212,7 +246,11 @@ export const Dashboard = ({ dataDashboards, graphs }: DashboardProps) => {
                         "employeesTotalSalaries",
                         "suppliersTotalCount",
                         "deliveriesTotalCount",
-                        "deliveriesMonthlyCost"
+                        "deliveriesMonthlyCost",
+                        "deliveriesMonthlyAverageCost",
+                        "deliveriesMonthlyCount",
+                        "deliveriesTotalCost",
+                        "deliveriesTotalAverageCost"
                     ].includes(key);
                     const delay = isCard ? cardIndex * DELAY_BETWEEN_CARDS : 0;
                     
@@ -241,7 +279,11 @@ export const Dashboard = ({ dataDashboards, graphs }: DashboardProps) => {
                         "employeesTotalSalaries",
                         "suppliersTotalCount",
                         "deliveriesTotalCount",
-                        "deliveriesMonthlyCost"
+                        "deliveriesMonthlyCost",
+                        "deliveriesMonthlyAverageCost",
+                        "deliveriesMonthlyCount",
+                        "deliveriesTotalCost",
+                        "deliveriesTotalAverageCost"
                     ].includes(key);
                     const delay = isCard ? cardIndex * DELAY_BETWEEN_CARDS : 0;
                     const component = isCard ? controller.render(fallbackData, delay) : controller.render(fallbackData);
