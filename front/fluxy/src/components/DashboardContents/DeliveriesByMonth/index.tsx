@@ -1,5 +1,8 @@
 import { ReusableLineChart } from "../ReusableLineChart";
-import { fetchDeliveriesByMonth } from "../../../services/endpoints/supply/dashboard";
+import { ExtraSelect } from "../ReusableLineChart/styles";
+import { useState } from "react";
+import { fetchDeliveriesByMonth, fetchTotalDeliveryCostByMonth } from "../../../services/endpoints/supply/dashboard";
+import { formatMoney } from "../../../utils";
 
 interface DeliveriesByMonthProps {
     height?: number;
@@ -9,6 +12,7 @@ export function DeliveriesByMonth({ height = 320 }: DeliveriesByMonthProps) {
     const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
     const currentMonth = currentDate.getMonth() + 1;
+    const [chartType, setChartType] = useState("quantity"); 
 
     const fetchDeliveriesData = async (period: string) => {
         const monthsToFetch = [];
@@ -48,7 +52,7 @@ export function DeliveriesByMonth({ height = 320 }: DeliveriesByMonthProps) {
         }
 
         const promises = monthsToFetch.map(({ month, year }) => 
-            fetchDeliveriesByMonth(month, year)
+            (chartType === "quantity" ? fetchDeliveriesByMonth(month, year) : fetchTotalDeliveryCostByMonth(month, year))
                 .then(count => ({
                     value: count,
                     date: `${year}-${month.toString().padStart(2, "0")}-01` 
@@ -72,23 +76,57 @@ export function DeliveriesByMonth({ height = 320 }: DeliveriesByMonthProps) {
         { value: "3-years", label: "3 anos" }
     ];
 
+    const chartTypeOptions = [
+        { value: "quantity", label: "Quantidade de Entregas" },
+        { value: "totalCost", label: "Valor Total de Entregas" }
+    ];
+
     const formatMonth = (dateString: string) => {
         const [year, month] = dateString.split("-").map(Number);
         const correctedDate = new Date(year, month - 1); 
         return new Intl.DateTimeFormat("pt-BR", { month: "short", year: "numeric" }).format(correctedDate);
     };
 
+    const handleChartTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        e.preventDefault();
+        setChartType(e.target.value);
+    };
+
+    // Configurações dinâmicas baseadas no tipo de chart
+    const chartConfig = {
+        quantity: {
+            title: "Quantidade de Entregas por Período",
+            valueFormatter: (value: number) => `${value}`,
+            tooltipLabel: "Quantidade de Entregas"
+        },
+        totalCost: {
+            title: "Valor Total de Entregas por Período",
+            valueFormatter: (value: number) => formatMoney(value),
+            tooltipLabel: "Valor Total"
+        }
+    };
+
+    const currentConfig = chartConfig[chartType as keyof typeof chartConfig];
+
     return (
         <ReusableLineChart 
-            title="Entregas por Período"
+            title={currentConfig.title}
             height={height}
             fetchData={fetchDeliveriesData}
             options={options}
             valueKey="value"
             dateKey="date"
             lineColor="#EE6C4D"
-            valueFormatter={(value: number) => `${value}`}
+            valueFormatter={currentConfig.valueFormatter}
             dateFormatter={formatMonth}
+            tooltipLabel={currentConfig.tooltipLabel}
+            extraHeaderContent={
+                <ExtraSelect value={chartType} onChange={handleChartTypeChange}>
+                    {chartTypeOptions.map(option => (
+                        <option key={option.value} value={option.value}>{option.label}</option>
+                    ))}
+                </ExtraSelect>
+            }
         />
     );
 }

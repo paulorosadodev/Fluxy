@@ -34,6 +34,8 @@ interface ReusableLineChartProps {
     lineColor?: string;
     valueFormatter?: (value: number) => string;
     dateFormatter?: (date: string) => string;
+    tooltipLabel?: string;
+    extraHeaderContent?: React.ReactNode;
 }
 
 export function ReusableLineChart({ 
@@ -45,7 +47,9 @@ export function ReusableLineChart({
     dateKey = "date",
     lineColor = "#8884d8",
     valueFormatter = (value: number) => `${value}`,
-    dateFormatter = formatDate
+    dateFormatter = formatDate,
+    tooltipLabel,
+    extraHeaderContent
 }: ReusableLineChartProps) {
     const [selectedValue, setSelectedValue] = useState<string>("");
     const [chartData, setChartData] = useState<ChartDataPoint[]>([]);
@@ -103,7 +107,10 @@ export function ReusableLineChart({
             <ChartWrapper>
                 <HeaderContainer>
                     <Title>{title}</Title>
-                    {selectInput}
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                        {extraHeaderContent}
+                        {selectInput}
+                    </div>
                 </HeaderContainer>
                 <StyledResponsiveContainer width="100%" height={height} $loading={loading}>
                     <LineChart 
@@ -127,7 +134,7 @@ export function ReusableLineChart({
                             allowDataOverflow={false}
                         />
                         <Tooltip 
-                            formatter={(value: number) => [valueFormatter(value), title]} 
+                            formatter={(value: number) => [valueFormatter(value), tooltipLabel || title]} 
                             labelFormatter={label => `Data: ${dateFormatter(label)}`} 
                         />
                         <Line 
