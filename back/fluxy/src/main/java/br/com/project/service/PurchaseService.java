@@ -81,6 +81,10 @@ public class PurchaseService {
         return purchaseRepository.findAllOrderedByCostDesc();
     }
 
+    public List<Purchase> getAllPurchasesOrderedByCostAsc() {
+        return purchaseRepository.findAllOrderedByCostAsc();
+    }
+
     public Double getTotalPurchaseCostByMonthAndYear(int month, int year) {
         try {
             return purchaseRepository.sumPurchaseCostsByMonthAndYear(month, year);

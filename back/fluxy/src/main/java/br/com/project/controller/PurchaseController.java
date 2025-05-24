@@ -73,8 +73,14 @@ public class PurchaseController {
     }
 
     @GetMapping("/most-expensive-purchases")
-    public ResponseEntity<List<Purchase>> getPurchasesOrderedByCost() {
+    public ResponseEntity<List<Purchase>> getPurchasesOrderedByCostDesc() {
         List<Purchase> purchases = purchaseService.getAllPurchasesOrderedByCostDesc();
+        return ResponseEntity.ok(purchases);
+    }
+
+    @GetMapping("/least-expensive-purchases")
+    public ResponseEntity<List<Purchase>> getPurchasesOrderedByCostAsc() {
+        List<Purchase> purchases = purchaseService.getAllPurchasesOrderedByCostAsc();
         return ResponseEntity.ok(purchases);
     }
 

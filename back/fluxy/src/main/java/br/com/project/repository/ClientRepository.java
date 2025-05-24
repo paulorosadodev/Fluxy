@@ -232,7 +232,8 @@ public class ClientRepository {
                         "    LEFT JOIN fluxy_db.fisico pf on c.id_cliente = pf.fk_cliente_id " +
                         "    LEFT JOIN fluxy_db.juridico pj on c.id_cliente = pj.fk_cliente_id " +
                         "GROUP BY c.id_cliente , nome_cliente " +
-                        "ORDER BY total_gasto DESC";
+                        "ORDER BY total_gasto DESC" +
+                        "LIMIT 5";
             return jdbcTemplate.query(sql, (rs, rowNum) -> new ClientSpendingDTO(
                     rs.getInt("client_id"),
                     rs.getString("nome_cliente"),
@@ -255,7 +256,8 @@ public class ClientRepository {
                         "    LEFT JOIN fluxy_db.fisico pf on c.id_cliente = pf.fk_cliente_id " +
                         "    LEFT JOIN fluxy_db.juridico pj on c.id_cliente = pj.fk_cliente_id " +
                         "GROUP BY c.id_cliente , nome_cliente " +
-                        "ORDER BY total_gasto ASC";
+                        "ORDER BY total_gasto ASC" +
+                        "LIMIT 5";
             return jdbcTemplate.query(sql, (rs, rowNum) -> new ClientSpendingDTO(
                     rs.getInt("client_id"),
                     rs.getString("nome_cliente"),

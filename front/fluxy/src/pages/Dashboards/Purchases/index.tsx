@@ -10,6 +10,7 @@ import { addPurchase, deletePurchase, editPurchase } from "../../../services/end
 import { z } from "zod";
 import { Lock } from "phosphor-react";
 import { useAuth } from "../../../hooks/useAuth";
+import { Dashboard } from "../../../components/Dashboard";
 
 export default function PurchasesDashboard() {
 
@@ -140,6 +141,11 @@ export default function PurchasesDashboard() {
                         <div id="main">
                             <h1>Compras</h1>
                             <DataTable deleteRow={deletePurchase} data={formattedPurchases} columns={columns} entityName="compras" popUpController={setShowPopUp} deletePopUpController={setShowDeletePopUp} setDeletePopUpMessage={setDeletePopUpMessage} setDeletePopUpType={setDeletePopUpType} formControllers={formControllers} selectedRowController={setSelectedRow}/>
+                            <Dashboard dataDashboards={
+                                [
+                                    ["topTierPurchases"]
+                                ]
+                            } />
                             {showPopUp &&
                             <PopUp type="success" message={popUpMessage} show={showPopUp} onClose={() => setShowPopUp(false)} />
                             }

@@ -78,6 +78,18 @@ public class PurchaseRepository {
         FROM compra c
         JOIN produto p ON c.fk_produto_id = p.id_produto
         ORDER BY (p.preco * c.qtd_produto) DESC
+        LIMIT 5
+    """;
+        return jdbcTemplate.query(sql, new PurchaseRowMapper());
+    }
+
+    public List<Purchase> findAllOrderedByCostAsc() {
+        String sql = """
+        SELECT c.*
+        FROM compra c
+        JOIN produto p ON c.fk_produto_id = p.id_produto
+        ORDER BY (p.preco * c.qtd_produto) ASC
+        LIMIT 5
     """;
         return jdbcTemplate.query(sql, new PurchaseRowMapper());
     }
