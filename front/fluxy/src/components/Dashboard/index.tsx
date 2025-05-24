@@ -3,9 +3,9 @@ import { DashboardsWrapper, DashboardWrapper, DashboardRow } from "./styles";
 import { fetchAveragePrice, fetchCategoriesCount, fetchLowStockProducts, fetchProductsCount, fetchProductsCountByCategory, fetchProductsTotalStock, fetchTotalPrice} from "../../services/endpoints/product/dashboard";
 import { fetchEmployeesCount, fetchTotalSalaries, fetchEmployeeCountByShift, fetchEmployeeCountByRole } from "../../services/endpoints/employee/dashboard";
 import { fetchSuppliersCount } from "../../services/endpoints/supplier/dashboard";
-import { fetchTotalDeliveries } from "../../services/endpoints/supply/dashboard";
+import { fetchTotalDeliveries, fetchTotalDeliveryCostByMonth } from "../../services/endpoints/supply/dashboard";
 import { Card } from "../DashboardContents/Card";
-import { Package, Notebook, Tag, CurrencyCircleDollar, CurrencyDollarSimple, Users, UserCircle, Buildings, User, Money, Truck, CaretCircleDoubleDown} from "phosphor-react";
+import { Package, Notebook, Tag, CurrencyCircleDollar, CurrencyDollarSimple, Users, UserCircle, Buildings, User, Money, Truck, CaretCircleDoubleDown, ShoppingCart} from "phosphor-react";
 import { ProductsByCategoryChart } from "../DashboardContents/ProductsByCategoryChart";
 import { EmployeesByShiftChart } from "../DashboardContents/EmployeesByShiftChart";
 import { EmployeesByRoleChart } from "../DashboardContents/EmployeesByRoleChart";
@@ -109,6 +109,17 @@ const dashboardsController: Record<string, DashboardRenderer> = {
             <Card icon={CaretCircleDoubleDown} data={data} text={data !== 1 ? "entregas realizadas" : "entrega realizada"} delay={delay} />
         ),
     },
+    deliveriesMonthlyCost: {
+        fetch: async () => {
+            const currentDate = new Date();
+            const currentMonth = currentDate.getMonth() + 1; 
+            const currentYear = currentDate.getFullYear();
+            return await fetchTotalDeliveryCostByMonth(currentMonth, currentYear);
+        },
+        render: (data, delay = 0) => (
+            <Card icon={ShoppingCart} data={data} text="abastecimento mensal" type="price" delay={delay} />
+        ),
+    },
     suppliersTotalCount: {
         fetch: fetchSuppliersCount,
         render: (data, delay = 0) => (
@@ -194,7 +205,8 @@ export const Dashboard = ({ dataDashboards, graphs }: DashboardProps) => {
                         "employeesTotalCount",
                         "employeesTotalSalaries",
                         "suppliersTotalCount",
-                        "deliveriesTotalCount"
+                        "deliveriesTotalCount",
+                        "deliveriesMonthlyCost"
                     ].includes(key);
                     const delay = isCard ? cardIndex * DELAY_BETWEEN_CARDS : 0;
                     
@@ -222,7 +234,8 @@ export const Dashboard = ({ dataDashboards, graphs }: DashboardProps) => {
                         "employeesTotalCount",
                         "employeesTotalSalaries",
                         "suppliersTotalCount",
-                        "deliveriesTotalCount"
+                        "deliveriesTotalCount",
+                        "deliveriesMonthlyCost"
                     ].includes(key);
                     const delay = isCard ? cardIndex * DELAY_BETWEEN_CARDS : 0;
                     const component = isCard ? controller.render(fallbackData, delay) : controller.render(fallbackData);

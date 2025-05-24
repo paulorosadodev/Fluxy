@@ -52,9 +52,9 @@ export default function AsideMenu() {
                         }
                         {role.includes("suppliers") && 
                             <li>
-                                <NavLink to="/dashboard/fornecedores" onClick={closeMenu}>
+                                <NavLink to="/dashboard/abastecimento" onClick={closeMenu}>
                                     <Truck size={32} />
-                                    <span className="menu-item">Fornecedores</span>
+                                    <span className="menu-item">Abastecimento</span>
                                 </NavLink>
                             </li>
                         }

@@ -33,7 +33,7 @@ export function Router() {
                         element={ isAuthenticated ? <MainDashboard /> : <Navigate to="/login"/> } />
                     <Route path="/dashboard/produtos" 
                         element={ isAuthenticated ? <ProductsDashboard /> : <Navigate to="/login"/> } />
-                    <Route path="/dashboard/fornecedores" 
+                    <Route path="/dashboard/abastecimento" 
                         element={ isAuthenticated ? <SuppliersDashboard /> : <Navigate to="/login"/> } />
                     <Route path="/dashboard/funcionarios" 
                         element={ isAuthenticated ? <EmployeesDashboard /> : <Navigate to="/login"/> } />
