@@ -104,8 +104,15 @@ public class ProductSupplierController {
         }
     }
 
-
-
+    @GetMapping("/total-average-cost")
+    public ResponseEntity<Double> getAverageAllDeliveriesCost() {
+        try {
+            Double average = service.getAverageAllDeliveriesCost();
+            return ResponseEntity.ok(average);
+        } catch (Exception e) {
+            throw new ResponseStatusException(INTERNAL_SERVER_ERROR, "Erro ao obter custo médio geral das entregas: " + e.getMessage());
+        }
+    }
 
     @GetMapping("/mais-caras")
     public ResponseEntity<List<TopTierProductSupplyDTO>> getMostExpensiveDeliveries() {

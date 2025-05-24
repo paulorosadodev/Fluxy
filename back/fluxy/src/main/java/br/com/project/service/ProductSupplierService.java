@@ -79,6 +79,11 @@ public class ProductSupplierService {
         return productSupplierRepository.averageDeliveryCostByMonthAndYear(month, year);
     }
 
+    public Double getAverageAllDeliveriesCost() {
+        return productSupplierRepository.averageAllDeliveriesCost();
+    }
+
+
     public List<TopTierProductSupplyDTO> getMostExpensiveDeliveries() {
         try {
             return repository.findMostExpensiveDeliveries();

@@ -54,6 +54,12 @@ public class ProductSupplierRepository {
         return average != null ? average : 0.0;
     }
 
+    public Double averageAllDeliveriesCost() {
+        String sql = "SELECT AVG(valor_pago) FROM entrega";
+        Double average = jdbcTemplate.queryForObject(sql, Double.class);
+        return average != null ? average : 0.0;
+    }
+
 
     public List<TopTierProductSupplyDTO> findMostExpensiveDeliveries() {
         String sql = """
