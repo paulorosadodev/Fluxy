@@ -2,14 +2,16 @@ import { ReactNode, useEffect, useState } from "react";
 import { DashboardsWrapper, DashboardWrapper, DashboardRow } from "./styles";
 import { fetchAveragePrice, fetchCategoriesCount, fetchLowStockProducts, fetchProductsCount, fetchProductsCountByCategory, fetchProductsTotalStock, fetchTotalPrice} from "../../services/endpoints/product/dashboard";
 import { fetchEmployeesCount, fetchTotalSalaries, fetchEmployeeCountByShift, fetchEmployeeCountByRole } from "../../services/endpoints/employee/dashboard";
+import { fetchSuppliersCount } from "../../services/endpoints/supplier/dashboard";
 import { Card } from "../DashboardContents/Card";
-import { Package, Notebook, Tag, CurrencyCircleDollar, CurrencyDollarSimple, Users, UserCircle, Buildings, User, Money} from "phosphor-react";
+import { Package, Notebook, Tag, CurrencyCircleDollar, CurrencyDollarSimple, Users, UserCircle, Buildings, User, Money, Truck} from "phosphor-react";
 import { ProductsByCategoryChart } from "../DashboardContents/ProductsByCategoryChart";
 import { EmployeesByShiftChart } from "../DashboardContents/EmployeesByShiftChart";
 import { EmployeesByRoleChart } from "../DashboardContents/EmployeesByRoleChart";
 import { TopTierProducts } from "../DashboardContents/TopTierProducts";
 import { TopTierClients } from "../DashboardContents/TopTierClients";
 import { TopTierEmployees } from "../DashboardContents/TopTierEmployees";
+import { TopTierSuppliers } from "../DashboardContents/TopTierSuppliers";
 import { LowStockProducts } from "../DashboardContents/LowStockProducts";
 import { ProductPriceHistoryWithSelect } from "../DashboardContents/ProductPriceHistory/ProductPriceHistoryWithSelect";
 import { fetchTotalClientsByCity, fetchTotalClients, fetchTotalPhysicalClients, fetchTotalJuridicalClients } from "../../services/endpoints/customer/dashboard";
@@ -89,6 +91,17 @@ const dashboardsController: Record<string, DashboardRenderer> = {
             <TopTierEmployees />
         ),
     },
+    topTierSuppliers: {
+        render: () => (
+            <TopTierSuppliers />
+        ),
+    },
+    suppliersTotalCount: {
+        fetch: fetchSuppliersCount,
+        render: (data, delay = 0) => (
+            <Card icon={Truck} data={data} text={data !== 1 ? "fornecedores cadastrados" : "fornecedor cadastrado"} delay={delay} />
+        ),
+    },
     lowStockProducts: {
         fetch: fetchLowStockProducts,
         render: (data) => (
@@ -166,7 +179,8 @@ export const Dashboard = ({ dataDashboards, graphs }: DashboardProps) => {
                         "clientsPhysicalCount", 
                         "clientsJuridicalCount",
                         "employeesTotalCount",
-                        "employeesTotalSalaries"
+                        "employeesTotalSalaries",
+                        "suppliersTotalCount"
                     ].includes(key);
                     const delay = isCard ? cardIndex * DELAY_BETWEEN_CARDS : 0;
                     
@@ -192,7 +206,8 @@ export const Dashboard = ({ dataDashboards, graphs }: DashboardProps) => {
                         "clientsPhysicalCount", 
                         "clientsJuridicalCount",
                         "employeesTotalCount",
-                        "employeesTotalSalaries"
+                        "employeesTotalSalaries",
+                        "suppliersTotalCount"
                     ].includes(key);
                     const delay = isCard ? cardIndex * DELAY_BETWEEN_CARDS : 0;
                     const component = isCard ? controller.render(fallbackData, delay) : controller.render(fallbackData);

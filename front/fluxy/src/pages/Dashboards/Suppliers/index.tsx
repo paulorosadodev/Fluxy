@@ -11,6 +11,7 @@ import { addSupplier, deleteSupplier, editSupplier } from "../../../services/end
 import { addSupply, deleteSupply, editSupply } from "../../../services/endpoints/supply";
 import { useAuth } from "../../../hooks/useAuth";
 import { Lock } from "phosphor-react";
+import { Dashboard } from "../../../components/Dashboard";
 
 export default function SuppliersDashboard() {
 
@@ -211,11 +212,25 @@ export default function SuppliersDashboard() {
                         <EntityForm type="Editar" title="Entrega" fields={supplyFields} open={isSupplyEditFormOpened} formControllers={suppliesFormControllers} popUpController={setShowPopUp} popUpMessage={setPopUpMessage} data={editSupplyData} onSubmitAPI={editSupply} />
                         }
                         <div id="main">
-                            <h1>Fornecedores</h1>
+                            <h1>Abastecimento</h1>
+
+                            <Dashboard dataDashboards={
+                                [
+                                    ["suppliersTotalCount"],
+                                ]
+                            } />
+
+                            <h2>Fornecedores</h2>
                             <DataTable deleteRow={deleteSupplier} data={suppliers} columns={columnsSuppliers} entityName="fornecedores" popUpController={setShowPopUp} formControllers={suppliersFormControllers} selectedRowController={setSupplierSelectedRow} deletePopUpController={setShowDeletePopUp} setDeletePopUpMessage={setDeletePopUpMessage} setDeletePopUpType={setDeletePopUpType} />
 
-                            <h1>Entregas</h1>
+                            <h2>Entregas</h2>
                             <DataTable deleteRow={deleteSupply} data={productSupplies} columns={columnsSupply} entityName="entregas" popUpController={setShowPopUp} formControllers={suppliesFormControllers} selectedRowController={setSupplySelectedRow} deletePopUpController={setShowDeletePopUp} setDeletePopUpMessage={setDeletePopUpMessage} setDeletePopUpType={setDeletePopUpType} />
+
+                            <Dashboard dataDashboards={
+                                [
+                                    ["topTierSuppliers"],
+                                ]
+                            } />
 
                             {showPopUp &&
                             <PopUp type="success" message={popUpMessage} show={showPopUp} onClose={() => setShowPopUp(false)} />
