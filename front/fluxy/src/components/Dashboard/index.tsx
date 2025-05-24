@@ -1,10 +1,12 @@
 import { ReactNode, useEffect, useState } from "react";
 import { DashboardsWrapper, DashboardWrapper, DashboardRow } from "./styles";
 import { fetchAveragePrice, fetchCategoriesCount, fetchLowStockProducts, fetchProductsCount, fetchProductsCountByCategory, fetchProductsTotalStock, fetchTotalPrice} from "../../services/endpoints/product/dashboard";
-import { fetchEmployeesCount, fetchTotalSalaries } from "../../services/endpoints/employee/dashboard";
+import { fetchEmployeesCount, fetchTotalSalaries, fetchEmployeeCountByShift, fetchEmployeeCountByRole } from "../../services/endpoints/employee/dashboard";
 import { Card } from "../DashboardContents/Card";
 import { Package, Notebook, Tag, CurrencyCircleDollar, CurrencyDollarSimple, Users, UserCircle, Buildings, User, Money} from "phosphor-react";
 import { ProductsByCategoryChart } from "../DashboardContents/ProductsByCategoryChart";
+import { EmployeesByShiftChart } from "../DashboardContents/EmployeesByShiftChart";
+import { EmployeesByRoleChart } from "../DashboardContents/EmployeesByRoleChart";
 import { TopTierProducts } from "../DashboardContents/TopTierProducts";
 import { TopTierClients } from "../DashboardContents/TopTierClients";
 import { LowStockProducts } from "../DashboardContents/LowStockProducts";
@@ -57,6 +59,18 @@ const dashboardsController: Record<string, DashboardRenderer> = {
         fetch: fetchProductsCountByCategory,
         render: (data) => (
             <ProductsByCategoryChart data={data} />
+        ),
+    },
+    employeesCountByShift: {
+        fetch: fetchEmployeeCountByShift,
+        render: (data) => (
+            <EmployeesByShiftChart data={data} />
+        ),
+    },
+    employeesCountByRole: {
+        fetch: fetchEmployeeCountByRole,
+        render: (data) => (
+            <EmployeesByRoleChart data={data} />
         ),
     },
     topTierProducts: {
