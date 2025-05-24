@@ -199,8 +199,9 @@ public class ClientRepository {
     public List<TopTierClientDTO> getActiveClients() {
         try {
             String sql = "SELECT DISTINCT c.id_cliente, " +
-                            "COALESCE(pf.nome, pj.razao_social) AS nome_cliente " +
-                            "MAX(co.data) AS ultima_compra " +
+                            "COALESCE(pf.nome, pj.razao_social) AS nome_cliente, " +
+                            "COUNT(co.numero)                   AS total_compras, " +
+                            "MAX(co.data)                       AS ultima_compra " +
                          "FROM cliente c " +
                              "JOIN compra co ON  c.id_cliente = co.fk_cliente_id " +
                              "LEFT JOIN fisico pf ON c.id_cliente = pf.fk_cliente_id " +
@@ -209,8 +210,9 @@ public class ClientRepository {
                          "GROUP BY c.id_cliente, nome_cliente " +
                          "ORDER BY ultima_compra DESC";
             return jdbcTemplate.query(sql, (rs, rowNum) -> new TopTierClientDTO(
-                    rs.getString("name"),
-                    rs.getInt("totalPurchases")
+                    rs.getString("nome_cliente"),
+                    rs.getInt("total_compras"),
+                    rs.getDate("ultima_compra")
             ));
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage(), e);
