@@ -16,6 +16,7 @@ import { TopTierSuppliers } from "../DashboardContents/TopTierSuppliers";
 import { TopTierDeliveries } from "../DashboardContents/TopTierDeliveries";
 import { LowStockProducts } from "../DashboardContents/LowStockProducts";
 import { ProductPriceHistory } from "../DashboardContents/ProductPriceHistory";
+import { DeliveriesByMonth } from "../DashboardContents/DeliveriesByMonth";
 import { fetchTotalClientsByCity, fetchTotalClients, fetchTotalPhysicalClients, fetchTotalJuridicalClients } from "../../services/endpoints/customer/dashboard";
 import { ClientsByCityChart } from "../DashboardContents/ClientsByCityChart";
 
@@ -135,6 +136,11 @@ const dashboardsController: Record<string, DashboardRenderer> = {
     productPriceHistory: {
         render: () => (
             <ProductPriceHistory />
+        ),
+    },
+    deliveriesByMonth: {
+        render: () => (
+            <DeliveriesByMonth />
         ),
     },
     clientsByCity: {

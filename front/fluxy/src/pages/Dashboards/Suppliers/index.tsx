@@ -229,6 +229,7 @@ export default function SuppliersDashboard() {
                             <Dashboard dataDashboards={
                                 [
                                     ["topTierSuppliers", "topTierDeliveries"],
+                                    ["deliveriesByMonth"],
                                 ]
                             } />
 
