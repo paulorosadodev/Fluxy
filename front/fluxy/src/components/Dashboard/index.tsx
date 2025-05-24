@@ -2,11 +2,14 @@ import { ReactNode, useEffect, useState } from "react";
 import { DashboardsWrapper, DashboardWrapper, DashboardRow } from "./styles";
 import { fetchAveragePrice, fetchCategoriesCount, fetchLowStockProducts, fetchProductsCount, fetchProductsCountByCategory, fetchProductsTotalStock, fetchTotalPrice} from "../../services/endpoints/product/dashboard";
 import { Card } from "../DashboardContents/Card";
-import { Package, Notebook, Tag, CurrencyCircleDollar, CurrencyDollarSimple} from "phosphor-react";
+import { Package, Notebook, Tag, CurrencyCircleDollar, CurrencyDollarSimple, Users, UserCircle, Buildings} from "phosphor-react";
 import { ProductsByCategoryChart } from "../DashboardContents/ProductsByCategoryChart";
-import { TopTier } from "../DashboardContents/TopTier";
+import { TopTierProducts } from "../DashboardContents/TopTierProducts";
+import { TopTierClients } from "../DashboardContents/TopTierClients";
 import { LowStockProducts } from "../DashboardContents/LowStockProducts";
 import { ProductPriceHistoryWithSelect } from "../DashboardContents/ProductPriceHistory/ProductPriceHistoryWithSelect";
+import { fetchTotalClientsByCity, fetchTotalClients, fetchTotalPhysicalClients, fetchTotalJuridicalClients } from "../../services/endpoints/customer/dashboard";
+import { ClientsByCityChart } from "../DashboardContents/ClientsByCityChart";
 
 type DashboardProps = {
     dataDashboards: string[][];
@@ -22,19 +25,19 @@ const dashboardsController: Record<string, DashboardRenderer> = {
     productsTotalStock: {
         fetch: fetchProductsTotalStock,
         render: (data, delay = 0) => (
-            <Card icon={Package} data={data} text={data > 1 ? "produtos em estoque" : "produto em estoque"} delay={delay} />
+            <Card icon={Package} data={data} text={data !== 1 ? "produtos em estoque" : "produto em estoque"} delay={delay} />
         ),
     },
     productsTotalCount: {
         fetch: fetchProductsCount,
         render: (data, delay = 0) => (
-            <Card icon={Notebook} data={data} text={data > 1 ? "produtos cadastrados" : "produto cadastrado"} delay={delay} />
+            <Card icon={Notebook} data={data} text={data !== 1 ? "produtos cadastrados" : "produto cadastrado"} delay={delay} />
         ),
     },
     productsCategoriesCount: {
         fetch: fetchCategoriesCount,
         render: (data, delay = 0) => (
-            <Card icon={Tag} data={data} text={data > 1 ? "categorias cadastradas" : "categoria cadastrada"} delay={delay} />
+            <Card icon={Tag} data={data} text={data !== 1 ? "categorias cadastradas" : "categoria cadastrada"} delay={delay} />
         ),
     },
     productsAveragePrice: {
@@ -57,7 +60,12 @@ const dashboardsController: Record<string, DashboardRenderer> = {
     },
     topTierProducts: {
         render: () => (
-            <TopTier />
+            <TopTierProducts />
+        ),
+    },
+    topTierClients: {
+        render: () => (
+            <TopTierClients />
         ),
     },
     lowStockProducts: {
@@ -69,6 +77,30 @@ const dashboardsController: Record<string, DashboardRenderer> = {
     productPriceHistory: {
         render: () => (
             <ProductPriceHistoryWithSelect />
+        ),
+    },
+    clientsByCity: {
+        fetch: fetchTotalClientsByCity,
+        render: (data) => (
+            <ClientsByCityChart data={data} />
+        ),
+    },
+    clientsTotalCount: {
+        fetch: fetchTotalClients,
+        render: (data, delay = 0) => (
+            <Card icon={Users} data={data} text={data !== 1 ? "clientes cadastrados" : "cliente cadastrado"} delay={delay} />
+        ),
+    },
+    clientsPhysicalCount: {
+        fetch: fetchTotalPhysicalClients,
+        render: (data, delay = 0) => (
+            <Card icon={UserCircle} data={data} text={data !== 1 ? "clientes físicos" : "cliente físico"} delay={delay} />
+        ),
+    },
+    clientsJuridicalCount: {
+        fetch: fetchTotalJuridicalClients,
+        render: (data, delay = 0) => (
+            <Card icon={Buildings} data={data} text={data !== 1 ? "clientes jurídicos" : "cliente jurídico"} delay={delay} />
         ),
     },
 };
@@ -91,7 +123,16 @@ export const Dashboard = ({ dataDashboards, graphs }: DashboardProps) => {
                 try {
                     let component;
                     
-                    const isCard = ["productsTotalStock", "productsTotalCount", "productsCategoriesCount", "productsAveragePrice", "productsTotalPrice"].includes(key);
+                    const isCard = [
+                        "productsTotalStock", 
+                        "productsTotalCount", 
+                        "productsCategoriesCount", 
+                        "productsAveragePrice", 
+                        "productsTotalPrice",
+                        "clientsTotalCount",
+                        "clientsPhysicalCount", 
+                        "clientsJuridicalCount"
+                    ].includes(key);
                     const delay = isCard ? cardIndex * DELAY_BETWEEN_CARDS : 0;
                     
                     if (controller.fetch) {
@@ -106,7 +147,16 @@ export const Dashboard = ({ dataDashboards, graphs }: DashboardProps) => {
                 } catch (error: any) {
                     console.error(`Erro ao buscar ${key}:`, error);
                     const fallbackData = 0;
-                    const isCard = ["productsTotalStock", "productsTotalCount", "productsCategoriesCount", "productsAveragePrice", "productsTotalPrice"].includes(key);
+                    const isCard = [
+                        "productsTotalStock", 
+                        "productsTotalCount", 
+                        "productsCategoriesCount", 
+                        "productsAveragePrice", 
+                        "productsTotalPrice",
+                        "clientsTotalCount",
+                        "clientsPhysicalCount", 
+                        "clientsJuridicalCount"
+                    ].includes(key);
                     const delay = isCard ? cardIndex * DELAY_BETWEEN_CARDS : 0;
                     const component = isCard ? controller.render(fallbackData, delay) : controller.render(fallbackData);
                     if (isCard) cardIndex++; 

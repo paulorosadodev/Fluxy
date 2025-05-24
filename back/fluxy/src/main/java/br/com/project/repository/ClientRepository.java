@@ -147,7 +147,7 @@ public class ClientRepository {
                     "ORDER BY total_compras DESC";
             return jdbcTemplate.query(sql, (rs, rowNum) -> new TopTierClientDTO(
                     rs.getString("nome_cliente"),
-                    rs.getInt("totalPurchases")
+                    rs.getInt("total_compras")
             ));
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage(), e);
@@ -167,7 +167,7 @@ public class ClientRepository {
                     "ORDER BY total_compras ASC";
             return jdbcTemplate.query(sql, (rs, rowNum) -> new TopTierClientDTO(
                     rs.getString("nome_cliente"),
-                    rs.getInt("totalPurchases")
+                    rs.getInt("total_compras")
             ));
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage(), e);

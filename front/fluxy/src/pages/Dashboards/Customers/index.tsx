@@ -10,6 +10,7 @@ import { addNaturalPersonCustomer, deleteNaturalPersonCustomer, editNaturalPerso
 import { addLegalEntityCustomer, deleteLegalEntityCustomer, editLegalEntityCustomer } from "../../../services/endpoints/legalEntityCustomer";
 import { Lock } from "phosphor-react";
 import { useAuth } from "../../../hooks/useAuth";
+import { Dashboard } from "../../../components/Dashboard";
 
 export default function CustomersDashboard() {
 
@@ -249,11 +250,24 @@ export default function CustomersDashboard() {
                         }
 
                         <div id="main">
-                            <h1>Clientes Pessoas Físicas</h1>
+                            <h1>Clientes</h1>
+                            <Dashboard dataDashboards={
+                                [
+                                    ["clientsTotalCount", "clientsPhysicalCount", "clientsJuridicalCount"],
+                                ]
+                            } />
+
+                            <h2>Pessoas Físicas</h2>
                             <DataTable deleteRow={deleteNaturalPersonCustomer} deletePopUpController={setShowDeletePopUp} setDeletePopUpMessage={setDeletePopUpMessage} setDeletePopUpType={setDeletePopUpType} data={naturalPersonCustomers} columns={columnsNaturalPerson} entityName="pessoas físicas" popUpController={setShowPopUp} formControllers={naturalPersonFormControllers} selectedRowController={setNaturalPersonSelectedRow} />
 
-                            <h1>Clientes Pessoas Jurídicas</h1>
+                            <h2>Pessoas Jurídicas</h2>
                             <DataTable deleteRow={deleteLegalEntityCustomer} deletePopUpController={setShowDeletePopUp} setDeletePopUpMessage={setDeletePopUpMessage} setDeletePopUpType={setDeletePopUpType} data={legalEntityCustomers} columns={columnsLegalEntity} entityName="pessoas jurídicas" popUpController={setShowPopUp} formControllers={legalEntityFormControllers} selectedRowController={setLegalEntitySelectedRow} />
+
+                            <Dashboard dataDashboards={
+                                [
+                                    ["clientsByCity", "topTierClients"]
+                                ]
+                            } />
 
                             {showPopUp &&
                         <PopUp type="success" message={popUpMessage} show={showPopUp} onClose={() => setShowPopUp(false)} />

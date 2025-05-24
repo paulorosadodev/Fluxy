@@ -122,7 +122,7 @@ public class ClienteController {
         }
     }
 
-    @GetMapping("/")
+    @GetMapping("/total-juridical-clients")
     public ResponseEntity<?> getTotalJuridicalClientsCount() {
         try {
             int totalJuridicalClients = clienteService.getTotalJuridicalClientsCount();
@@ -132,7 +132,7 @@ public class ClienteController {
         }
     }
 
-    @GetMapping("/most-active-clients")
+    @GetMapping("/active-clients")
     public ResponseEntity<?> getActiveClients() {
         try {
             List<TopTierClientDTO> mostActiveClients = clienteService.getActiveClients();
