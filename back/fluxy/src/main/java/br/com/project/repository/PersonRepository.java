@@ -23,7 +23,6 @@ public class PersonRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    // Método para salvar e retornar o ID gerado
     public Integer saveAndReturnId(Person person) {
         try {
             String sql = "INSERT INTO pessoa (rua, numero, bairro, cidade, cep) VALUES (?, ?, ?, ?, ?)";

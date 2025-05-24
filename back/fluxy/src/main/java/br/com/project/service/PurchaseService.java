@@ -68,6 +68,14 @@ public class PurchaseService {
         }
     }
 
+    public Double getTotalPurchaseCostByMonthAndYear(int month, int year) {
+        try {
+            return purchaseRepository.sumPurchaseCostsByMonthAndYear(month, year);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
     public PurchaseResponseDTO findByNumber(Integer number) {
         try {
             Purchase purchase = purchaseRepository.findByNumber(number)

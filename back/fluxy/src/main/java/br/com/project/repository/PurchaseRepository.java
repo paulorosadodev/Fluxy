@@ -45,6 +45,17 @@ public class PurchaseRepository {
         return keyHolder.getKey().intValue();
     }
 
+    public Double sumPurchaseCostsByMonthAndYear(int month, int year) {
+        String sql = """
+        SELECT SUM(p.preco * c.qtd_produto)
+        FROM compra c
+        JOIN produto p ON c.fk_produto_id = p.id_produto
+        WHERE MONTH(c.data) = ? AND YEAR(c.data) = ?
+    """;
+        Double total = jdbcTemplate.queryForObject(sql, Double.class, month, year);
+        return total != null ? total : 0.0;
+    }
+
     public Optional<Purchase> findByNumber(Integer number) {
         String sql = "SELECT * FROM compra WHERE numero = ?";
         List<Purchase> result = jdbcTemplate.query(sql, new PurchaseRowMapper(), number);

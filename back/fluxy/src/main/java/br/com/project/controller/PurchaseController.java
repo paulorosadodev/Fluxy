@@ -1,11 +1,13 @@
 package br.com.project.controller;
 
+import br.com.project.dto.request.MonthYearRequest;
 import br.com.project.dto.request.PurchaseRequestDTO;
 import br.com.project.dto.response.PurchaseResponseDTO;
 import br.com.project.service.PurchaseService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.net.URI;
 import java.util.List;
@@ -33,6 +35,26 @@ public class PurchaseController {
                     .body("Erro interno ao salvar compra: " + e.getMessage());
         }
     }
+
+    @PostMapping("/monthly-purchase-costs")
+    public ResponseEntity<Double> getTotalPurchaseCostByMonth(@RequestBody MonthYearRequest request) {
+        try {
+            int mes = request.getMonth();
+            int ano = request.getYear();
+
+            if (mes < 1 || mes > 12) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O mês deve estar entre 1 e 12.");
+            }
+
+            Double total = service.getTotalPurchaseCostByMonthAndYear(mes, ano);
+            return ResponseEntity.ok(total);
+        } catch (ResponseStatusException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro ao obter custo total das compras: " + e.getMessage());
+        }
+    }
+
 
     @GetMapping("/{number}")
     public ResponseEntity<?> findByNumber(@PathVariable Integer number) {

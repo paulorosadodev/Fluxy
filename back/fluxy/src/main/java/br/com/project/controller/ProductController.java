@@ -126,7 +126,7 @@ public class ProductController {
 
     @PostMapping("/price-history")
     public ResponseEntity<List<PriceHistoryResponseDTO>> getHistoricoPreco(@RequestBody ProductIdRequestDTO request) {
-        List<PriceHistoryResponseDTO> historico = productService.getHistoricoPreco(request.getProdutoId());
+        List<PriceHistoryResponseDTO> historico = productService.getHistoricoPreco(request.getProductId());
         return ResponseEntity.ok(historico);
     }
 
