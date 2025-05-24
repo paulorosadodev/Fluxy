@@ -1,5 +1,6 @@
 package br.com.project.repository;
 
+import br.com.project.dto.response.PaymentTypeCountResponseDTO;
 import br.com.project.model.Purchase;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -43,6 +44,42 @@ public class PurchaseRepository {
         }, keyHolder);
 
         return keyHolder.getKey().intValue();
+    }
+
+    public int countAllPurchases() {
+        try {
+            String sql = "SELECT COUNT(*) FROM compra";
+            Integer total = jdbcTemplate.queryForObject(sql, Integer.class);
+            return total != null ? total : 0;
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao contar compras: " + e.getMessage());
+        }
+    }
+
+    public List<PaymentTypeCountResponseDTO> countPurchasesByPaymentType() {
+        String sql = """
+        SELECT tipo, COUNT(*) AS quantidade
+        FROM compra
+        GROUP BY tipo
+        ORDER BY quantidade DESC
+    """;
+
+        return jdbcTemplate.query(sql, (rs, rowNum) ->
+                new PaymentTypeCountResponseDTO(
+                        rs.getString("tipo"),
+                        rs.getInt("quantidade")
+                )
+        );
+    }
+
+    public List<Purchase> findAllOrderedByCostDesc() {
+        String sql = """
+        SELECT c.*
+        FROM compra c
+        JOIN produto p ON c.fk_produto_id = p.id_produto
+        ORDER BY (p.preco * c.qtd_produto) DESC
+    """;
+        return jdbcTemplate.query(sql, new PurchaseRowMapper());
     }
 
     public Double sumPurchaseCostsByMonthAndYear(int month, int year) {

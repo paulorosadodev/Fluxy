@@ -2,7 +2,10 @@ package br.com.project.controller;
 
 import br.com.project.dto.request.MonthYearRequest;
 import br.com.project.dto.request.PurchaseRequestDTO;
+import br.com.project.dto.response.PaymentTypeCountResponseDTO;
 import br.com.project.dto.response.PurchaseResponseDTO;
+import br.com.project.dto.response.PurchaseTotalCountResponseDTO;
+import br.com.project.model.Purchase;
 import br.com.project.service.PurchaseService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +20,11 @@ import java.util.List;
 public class PurchaseController {
 
     private final PurchaseService service;
+    private final PurchaseService purchaseService;
 
-    public PurchaseController(PurchaseService service) {
+    public PurchaseController(PurchaseService service, PurchaseService purchaseService) {
         this.service = service;
+        this.purchaseService = purchaseService;
     }
 
     @PostMapping
@@ -55,6 +60,23 @@ public class PurchaseController {
         }
     }
 
+    @GetMapping("/total")
+    public ResponseEntity<PurchaseTotalCountResponseDTO> getTotalCompras() {
+        int total = purchaseService.countAllPurchases();
+        return ResponseEntity.ok(new PurchaseTotalCountResponseDTO(total));
+    }
+
+    @GetMapping("/payment-type-count")
+    public ResponseEntity<List<PaymentTypeCountResponseDTO>> getPaymentTypeCounts() {
+        List<PaymentTypeCountResponseDTO> result = purchaseService.getPaymentTypeCounts();
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/most-expensive-purchases")
+    public ResponseEntity<List<Purchase>> getPurchasesOrderedByCost() {
+        List<Purchase> purchases = purchaseService.getAllPurchasesOrderedByCostDesc();
+        return ResponseEntity.ok(purchases);
+    }
 
     @GetMapping("/{number}")
     public ResponseEntity<?> findByNumber(@PathVariable Integer number) {
