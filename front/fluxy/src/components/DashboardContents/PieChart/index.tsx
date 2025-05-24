@@ -64,16 +64,49 @@ export const ReusablePieChart = <T extends DataItem>({
         return labelFormatter ? labelFormatter(value) : value;
     };
 
+    const processDataForChart = (rawData: T[]): T[] => {
+        if (!rawData || rawData.length <= 12) {
+            return rawData;
+        }
+
+        const sortedData = [...rawData].sort((a, b) => {
+            const valueA = Number(a[dataKey]) || 0;
+            const valueB = Number(b[dataKey]) || 0;
+            return valueB - valueA;
+        });
+
+
+        const topItems = sortedData.slice(0, 11);
+        
+        const remainingItems = sortedData.slice(11);
+        const othersSum = remainingItems.reduce((sum, item) => {
+            return sum + (Number(item[dataKey]) || 0);
+        }, 0);
+
+        if (remainingItems.length > 0) {
+            const othersItem = {
+                [nameKey]: "Outros",
+                [dataKey]: othersSum
+            } as T;
+            
+            return [...topItems, othersItem];
+        }
+
+        return topItems;
+    };
+
+    const processedData = processDataForChart(data);
+
     return (
-        data ? (
+        processedData ? (
             <PieChartWrapper>
                 <InfoWrapper>
                     <Title>{title}</Title>
                     <MotionCategoryList variants={listVariants} initial="hidden" animate="visible">
-                        {data && data.map((item, index) => (
+                        {processedData && processedData.map((item, index) => (
                             <MotionCategoryItem key={item[nameKey]} variants={itemVariants}>
                                 <ColorBox color={COLORS[index % COLORS.length]} />
-                                {formatLabel(item[nameKey])}
+                                {formatLabel(item[nameKey])}: {item[dataKey]}
                             </MotionCategoryItem>
                         ))}
                     </MotionCategoryList>
@@ -83,7 +116,7 @@ export const ReusablePieChart = <T extends DataItem>({
                     <ResponsiveContainer width="100%" height="100%">
                         <PieChart>
                             <Pie
-                                data={data}
+                                data={processedData}
                                 dataKey={dataKey}
                                 nameKey={nameKey}
                                 cx="50%"
@@ -95,9 +128,9 @@ export const ReusablePieChart = <T extends DataItem>({
                                 animationBegin={0}
                                 animationDuration={1000}
                                 animationEasing="ease-in-out"
-                                stroke={data.length === 1 ? "none" : "#fff"}
+                                stroke={processedData.length === 1 ? "none" : "#fff"}
                             >
-                                {data && data.map((_, index) => (
+                                {processedData && processedData.map((_, index) => (
                                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                 ))}
                             </Pie>
