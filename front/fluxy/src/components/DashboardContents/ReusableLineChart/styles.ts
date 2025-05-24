@@ -51,6 +51,23 @@ export const SelectDropdown = styled.select`
     }
 `;
 
+export const ExtraSelect = styled.select`
+    width: 220px;
+    min-width: 220px;
+    max-width: 220px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid ${({ theme }) => theme["gray-300"] || "#e1e1e6"};
+    background: ${({ theme }) => theme["gray-200"]};
+    font-size: 0.875rem;
+    cursor: pointer;
+    
+    &:focus {
+        outline: none;
+        border-color: ${({ theme }) => theme["primary"] || "#8884d8"};
+    }
+`;
+
 export const ContainerWithSpinner = styled.div<{ $loading?: boolean }>`
     position: relative;
     
