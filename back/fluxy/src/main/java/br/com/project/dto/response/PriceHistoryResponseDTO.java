@@ -10,6 +10,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PriceHistoryResponseDTO {
-    private double preco;
-    private LocalDate data;
+    private double price;
+    private LocalDate date;
 }
