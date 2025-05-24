@@ -28,6 +28,20 @@ export const fetchEmployeesMostPurchases = async () => {
     }
 };
 
+export const fetchEmployeesLeastPurchases = async () => {
+    try {
+        const response = await api.get("/employees/least-purchases");
+        return response.data;
+    } catch (error: any) {
+        const errorMessage = error.response?.data;
+
+        if (errorMessage) {
+            throw new Error(errorMessage);
+        }
+        throw new Error("Erro inesperado ao recuperar funcionários com menos compras");
+    }
+};
+
 export const fetchTotalSalaries = async () => {
     try {
         const response = await api.get("/employees/total-salaries");

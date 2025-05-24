@@ -211,7 +211,7 @@ export default function EmployeesDashboard() {
                             <DataTable deleteRow={deleteEmployee} data={employees} columns={columns} entityName="funcionários" popUpController={setShowPopUp} deletePopUpController={setShowDeletePopUp} setDeletePopUpMessage={setDeletePopUpMessage} setDeletePopUpType={setDeletePopUpType} formControllers={formControllers} selectedRowController={setSelectedRow}/>
                             <Dashboard dataDashboards={
                                 [
-                                    ["employeesCountByShift", "employeesCountByRole"],
+                                    ["employeesCountByShift", "topTierEmployees", "employeesCountByRole"],
                                 ]
                             } />
                             {showPopUp &&
