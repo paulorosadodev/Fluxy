@@ -48,6 +48,13 @@ public class ProductSupplierRepository {
         return total != null ? total : 0.0;
     }
 
+    public Double averageDeliveryCostByMonthAndYear(int month, int year) {
+        String sql = "SELECT AVG(valor_pago) FROM entrega WHERE MONTH(data_reposicao) = ? AND YEAR(data_reposicao) = ?";
+        Double average = jdbcTemplate.queryForObject(sql, Double.class, month, year);
+        return average != null ? average : 0.0;
+    }
+
+
     public List<TopTierProductSupplyDTO> findMostExpensiveDeliveries() {
         String sql = """
         SELECT p.nome AS nome_produto, e.qnt_fornecida, e.valor_pago

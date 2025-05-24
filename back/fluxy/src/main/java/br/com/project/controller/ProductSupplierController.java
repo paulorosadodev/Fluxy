@@ -85,6 +85,28 @@ public class ProductSupplierController {
         }
     }
 
+    @PostMapping("/monthly-average-cost")
+    public ResponseEntity<Double> getAverageDeliveryCostByMonth(@RequestBody MonthYearRequest request) {
+        try {
+            int mes = request.getMonth();
+            int ano = request.getYear();
+
+            if (mes < 1 || mes > 12) {
+                throw new ResponseStatusException(BAD_REQUEST, "O mês deve estar entre 1 e 12.");
+            }
+
+            Double average = service.getAverageDeliveryCostByMonthAndYear(mes, ano);
+            return ResponseEntity.ok(average);
+        } catch (ResponseStatusException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ResponseStatusException(INTERNAL_SERVER_ERROR, "Erro ao obter custo médio das entregas: " + e.getMessage());
+        }
+    }
+
+
+
+
     @GetMapping("/mais-caras")
     public ResponseEntity<List<TopTierProductSupplyDTO>> getMostExpensiveDeliveries() {
         try {
