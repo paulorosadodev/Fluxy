@@ -60,6 +60,11 @@ public class ProductSupplierRepository {
         return average != null ? average : 0.0;
     }
 
+    public Double sumAllDeliveryCosts() {
+        String sql = "SELECT SUM(valor_pago) FROM entrega";
+        Double total = jdbcTemplate.queryForObject(sql, Double.class);
+        return total != null ? total : 0.0;
+    }
 
     public List<TopTierProductSupplyDTO> findMostExpensiveDeliveries() {
         String sql = """

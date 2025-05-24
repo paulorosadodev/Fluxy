@@ -46,6 +46,16 @@ public class ProductSupplierController {
         }
     }
 
+    @GetMapping("/total-cost")
+    public ResponseEntity<Double> getTotalDeliveryCost() {
+        try {
+            Double total = service.getTotalDeliveryCost();
+            return ResponseEntity.ok(total);
+        } catch (Exception e) {
+            throw new ResponseStatusException(INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
+
     // é preciso enviar o mes e o ano pra esse funcionar
     @PostMapping("/monthly-total")
     public ResponseEntity<Integer> getDeliveriesByMonth(@RequestBody MonthYearRequest request) {

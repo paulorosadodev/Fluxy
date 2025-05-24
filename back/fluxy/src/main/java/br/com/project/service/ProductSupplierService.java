@@ -83,6 +83,13 @@ public class ProductSupplierService {
         return productSupplierRepository.averageAllDeliveriesCost();
     }
 
+    public Double getTotalDeliveryCost() {
+        try {
+            return repository.sumAllDeliveryCosts();
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao calcular o custo total das entregas: " + e.getMessage(), e);
+        }
+    }
 
     public List<TopTierProductSupplyDTO> getMostExpensiveDeliveries() {
         try {
