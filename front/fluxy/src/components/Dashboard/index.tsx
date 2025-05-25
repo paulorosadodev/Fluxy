@@ -12,6 +12,7 @@ import { EmployeesByShiftChart } from "../DashboardContents/EmployeesByShiftChar
 import { EmployeesByRoleChart } from "../DashboardContents/EmployeesByRoleChart";
 import { TopTierProducts } from "../DashboardContents/TopTierProducts";
 import { TopTierClients } from "../DashboardContents/TopTierClients";
+import { TopTierSpendibleClients } from "../DashboardContents/TopTierSpendibleClients";
 import { TopTierEmployees } from "../DashboardContents/TopTierEmployees";
 import { TopTierSuppliers } from "../DashboardContents/TopTierSuppliers";
 import { TopTierDeliveries } from "../DashboardContents/TopTierDeliveries";
@@ -98,6 +99,11 @@ const dashboardsController: Record<string, DashboardRenderer> = {
     topTierClients: {
         render: () => (
             <TopTierClients />
+        ),
+    },
+    topTierSpendibleClients: {
+        render: () => (
+            <TopTierSpendibleClients />
         ),
     },
     topTierEmployees: {

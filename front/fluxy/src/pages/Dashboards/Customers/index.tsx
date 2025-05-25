@@ -265,7 +265,7 @@ export default function CustomersDashboard() {
 
                             <Dashboard dataDashboards={
                                 [
-                                    ["clientsByCity", "topTierClients"]
+                                    ["topTierClients", "clientsByCity", "topTierSpendibleClients"]
                                 ]
                             } />
 
