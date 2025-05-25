@@ -82,6 +82,11 @@ public class PurchaseService {
         return purchaseRepository.averagePurchaseCost();
     }
 
+    public Double getAveragePurchaseCostByMonthAndYear(int month, int year) {
+        return purchaseRepository.averagePurchaseCostByMonthAndYear(month, year);
+    }
+
+
     public PurchaseCountByMonthAndYearResponseDTO getPurchaseCountByMonthAndYear(int month, int year) {
         return purchaseRepository.countPurchasesByMonthAndYear(month, year);
     }
