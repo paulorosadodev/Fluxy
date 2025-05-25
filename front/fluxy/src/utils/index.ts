@@ -167,6 +167,9 @@ export function formatAddress(address: Address) {
 }
 
 export function formatSupplier(supplier: Supplier) {
+    if (!supplier || !supplier.name || !supplier.cnpj) {
+        return "Fornecedor inválido";
+    }
     return `${supplier.name} | ${formatCNPJ(supplier.cnpj)}`;
 }
 
@@ -182,6 +185,9 @@ export function formatCustomer(customer: Customer) {
 }
 
 export function formatPurchaseProduct(product: Product) {
+    if (!product || product.id === undefined || product.name === undefined) {
+        return "Produto inválido";
+    }
     return `${product.id} | ${product.name}`;
 }
 

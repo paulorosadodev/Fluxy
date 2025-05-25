@@ -126,17 +126,17 @@ export default function SuppliersDashboard() {
                 value: "supplier",
                 placeholder: "Selecione o fornecedor",
                 validation: z.string().min(1, { message: "Fornecedor é obrigatório" }),
-                options: suppliers.map((supplier) => formatSupplier(supplier)),
+                options: suppliers.filter(supplier => supplier && supplier.name && supplier.cnpj).map((supplier) => formatSupplier(supplier)),
             },
         ],
         [
             {
                 label: "Produto",
-                type: "select",
+                type: "combo",
                 value: "product",
                 placeholder: "Selecione o produto",
                 validation: z.string().min(1, { message: "Produto é obrigatório" }),
-                options: products.map((product) => formatPurchaseProduct(product)),
+                options: products.filter(product => product && product.id !== undefined && product.name !== undefined).map((product) => formatPurchaseProduct(product)),
             },
             {
                 label: "Quantidade",
@@ -179,23 +179,25 @@ export default function SuppliersDashboard() {
     let editSupplyData = [""];
 
     if (supplierSelectedRow.length > 1) {
-
         const selectedSupplier = suppliers.filter((Supplier) => Supplier.cnpj === supplierSelectedRow.split(",")[1])[0];
 
-        editSupplierData = [
-            String(selectedSupplier.id), selectedSupplier.name, selectedSupplier.cnpj, ...selectedSupplier.phone, selectedSupplier.address.cep, 
-            selectedSupplier.address.city, selectedSupplier.address.neighborhood, selectedSupplier.address.street,
-            selectedSupplier.address.number
-        ];
+        if (selectedSupplier) {
+            editSupplierData = [
+                String(selectedSupplier.id), selectedSupplier.name, selectedSupplier.cnpj, ...selectedSupplier.phone, selectedSupplier.address.cep, 
+                selectedSupplier.address.city, selectedSupplier.address.neighborhood, selectedSupplier.address.street,
+                selectedSupplier.address.number
+            ];
+        }
     }
 
     if (supplySelectedRow.length > 1) {
-
         const selectedSupply = productSupplies.filter((Supply) => String(Supply.id) === supplySelectedRow.split(",")[0])[0];
-        editSupplyData = [
-            String(selectedSupply.id), formatSupplier(selectedSupply.supplier), formatPurchaseProduct(selectedSupply.product), String(selectedSupply.productAmount), String(selectedSupply.price), selectedSupply.date
-        ];
-
+        
+        if (selectedSupply) {
+            editSupplyData = [
+                String(selectedSupply.id), formatSupplier(selectedSupply.supplier), formatPurchaseProduct(selectedSupply.product), String(selectedSupply.productAmount), String(selectedSupply.price), selectedSupply.date
+            ];
+        }
     }
 
     return (
