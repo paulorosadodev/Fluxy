@@ -91,3 +91,49 @@ export const fetchLeastExpensivePurchases = async () => {
         throw new Error("Erro inesperado ao recuperar compras mais baratas");
     }
 };
+
+export const fetchAveragePurchaseCostByMonth = async (month: number, year: number) => {
+    try {
+        const response = await api.post("/purchases/monthly-average-costs", {
+            month: month,
+            year: year
+        });
+
+        return response.data;
+    } catch (error: any) {
+        const errorMessage = error.response?.data;
+
+        if (errorMessage) {
+            throw new Error(errorMessage);
+        }
+        throw new Error("Erro inesperado ao recuperar média de custos por mês");
+    }
+};
+
+export const fetchTotalPurchaseCosts = async () => {
+    try {
+        const response = await api.get("/purchases/total-costs");
+        return response.data;
+    } catch (error: any) {
+        const errorMessage = error.response?.data;
+
+        if (errorMessage) {
+            throw new Error(errorMessage);
+        }
+        throw new Error("Erro inesperado ao recuperar custo total das compras");
+    }
+};
+
+export const fetchAveragePurchaseCost = async () => {
+    try {
+        const response = await api.get("/purchases/average-costs");
+        return response.data;
+    } catch (error: any) {
+        const errorMessage = error.response?.data;
+
+        if (errorMessage) {
+            throw new Error(errorMessage);
+        }
+        throw new Error("Erro inesperado ao recuperar custo médio das compras");
+    }
+};
