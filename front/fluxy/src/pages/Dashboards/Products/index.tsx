@@ -127,8 +127,8 @@ export default function ProductsDashboard() {
                             {showGraphs && 
                             <Dashboard graphs={true} dataDashboards={
                                 [   
-                                    ["productsCountByCategory", "lowStockProducts", "topTierProducts"],
-                                    ["productPriceHistory"]
+                                    ["productsCountByCategory", "mostPurchasedCategories", "lowStockProducts"],
+                                    ["topTierProducts", "productPriceHistory"]
                                 ]
                             } />
                             }

@@ -38,6 +38,13 @@ export const PaymentTypesChart = () => {
         return typeMapping[type] || type;
     };
 
+    // Não renderizar se não há dados ou se todos os valores são zero
+    const hasValidData = data && data.length > 0 && data.some(item => item.quantity > 0);
+    
+    if (!hasValidData) {
+        return null;
+    }
+
     return (
         <ReusablePieChart<PaymentTypeData>
             data={data}

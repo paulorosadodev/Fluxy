@@ -1,6 +1,6 @@
 import { ReusableLineChart } from "../ReusableLineChart";
 import { ExtraSelect } from "../ReusableLineChart/styles";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { fetchDeliveriesByMonth, fetchTotalDeliveryCostByMonth } from "../../../services/endpoints/supply/dashboard";
 import { formatMoney } from "../../../utils";
 
@@ -107,6 +107,33 @@ export function DeliveriesByMonth({ height = 320 }: DeliveriesByMonthProps) {
     };
 
     const currentConfig = chartConfig[chartType as keyof typeof chartConfig];
+
+    // Função para verificar se há dados válidos
+    const checkForValidData = async () => {
+        try {
+            // Testa com um período pequeno para verificar se há dados
+            const testData = await fetchDeliveriesData("3-months");
+            return testData && testData.length > 0 && testData.some(item => item.value > 0);
+        } catch {
+            return false;
+        }
+    };
+
+    // Hook para verificar dados válidos
+    const [hasValidData, setHasValidData] = useState<boolean | null>(null);
+
+    useEffect(() => {
+        checkForValidData().then(setHasValidData);
+    }, [chartType]);
+
+    // Não renderizar enquanto verifica ou se não há dados válidos
+    if (hasValidData === null) {
+        return null; // Loading state
+    }
+
+    if (!hasValidData) {
+        return null;
+    }
 
     return (
         <ReusableLineChart 

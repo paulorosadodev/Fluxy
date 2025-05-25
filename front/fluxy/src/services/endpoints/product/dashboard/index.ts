@@ -162,5 +162,19 @@ export const fetchProductPriceHistory = async (productId: string) => {
     }
 };
 
+export const fetchMostPurchasedCategories = async () => {
+    try {
+        const response = await api.get("/categories/most-purchased-categories");
+        return response.data;
+    } catch (error: any) {
+        const errorMessage = error.response?.data;
+
+        if (errorMessage) {
+            throw new Error(errorMessage);
+        }
+        throw new Error("Erro inesperado ao recuperar categorias mais compradas");
+    }
+};
+
 
 
