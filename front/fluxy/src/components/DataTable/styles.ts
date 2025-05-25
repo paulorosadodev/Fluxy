@@ -101,12 +101,13 @@ export const DataTableWrapper = styled.div`
     margin-bottom: 2rem;
 
     #not-found {
-        position: absolute;
         display: flex;
         justify-content: center;
-        left: 50%;
-        transform: translate(-50%, 1rem);
+        align-items: center;
+        width: 100%;
+        margin-top: 1rem;
         color: grey;
+        transform: none;
     }
     
     table {
