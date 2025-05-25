@@ -4,7 +4,7 @@ import { fetchAveragePrice, fetchCategoriesCount, fetchLowStockProducts, fetchPr
 import { fetchEmployeesCount, fetchTotalSalaries, fetchEmployeeCountByShift, fetchEmployeeCountByRole } from "../../services/endpoints/employee/dashboard";
 import { fetchSuppliersCount } from "../../services/endpoints/supplier/dashboard";
 import { fetchTotalDeliveries, fetchTotalDeliveryCostByMonth, fetchDeliveryMonthAverageCost, fetchDeliveriesByMonth, fetchTotalCost, fetchTotalAverageCost } from "../../services/endpoints/supply/dashboard";
-import { fetchTotalPurchases } from "../../services/endpoints/purchase/dashboard";
+import { fetchTotalPurchases, fetchAveragePurchaseCost, fetchTotalPurchaseCosts, fetchAveragePurchaseCostByMonth, fetchTotalPurchaseCostByMonth } from "../../services/endpoints/purchase/dashboard";
 import { Card } from "../DashboardContents/Card";
 import { Package, Notebook, Tag, CurrencyCircleDollar, CurrencyDollarSimple, Users, UserCircle, Buildings, User, Money, Truck, CaretCircleDoubleDown, ShoppingCart} from "phosphor-react";
 import { ProductsByCategoryChart } from "../DashboardContents/ProductsByCategoryChart";
@@ -12,6 +12,7 @@ import { EmployeesByShiftChart } from "../DashboardContents/EmployeesByShiftChar
 import { EmployeesByRoleChart } from "../DashboardContents/EmployeesByRoleChart";
 import { TopTierProducts } from "../DashboardContents/TopTierProducts";
 import { TopTierClients } from "../DashboardContents/TopTierClients";
+import { TopTierSpendibleClients } from "../DashboardContents/TopTierSpendibleClients";
 import { TopTierEmployees } from "../DashboardContents/TopTierEmployees";
 import { TopTierSuppliers } from "../DashboardContents/TopTierSuppliers";
 import { TopTierDeliveries } from "../DashboardContents/TopTierDeliveries";
@@ -98,6 +99,11 @@ const dashboardsController: Record<string, DashboardRenderer> = {
     topTierClients: {
         render: () => (
             <TopTierClients />
+        ),
+    },
+    topTierSpendibleClients: {
+        render: () => (
+            <TopTierSpendibleClients />
         ),
     },
     topTierEmployees: {
@@ -255,6 +261,40 @@ const dashboardsController: Record<string, DashboardRenderer> = {
             return <Card icon={ShoppingCart} data={data} text={text} delay={delay} />;
         },
     },
+    purchasesMonthlyCost: {
+        fetch: async () => {
+            const currentDate = new Date();
+            const currentMonth = currentDate.getMonth() + 1; 
+            const currentYear = currentDate.getFullYear();
+            return await fetchTotalPurchaseCostByMonth(currentMonth, currentYear);
+        },
+        render: (data, delay = 0) => (
+            <Card icon={CurrencyDollarSimple} data={data} text="receita deste mês" type="price" delay={delay} />
+        ),
+    },
+    purchasesMonthlyAverageCost: {
+        fetch: async () => {
+            const currentDate = new Date();
+            const currentMonth = currentDate.getMonth() + 1; 
+            const currentYear = currentDate.getFullYear();
+            return await fetchAveragePurchaseCostByMonth(currentMonth, currentYear);
+        },
+        render: (data, delay = 0) => (
+            <Card icon={CurrencyCircleDollar} data={data} text="ticket médio deste mês" type="price" delay={delay} />
+        ),
+    },
+    purchasesTotalCost: {
+        fetch: fetchTotalPurchaseCosts,
+        render: (data, delay = 0) => (
+            <Card icon={CurrencyDollarSimple} data={data} text="receita total" type="price" delay={delay} />
+        ),
+    },
+    purchasesTotalAverageCost: {
+        fetch: fetchAveragePurchaseCost,
+        render: (data, delay = 0) => (
+            <Card icon={CurrencyCircleDollar} data={data} text="ticket médio total" type="price" delay={delay} />
+        ),
+    },
     paymentTypesChart: {
         render: () => (
             <PaymentTypesChart />
@@ -314,6 +354,10 @@ export const Dashboard = ({ dataDashboards, graphs, isMainDashboard = false }: D
                         "deliveriesTotalCost",
                         "deliveriesTotalAverageCost",
                         "purchasesTotalCount",
+                        "purchasesMonthlyCost",
+                        "purchasesMonthlyAverageCost",
+                        "purchasesTotalCost",
+                        "purchasesTotalAverageCost",
                         "monthlyRevenue",
                         "monthlyExpenses",
                         "monthlyProfit"
@@ -351,6 +395,10 @@ export const Dashboard = ({ dataDashboards, graphs, isMainDashboard = false }: D
                         "deliveriesTotalCost",
                         "deliveriesTotalAverageCost",
                         "purchasesTotalCount",
+                        "purchasesMonthlyCost",
+                        "purchasesMonthlyAverageCost",
+                        "purchasesTotalCost",
+                        "purchasesTotalAverageCost",
                         "monthlyRevenue",
                         "monthlyExpenses",
                         "monthlyProfit"

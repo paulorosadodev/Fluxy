@@ -56,6 +56,34 @@ export const fetchLowTierClients = async () => {
     }
 };
 
+export const fetchTopTierSpendibleClients = async () => {
+    try {
+        const response = await api.get("/clientes/top-tier-spendible-clients");
+        return response.data;
+    } catch (error: any) {
+        const errorMessage = error.response?.data;
+
+        if (errorMessage) {
+            throw new Error(errorMessage);
+        }
+        throw new Error("Erro inesperado ao recuperar clientes de nível superior por gastos");
+    }
+};
+
+export const fetchLowTierSpendibleClients = async () => {
+    try {
+        const response = await api.get("/clientes/low-tier-spendible-clients");
+        return response.data;
+    } catch (error: any) {
+        const errorMessage = error.response?.data;
+
+        if (errorMessage) {
+            throw new Error(errorMessage);
+        }
+        throw new Error("Erro inesperado ao recuperar clientes de nível inferior por gastos");
+    }
+};
+
 export const fetchTotalPhysicalClients = async () => {
     try {
         const response = await api.get("/clientes/total-physical-clients");
