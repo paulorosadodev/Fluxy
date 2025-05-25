@@ -19,6 +19,7 @@ import { TopTierPurchases } from "../DashboardContents/TopTierPurchases";
 import { LowStockProducts } from "../DashboardContents/LowStockProducts";
 import { ProductPriceHistory } from "../DashboardContents/ProductPriceHistory";
 import { DeliveriesByMonth } from "../DashboardContents/DeliveriesByMonth";
+import { PurchasesByMonth } from "../DashboardContents/PurchasesByMonth";
 import { fetchTotalClientsByCity, fetchTotalClients, fetchTotalPhysicalClients, fetchTotalJuridicalClients } from "../../services/endpoints/customer/dashboard";
 import { ClientsByCityChart } from "../DashboardContents/ClientsByCityChart";
 import { PaymentTypesChart } from "../DashboardContents/PaymentTypesChart";
@@ -184,6 +185,11 @@ const dashboardsController: Record<string, DashboardRenderer> = {
     deliveriesByMonth: {
         render: () => (
             <DeliveriesByMonth />
+        ),
+    },
+    purchasesByMonth: {
+        render: () => (
+            <PurchasesByMonth />
         ),
     },
     clientsByCity: {
