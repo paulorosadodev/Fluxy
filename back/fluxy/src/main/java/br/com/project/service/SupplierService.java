@@ -86,9 +86,6 @@ public class SupplierService {
     @Transactional
     public void update(Integer id, SupplierRequestDTO requestDTO) {
         try {
-            if (supplierRepository.existsByCnpj(requestDTO.cnpj())){
-                throw new IllegalArgumentException("CPNJ já cadastrado");
-            }
             Supplier supplier = mapperUtils.map(requestDTO, Supplier.class);
             supplier.setId(id);
             supplier.setName(requestDTO.name());
