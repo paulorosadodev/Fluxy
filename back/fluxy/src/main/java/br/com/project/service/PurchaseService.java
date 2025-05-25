@@ -2,6 +2,7 @@ package br.com.project.service;
 
 import br.com.project.dto.request.PurchaseRequestDTO;
 import br.com.project.dto.response.PaymentTypeCountResponseDTO;
+import br.com.project.dto.response.PurchaseCountByMonthAndYearResponseDTO;
 import br.com.project.dto.response.PurchaseResponseDTO;
 import br.com.project.model.Purchase;
 import br.com.project.repository.PurchaseRepository;
@@ -71,6 +72,10 @@ public class PurchaseService {
 
     public int countAllPurchases() {
         return purchaseRepository.countAllPurchases();
+    }
+
+    public PurchaseCountByMonthAndYearResponseDTO getPurchaseCountByMonthAndYear(int month, int year) {
+        return purchaseRepository.countPurchasesByMonthAndYear(month, year);
     }
 
     public List<PaymentTypeCountResponseDTO> getPaymentTypeCounts() {

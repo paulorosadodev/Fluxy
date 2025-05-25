@@ -1,6 +1,7 @@
 package br.com.project.repository;
 
 import br.com.project.dto.response.PaymentTypeCountResponseDTO;
+import br.com.project.dto.response.PurchaseCountByMonthAndYearResponseDTO;
 import br.com.project.model.Purchase;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -55,6 +56,19 @@ public class PurchaseRepository {
             throw new RuntimeException("Erro ao contar compras: " + e.getMessage());
         }
     }
+
+    public PurchaseCountByMonthAndYearResponseDTO countPurchasesByMonthAndYear(int month, int year) {
+        String sql = """
+        SELECT COUNT(*) AS quantidade
+        FROM compra
+        WHERE MONTH(data) = ? AND YEAR(data) = ?
+    """;
+
+        Integer count = jdbcTemplate.queryForObject(sql, new Object[]{month, year}, Integer.class);
+
+        return new PurchaseCountByMonthAndYearResponseDTO(count != null ? count : 0);
+    }
+
 
     public List<PaymentTypeCountResponseDTO> countPurchasesByPaymentType() {
         String sql = """
