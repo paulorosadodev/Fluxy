@@ -3,7 +3,6 @@ package br.com.project.controller;
 import br.com.project.dto.request.ProductIdRequestDTO;
 import br.com.project.dto.request.ProductRequestDTO;
 import br.com.project.dto.response.*;
-import br.com.project.model.Product;
 import br.com.project.service.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -91,6 +90,18 @@ public class ProductController {
             return ResponseEntity.internalServerError().body("Erro ao obter quantidade de produtos por " +
                     "categoria: " + e.getMessage());
         }
+    }
+
+    @GetMapping("/most-bought-products")
+    public ResponseEntity<List<ProductPurchaseCountResponseDTO>> getMostPurchasedProducts() {
+        List<ProductPurchaseCountResponseDTO> produtos = productService.getMostPurchasedProducts();
+        return ResponseEntity.ok(produtos);
+    }
+
+    @GetMapping("/least-bought-products")
+    public ResponseEntity<List<ProductPurchaseCountResponseDTO>> getLeastPurchasedProducts() {
+        List<ProductPurchaseCountResponseDTO> produtos = productService.getLeastPurchasedProducts();
+        return ResponseEntity.ok(produtos);
     }
 
     @GetMapping("/most-expensive-products")
