@@ -32,6 +32,24 @@ export const fetchTotalPurchaseCostByMonth = async (month: number, year: number)
     }
 };
 
+export const fetchTotalPurchasesByMonth = async (month: number, year: number) => {
+    try {
+        const response = await api.post("/purchases/by-month-year", {
+            month: month,
+            year: year
+        });
+
+        return response.data.count;
+    } catch (error: any) {
+        const errorMessage = error.response?.data;
+
+        if (errorMessage) {
+            throw new Error(errorMessage);
+        }
+        throw new Error("Erro inesperado ao recuperar total de compras por mês");
+    }
+};
+
 export const fetchPaymentTypeCounts = async () => {
     try {
         const response = await api.get("/purchases/payment-type-count");

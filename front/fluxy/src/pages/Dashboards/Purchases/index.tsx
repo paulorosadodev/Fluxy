@@ -149,6 +149,7 @@ export default function PurchasesDashboard() {
                             <Dashboard dataDashboards={
                                 [
                                     ["paymentTypesChart", "topTierPurchases"],
+                                    ["purchasesByMonth"],
                                 ]
                             } />
                             {showPopUp &&
