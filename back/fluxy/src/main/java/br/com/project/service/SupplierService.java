@@ -86,6 +86,14 @@ public class SupplierService {
     public void update(Integer id, SupplierRequestDTO requestDTO) {
         try {
             Supplier supplier = mapperUtils.map(requestDTO, Supplier.class);
+            supplier.setId(id);
+            supplier.setName(requestDTO.name());
+            supplier.setCnpj(requestDTO.cnpj());
+            supplier.setStreet(requestDTO.street());
+            supplier.setNumber(requestDTO.number());
+            supplier.setNeighborhood(requestDTO.neighborhood());
+            supplier.setCity(requestDTO.city());
+            supplier.setCep(requestDTO.cep());
             supplier.setPhone(requestDTO.phone()); // importante
             supplierRepository.updatePerson(id, supplier);
             supplierRepository.updateSupplier(id, supplier);
