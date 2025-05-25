@@ -1,5 +1,6 @@
 package br.com.project.controller;
 
+import br.com.project.dto.response.CategoryPurchasedResponseDTO;
 import br.com.project.model.Category;
 import br.com.project.service.CategoryService;
 import org.springframework.http.ResponseEntity;
@@ -50,5 +51,11 @@ public class CategoryController {
             return ResponseEntity.internalServerError().body("Erro ao obter total de categorias: " + e.getMessage());
         }
     }
+
+    @GetMapping("/most-purchased-categories")
+    public ResponseEntity<List<CategoryPurchasedResponseDTO>> getCategoryPurchaseSummary() {
+        return ResponseEntity.ok(service.getCategoryPurchaseSummary());
+    }
+
 
 }

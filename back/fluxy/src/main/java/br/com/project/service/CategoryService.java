@@ -1,5 +1,6 @@
 package br.com.project.service;
 
+import br.com.project.dto.response.CategoryPurchasedResponseDTO;
 import br.com.project.model.Category;
 import br.com.project.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,10 @@ public class CategoryService {
             throw new IllegalArgumentException("Categoria não encontrada para atualização.");
         }
         repository.update(category);
+    }
+
+    public List<CategoryPurchasedResponseDTO> getCategoryPurchaseSummary() {
+        return repository.getCategoryPurchaseSummary();
     }
 
     public int getTotalCategoriesCount() {

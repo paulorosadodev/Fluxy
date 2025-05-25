@@ -1,5 +1,6 @@
 package br.com.project.repository;
 
+import br.com.project.dto.response.CategoryPurchasedResponseDTO;
 import br.com.project.model.Category;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -46,6 +47,25 @@ public class CategoryRepository {
             throw new RuntimeException(e);
         }
     }
+
+    public List<CategoryPurchasedResponseDTO> getCategoryPurchaseSummary() {
+        String sql = """
+        SELECT cat.nome, COALESCE(SUM(c.qtd_produto), 0) AS total_comprado
+        FROM categoria cat
+        JOIN produto p ON p.codigo_categoria = cat.codigo
+        LEFT JOIN compra c ON c.fk_produto_id = p.id_produto
+        GROUP BY cat.nome
+        ORDER BY total_comprado DESC
+    """;
+
+        return jdbcTemplate.query(sql, (rs, rowNum) ->
+                new CategoryPurchasedResponseDTO(
+                        rs.getString("nome"),
+                        rs.getInt("total_comprado")
+                )
+        );
+    }
+
 
     public int getTotalCategoriesCount() {
         try {
