@@ -24,7 +24,7 @@ export const DashboardRow = styled.div`
     width: 100%;
     
     & > div {
-        min-width: 31rem;
+        min-width: 17rem;
         flex: 1;
     }
 `;

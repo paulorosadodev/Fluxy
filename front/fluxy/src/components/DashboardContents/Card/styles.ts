@@ -21,8 +21,7 @@ export const CardWrapper = styled.div.withConfig({
     padding: 1rem 1rem;
     color: ${(props) => props.theme["brown-800"]};
     border-left: 4px solid ${(props) => props.theme["purple-400"]};
-    min-width: 21rem;
-
+    
     opacity: 0;
     animation: ${fadeInUp} 0.6s ease-out forwards;
     animation-delay: ${(props) => props.delay || 0}ms;

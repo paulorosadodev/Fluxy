@@ -24,15 +24,18 @@ import { fetchTotalClientsByCity, fetchTotalClients, fetchTotalPhysicalClients, 
 import { ClientsByCityChart } from "../DashboardContents/ClientsByCityChart";
 import { PaymentTypesChart } from "../DashboardContents/PaymentTypesChart";
 import { MonthlyRevenue } from "../DashboardContents/MonthlyRevenue";
+import { MonthlyExpenses } from "../DashboardContents/MonthlyExpenses";
+import { MonthlyProfit } from "../DashboardContents/MonthlyProfit";
 
 type DashboardProps = {
     dataDashboards: string[][];
-    graphs?: boolean
+    graphs?: boolean;
+    isMainDashboard?: boolean;
 };
 
 type DashboardRenderer = {
     fetch?: () => Promise<any>;
-    render: (data?: any, delay?: number) => ReactNode;
+    render: (data?: any, delay?: number, isMainDashboard?: boolean) => ReactNode;
 };
 
 const dashboardsController: Record<string, DashboardRenderer> = {
@@ -44,9 +47,12 @@ const dashboardsController: Record<string, DashboardRenderer> = {
     },
     productsTotalCount: {
         fetch: fetchProductsCount,
-        render: (data, delay = 0) => (
-            <Card icon={Notebook} data={data} text={data !== 1 ? "produtos cadastrados" : "produto cadastrado"} delay={delay} />
-        ),
+        render: (data, delay = 0, isMainDashboard = false) => {
+            const text = isMainDashboard 
+                ? (data !== 1 ? "produtos" : "produto")
+                : (data !== 1 ? "produtos cadastrados" : "produto cadastrado");
+            return <Card icon={Notebook} data={data} text={text} delay={delay} />;
+        },
     },
     productsCategoriesCount: {
         fetch: fetchCategoriesCount,
@@ -116,9 +122,12 @@ const dashboardsController: Record<string, DashboardRenderer> = {
     },
     deliveriesTotalCount: {
         fetch: fetchTotalDeliveries,
-        render: (data, delay = 0) => (
-            <Card icon={CaretCircleDoubleDown} data={data} text={data !== 1 ? "entregas realizadas" : "entrega realizada"} delay={delay} />
-        ),
+        render: (data, delay = 0, isMainDashboard = false) => {
+            const text = isMainDashboard 
+                ? (data !== 1 ? "entregas" : "entrega")
+                : (data !== 1 ? "entregas realizadas" : "entrega realizada");
+            return <Card icon={CaretCircleDoubleDown} data={data} text={text} delay={delay} />;
+        },
     },
     deliveriesMonthlyCost: {
         fetch: async () => {
@@ -167,9 +176,12 @@ const dashboardsController: Record<string, DashboardRenderer> = {
     },
     suppliersTotalCount: {
         fetch: fetchSuppliersCount,
-        render: (data, delay = 0) => (
-            <Card icon={Truck} data={data} text={data !== 1 ? "fornecedores cadastrados" : "fornecedor cadastrado"} delay={delay} />
-        ),
+        render: (data, delay = 0, isMainDashboard = false) => {
+            const text = isMainDashboard 
+                ? (data !== 1 ? "fornecedores" : "fornecedor")
+                : (data !== 1 ? "fornecedores cadastrados" : "fornecedor cadastrado");
+            return <Card icon={Truck} data={data} text={text} delay={delay} />;
+        },
     },
     lowStockProducts: {
         fetch: fetchLowStockProducts,
@@ -200,9 +212,12 @@ const dashboardsController: Record<string, DashboardRenderer> = {
     },
     clientsTotalCount: {
         fetch: fetchTotalClients,
-        render: (data, delay = 0) => (
-            <Card icon={Users} data={data} text={data !== 1 ? "clientes cadastrados" : "cliente cadastrado"} delay={delay} />
-        ),
+        render: (data, delay = 0, isMainDashboard = false) => {
+            const text = isMainDashboard 
+                ? (data !== 1 ? "clientes" : "cliente")
+                : (data !== 1 ? "clientes cadastrados" : "cliente cadastrado");
+            return <Card icon={Users} data={data} text={text} delay={delay} />;
+        },
     },
     clientsPhysicalCount: {
         fetch: fetchTotalPhysicalClients,
@@ -218,9 +233,12 @@ const dashboardsController: Record<string, DashboardRenderer> = {
     },
     employeesTotalCount: {
         fetch: fetchEmployeesCount,
-        render: (data, delay = 0) => (
-            <Card icon={User} data={data} text={data !== 1 ? "funcionários cadastrados" : "funcionário cadastrado"} delay={delay} />
-        ),
+        render: (data, delay = 0, isMainDashboard = false) => {
+            const text = isMainDashboard 
+                ? (data !== 1 ? "funcionários" : "funcionário")
+                : (data !== 1 ? "funcionários cadastrados" : "funcionário cadastrado");
+            return <Card icon={User} data={data} text={text} delay={delay} />;
+        },
     },
     employeesTotalSalaries: {
         fetch: fetchTotalSalaries,
@@ -230,9 +248,12 @@ const dashboardsController: Record<string, DashboardRenderer> = {
     },
     purchasesTotalCount: {
         fetch: fetchTotalPurchases,
-        render: (data, delay = 0) => (
-            <Card icon={ShoppingCart} data={data} text={data !== 1 ? "compras realizadas" : "compra realizada"} delay={delay} />
-        ),
+        render: (data, delay = 0, isMainDashboard = false) => {
+            const text = isMainDashboard 
+                ? (data !== 1 ? "compras" : "compra")
+                : (data !== 1 ? "compras realizadas" : "compra realizada");
+            return <Card icon={ShoppingCart} data={data} text={text} delay={delay} />;
+        },
     },
     paymentTypesChart: {
         render: () => (
@@ -244,9 +265,19 @@ const dashboardsController: Record<string, DashboardRenderer> = {
             <MonthlyRevenue delay={delay} />
         ),
     },
+    monthlyExpenses: {
+        render: (_, delay = 0) => (
+            <MonthlyExpenses delay={delay} />
+        ),
+    },
+    monthlyProfit: {
+        render: (_, delay = 0) => (
+            <MonthlyProfit delay={delay} />
+        ),
+    },
 };
 
-export const Dashboard = ({ dataDashboards, graphs }: DashboardProps) => {
+export const Dashboard = ({ dataDashboards, graphs, isMainDashboard = false }: DashboardProps) => {
     const [dashboards, setDashboards] = useState<ReactNode[][]>([]);
 
     const fetchData = async () => {
@@ -283,13 +314,15 @@ export const Dashboard = ({ dataDashboards, graphs }: DashboardProps) => {
                         "deliveriesTotalCost",
                         "deliveriesTotalAverageCost",
                         "purchasesTotalCount",
-                        "monthlyRevenue"
+                        "monthlyRevenue",
+                        "monthlyExpenses",
+                        "monthlyProfit"
                     ].includes(key);
                     const delay = isCard ? cardIndex * DELAY_BETWEEN_CARDS : 0;
                     
                     if (controller.fetch) {
                         const data = await controller.fetch();
-                        component = isCard ? controller.render(data, delay) : controller.render(data);
+                        component = isCard ? controller.render(data, delay, isMainDashboard) : controller.render(data);
                     } else {
                         component = isCard ? controller.render(undefined, delay) : controller.render();
                     }
@@ -318,10 +351,12 @@ export const Dashboard = ({ dataDashboards, graphs }: DashboardProps) => {
                         "deliveriesTotalCost",
                         "deliveriesTotalAverageCost",
                         "purchasesTotalCount",
-                        "monthlyRevenue"
+                        "monthlyRevenue",
+                        "monthlyExpenses",
+                        "monthlyProfit"
                     ].includes(key);
                     const delay = isCard ? cardIndex * DELAY_BETWEEN_CARDS : 0;
-                    const component = isCard ? controller.render(fallbackData, delay) : controller.render(fallbackData);
+                    const component = isCard ? controller.render(fallbackData, delay, isMainDashboard) : controller.render(fallbackData);
                     if (isCard) cardIndex++; 
                     rowComponents.push(component);
                 }
