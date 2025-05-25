@@ -86,6 +86,9 @@ public class LegalClientService {
     @Transactional
     public void update(Integer id, LegalClientRequestDTO dto) {
         try {
+            if (repository.existsByCnpj(dto.cnpj())){
+                throw new IllegalArgumentException("CPNJ já cadastrado");
+            }
             LegalClient existing = repository.findById(id)
                     .orElseThrow(() -> new RuntimeException("Cliente jurídico com ID " + id + " não encontrado"));
 

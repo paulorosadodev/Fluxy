@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -85,6 +86,9 @@ public class SupplierService {
     @Transactional
     public void update(Integer id, SupplierRequestDTO requestDTO) {
         try {
+            if (supplierRepository.existsByCnpj(requestDTO.cnpj())){
+                throw new IllegalArgumentException("CPNJ já cadastrado");
+            }
             Supplier supplier = mapperUtils.map(requestDTO, Supplier.class);
             supplier.setId(id);
             supplier.setName(requestDTO.name());
