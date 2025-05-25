@@ -142,9 +142,9 @@ export default function PurchasesDashboard() {
                             <h1>Compras</h1>
                             <Dashboard dataDashboards={
                                 [
-                                    ["purchasesTotalCount"],
-                                    ["purchasesMonthlyCost", "purchasesMonthlyAverageCost"],
-                                    ["purchasesTotalCost", "purchasesTotalAverageCost"],
+                                    ["purchasesTotalCount", "purchasesMonthlyCount"],
+                                    ["purchasesTotalCost", "purchasesMonthlyCost"],
+                                    ["purchasesTotalAverageCost", "purchasesMonthlyAverageCost"],
                                 ]
                             } />
                             <DataTable deleteRow={deletePurchase} data={formattedPurchases} columns={columns} entityName="compras" popUpController={setShowPopUp} deletePopUpController={setShowDeletePopUp} setDeletePopUpMessage={setDeletePopUpMessage} setDeletePopUpType={setDeletePopUpType} formControllers={formControllers} selectedRowController={setSelectedRow}/>
@@ -152,6 +152,7 @@ export default function PurchasesDashboard() {
                                 [
                                     ["paymentTypesChart", "topTierPurchases"],
                                     ["purchasesByMonth"],
+                                    ["mostPurchasedCategories"]
                                 ]
                             } />
                             {showPopUp &&

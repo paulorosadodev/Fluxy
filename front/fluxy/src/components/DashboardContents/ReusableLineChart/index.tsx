@@ -96,6 +96,8 @@ export function ReusableLineChart({
         </SelectContainer>
     );
 
+    console.log("chartData", chartData);
+
     return (
         <ContainerWithSpinner $loading={loading}>
             {loading && (

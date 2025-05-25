@@ -107,27 +107,23 @@ export function PurchasesByMonth({ height = 320 }: PurchasesByMonthProps) {
 
     const currentConfig = chartConfig[chartType as keyof typeof chartConfig];
 
-    // Função para verificar se há dados válidos
     const checkForValidData = async () => {
         try {
-            // Testa com um período pequeno para verificar se há dados
             const testData = await fetchPurchasesData("3-months");
-            return testData && testData.length > 0 && testData.some(item => item.value > 0);
+            return testData && testData.length > 0 && testData.some(item => item.value >= 0);
         } catch {
             return false;
         }
     };
 
-    // Hook para verificar dados válidos
     const [hasValidData, setHasValidData] = useState<boolean | null>(null);
 
     useEffect(() => {
         checkForValidData().then(setHasValidData);
     }, [chartType]);
 
-    // Não renderizar enquanto verifica ou se não há dados válidos
     if (hasValidData === null) {
-        return null; // Loading state
+        return null; 
     }
 
     if (!hasValidData) {

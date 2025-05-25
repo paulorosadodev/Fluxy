@@ -4,7 +4,7 @@ import { fetchAveragePrice, fetchCategoriesCount, fetchLowStockProducts, fetchPr
 import { fetchEmployeesCount, fetchTotalSalaries, fetchEmployeeCountByShift, fetchEmployeeCountByRole } from "../../services/endpoints/employee/dashboard";
 import { fetchSuppliersCount } from "../../services/endpoints/supplier/dashboard";
 import { fetchTotalDeliveries, fetchTotalDeliveryCostByMonth, fetchDeliveryMonthAverageCost, fetchDeliveriesByMonth, fetchTotalCost, fetchTotalAverageCost } from "../../services/endpoints/supply/dashboard";
-import { fetchTotalPurchases, fetchAveragePurchaseCost, fetchTotalPurchaseCosts, fetchAveragePurchaseCostByMonth, fetchTotalPurchaseCostByMonth } from "../../services/endpoints/purchase/dashboard";
+import { fetchTotalPurchases, fetchAveragePurchaseCost, fetchTotalPurchaseCosts, fetchAveragePurchaseCostByMonth, fetchTotalPurchaseCostByMonth, fetchTotalPurchasesByMonth } from "../../services/endpoints/purchase/dashboard";
 import { Card } from "../DashboardContents/Card";
 import { Package, Notebook, Tag, CurrencyCircleDollar, CurrencyDollarSimple, Users, UserCircle, Buildings, User, Money, Truck, CaretCircleDoubleDown, ShoppingCart} from "phosphor-react";
 import { ProductsByCategoryChart } from "../DashboardContents/ProductsByCategoryChart";
@@ -24,6 +24,7 @@ import { PurchasesByMonth } from "../DashboardContents/PurchasesByMonth";
 import { fetchTotalClientsByCity, fetchTotalClients, fetchTotalPhysicalClients, fetchTotalJuridicalClients } from "../../services/endpoints/customer/dashboard";
 import { ClientsByCityChart } from "../DashboardContents/ClientsByCityChart";
 import { PaymentTypesChart } from "../DashboardContents/PaymentTypesChart";
+import { MostPurchasedCategoriesChart } from "../DashboardContents/MostPurchasedCategoriesChart";
 import { MonthlyRevenue } from "../DashboardContents/MonthlyRevenue";
 import { MonthlyExpenses } from "../DashboardContents/MonthlyExpenses";
 import { MonthlyProfit } from "../DashboardContents/MonthlyProfit";
@@ -77,6 +78,11 @@ const dashboardsController: Record<string, DashboardRenderer> = {
         fetch: fetchProductsCountByCategory,
         render: (data) => (
             <ProductsByCategoryChart data={data} />
+        ),
+    },
+    mostPurchasedCategories: {
+        render: () => (
+            <MostPurchasedCategoriesChart />
         ),
     },
     employeesCountByShift: {
@@ -293,6 +299,17 @@ const dashboardsController: Record<string, DashboardRenderer> = {
         fetch: fetchAveragePurchaseCost,
         render: (data, delay = 0) => (
             <Card icon={CurrencyCircleDollar} data={data} text="ticket médio total" type="price" delay={delay} />
+        ),
+    },
+    purchasesMonthlyCount: {
+        fetch: async () => {
+            const currentDate = new Date();
+            const currentMonth = currentDate.getMonth() + 1; 
+            const currentYear = currentDate.getFullYear();
+            return await fetchTotalPurchasesByMonth(currentMonth, currentYear);
+        },
+        render: (data, delay = 0) => (
+            <Card icon={ShoppingCart} data={data} text={data !== 1 ? "compras este mês" : "compra este mês"} delay={delay} />
         ),
     },
     paymentTypesChart: {

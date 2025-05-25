@@ -106,8 +106,10 @@ export function isValidCEP(cep: string): boolean {
 }
 
 export function formatMoney(value: number) {
-    return `R$ ${Number(value).toFixed(2).replace(".", ",")}`;
-    
+    return value.toLocaleString("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+    });
 }
 
 export function formatStock(value: number) {
