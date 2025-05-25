@@ -57,6 +57,17 @@ public class PurchaseRepository {
         }
     }
 
+    public Double sumAllPurchaseCosts() {
+        String sql = """
+        SELECT SUM(c.qtd_produto * p.preco) 
+        FROM compra c
+        JOIN produto p ON c.fk_produto_id = p.id_produto
+    """;
+
+        Double total = jdbcTemplate.queryForObject(sql, Double.class);
+        return total != null ? total : 0.0;
+    }
+
     public PurchaseCountByMonthAndYearResponseDTO countPurchasesByMonthAndYear(int month, int year) {
         String sql = """
         SELECT COUNT(*) AS quantidade

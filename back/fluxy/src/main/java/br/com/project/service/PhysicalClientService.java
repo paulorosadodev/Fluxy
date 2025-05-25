@@ -86,6 +86,9 @@ public class PhysicalClientService {
     @Transactional
     public void update(Integer id, PhysicalClientRequestDTO dto) {
         try {
+            if (repository.existsByCpf(dto.cpf())){
+                throw new IllegalArgumentException("CPF já cadastrado");
+            }
             PhysicalClient existing = repository.findById(id)
                     .orElseThrow(() -> new RuntimeException("Cliente físico com ID " + id + " não encontrado."));
 

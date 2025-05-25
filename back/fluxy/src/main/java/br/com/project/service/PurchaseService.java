@@ -74,6 +74,11 @@ public class PurchaseService {
         return purchaseRepository.countAllPurchases();
     }
 
+    public Double getTotalPurchaseCost() {
+        return purchaseRepository.sumAllPurchaseCosts();
+    }
+
+
     public PurchaseCountByMonthAndYearResponseDTO getPurchaseCountByMonthAndYear(int month, int year) {
         return purchaseRepository.countPurchasesByMonthAndYear(month, year);
     }

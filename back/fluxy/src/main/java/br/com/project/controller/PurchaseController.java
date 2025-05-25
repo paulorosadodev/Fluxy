@@ -67,6 +67,12 @@ public class PurchaseController {
         return ResponseEntity.ok(new PurchaseTotalCountResponseDTO(total));
     }
 
+    @GetMapping("/total-costs")
+    public ResponseEntity<Double> getTotalPurchaseCosts() {
+        Double total = service.getTotalPurchaseCost();
+        return ResponseEntity.ok(total);
+    }
+
     @GetMapping("/payment-type-count")
     public ResponseEntity<List<PaymentTypeCountResponseDTO>> getPaymentTypeCounts() {
         List<PaymentTypeCountResponseDTO> result = purchaseService.getPaymentTypeCounts();
