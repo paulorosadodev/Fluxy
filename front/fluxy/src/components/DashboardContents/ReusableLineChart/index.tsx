@@ -118,8 +118,6 @@ export function ReusableLineChart({
         </SelectContainer>
     );
 
-    console.log("chartData", chartData);
-
     return (
         <ContainerWithSpinner $loading={loading}>
             {loading && (
@@ -157,7 +155,7 @@ export function ReusableLineChart({
                             allowDataOverflow={false}
                         />
                         <Tooltip 
-                            formatter={(value: number) => [valueFormatter(value), tooltipLabel || title]} 
+                            formatter={(value: number) => [`${tooltipLabel || title}: ${valueFormatter(value)}`]} 
                             labelFormatter={label => `Data: ${dateFormatter(label)}`} 
                         />
                         <Line 

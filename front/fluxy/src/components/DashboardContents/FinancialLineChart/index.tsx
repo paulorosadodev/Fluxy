@@ -37,7 +37,7 @@ export function FinancialLineChart() {
         case "expenses":
             return theme["purple-500"];
         case "profit":
-            return theme["orange-500"];
+            return theme["teal-500"];
         default:
             return theme["teal-500"];
         }
@@ -45,7 +45,11 @@ export function FinancialLineChart() {
 
     const getMetricTitle = () => {
         const metricName = METRIC_OPTIONS.find(option => option.value === selectedMetric)?.label || "Faturamento";
-        return metricName;
+        return `${metricName} por Período`;
+    };
+
+    const getMetricName = () => {
+        return METRIC_OPTIONS.find(option => option.value === selectedMetric)?.label || "Faturamento";
     };
 
     const generateMonthsArray = (months: number): { month: number; year: number; date: string }[] => {
@@ -127,7 +131,6 @@ export function FinancialLineChart() {
         return chartData;
     };
 
-    // Componente adicional para o segundo dropdown (será criado como extraHeaderContent)
     const extraHeaderContent = (
         <SelectContainer>
             <SelectDropdown
@@ -161,7 +164,7 @@ export function FinancialLineChart() {
             valueFormatter={formatMoney}
             dateFormatter={(date) => date}
             lineColor={getLineColor()}
-            tooltipLabel={METRIC_OPTIONS.find(option => option.value === selectedMetric)?.label}
+            tooltipLabel={getMetricName()}
             extraHeaderContent={extraHeaderContent}
             isCurrency={true}
         />

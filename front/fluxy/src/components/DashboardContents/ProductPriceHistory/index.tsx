@@ -50,6 +50,10 @@ export function ProductPriceHistory({ height = 320 }: PriceHistoryProps) {
         label: product.name
     }));
 
+    if (products.length === 0) {
+        return null;
+    }
+
     return (
         <ReusableLineChart 
             title="Histórico de Preço"
