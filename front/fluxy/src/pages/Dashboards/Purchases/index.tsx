@@ -120,10 +120,10 @@ export default function PurchasesDashboard() {
 
     if (selectedRow.length > 1 && formattedPurchases) {
         const selectedPurchase = formattedPurchases.filter((purchase) => String(purchase.number) === selectedRow.split(",")[0])[0];
-        const selectedPurchaseProduct = products.filter((purchase) => String(purchase.codEa) === selectedPurchase.product.codEa)[0];
         
-        
-        if (selectedPurchase) {
+        if (selectedPurchase && selectedPurchase.product) {
+            const selectedPurchaseProduct = products.filter((purchase) => String(purchase.codEa) === selectedPurchase.product.codEa)[0];
+            
             editData = [String(selectedPurchase.number), String(formatCustomer(selectedPurchase.customer)), String(formatPurchaseProduct(selectedPurchaseProduct)), 
                 String(selectedPurchase.productAmount), String(selectedPurchase.paymentMethod.type), String(selectedPurchase.paymentMethod.installments), String(formatEmployee(selectedPurchase.employee))];
         }
