@@ -68,6 +68,18 @@ public class PurchaseRepository {
         return total != null ? total : 0.0;
     }
 
+    public Double averagePurchaseCost() {
+        String sql = """
+        SELECT AVG(c.qtd_produto * p.preco)
+        FROM compra c
+        JOIN produto p ON c.fk_produto_id = p.id_produto
+    """;
+
+        Double average = jdbcTemplate.queryForObject(sql, Double.class);
+        return average != null ? average : 0.0;
+    }
+
+
     public PurchaseCountByMonthAndYearResponseDTO countPurchasesByMonthAndYear(int month, int year) {
         String sql = """
         SELECT COUNT(*) AS quantidade

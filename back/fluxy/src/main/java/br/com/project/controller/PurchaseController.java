@@ -73,6 +73,12 @@ public class PurchaseController {
         return ResponseEntity.ok(total);
     }
 
+    @GetMapping("/average-costs")
+    public ResponseEntity<Double> getAveragePurchaseCost() {
+        Double average = purchaseService.getAveragePurchaseCost();
+        return ResponseEntity.ok(average);
+    }
+
     @GetMapping("/payment-type-count")
     public ResponseEntity<List<PaymentTypeCountResponseDTO>> getPaymentTypeCounts() {
         List<PaymentTypeCountResponseDTO> result = purchaseService.getPaymentTypeCounts();
