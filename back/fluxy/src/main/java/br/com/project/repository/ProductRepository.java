@@ -3,7 +3,6 @@ package br.com.project.repository;
 import br.com.project.dto.response.*;
 import br.com.project.model.Product;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -92,6 +91,42 @@ public class ProductRepository {
         } catch (Exception e) {
             throw new RuntimeException("Erro ao atualizar produto", e);
         }
+    }
+
+    public List<ProductPurchaseCountResponseDTO> getMostPurchasedProducts() {
+        String sql = """
+        SELECT p.nome, SUM(c.qtd_produto) AS total_comprado
+        FROM compra c
+        JOIN produto p ON c.fk_produto_id = p.id_produto
+        GROUP BY p.nome
+        ORDER BY total_comprado DESC
+        LIMIT 5
+    """;
+
+        return jdbcTemplate.query(sql, (rs, rowNum) ->
+                new ProductPurchaseCountResponseDTO(
+                        rs.getString("nome"),
+                        rs.getInt("total_comprado")
+                )
+        );
+    }
+
+    public List<ProductPurchaseCountResponseDTO> getLeastPurchasedProducts() {
+        String sql = """
+        SELECT p.nome, COALESCE(SUM(c.qtd_produto), 0) AS total_comprado
+        FROM produto p
+        LEFT JOIN compra c ON c.fk_produto_id = p.id_produto
+        GROUP BY p.nome
+        ORDER BY total_comprado ASC
+        LIMIT 5
+    """;
+
+        return jdbcTemplate.query(sql, (rs, rowNum) ->
+                new ProductPurchaseCountResponseDTO(
+                        rs.getString("nome"),
+                        rs.getInt("total_comprado")
+                )
+        );
     }
 
     public int getTotalStockQuantity() {

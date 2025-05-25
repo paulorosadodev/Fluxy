@@ -68,6 +68,29 @@ public class PurchaseRepository {
         return total != null ? total : 0.0;
     }
 
+    public Double averagePurchaseCost() {
+        String sql = """
+        SELECT AVG(c.qtd_produto * p.preco)
+        FROM compra c
+        JOIN produto p ON c.fk_produto_id = p.id_produto
+    """;
+
+        Double average = jdbcTemplate.queryForObject(sql, Double.class);
+        return average != null ? average : 0.0;
+    }
+
+    public Double averagePurchaseCostByMonthAndYear(int month, int year) {
+        String sql = """
+        SELECT AVG(p.preco * c.qtd_produto)
+        FROM compra c
+        JOIN produto p ON c.fk_produto_id = p.id_produto
+        WHERE MONTH(c.data) = ? AND YEAR(c.data) = ?
+    """;
+
+        Double average = jdbcTemplate.queryForObject(sql, Double.class, month, year);
+        return average != null ? average : 0.0;
+    }
+
     public PurchaseCountByMonthAndYearResponseDTO countPurchasesByMonthAndYear(int month, int year) {
         String sql = """
         SELECT COUNT(*) AS quantidade
@@ -79,7 +102,6 @@ public class PurchaseRepository {
 
         return new PurchaseCountByMonthAndYearResponseDTO(count != null ? count : 0);
     }
-
 
     public List<PaymentTypeCountResponseDTO> countPurchasesByPaymentType() {
         String sql = """

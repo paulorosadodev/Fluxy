@@ -61,6 +61,24 @@ public class PurchaseController {
         }
     }
 
+    @PostMapping("/monthly-average-costs")
+    public ResponseEntity<?> getAveragePurchaseCostByMonthAndYear(@RequestBody MonthYearRequest request) {
+        try {
+            int mes = request.getMonth();
+            int ano = request.getYear();
+
+            if (mes < 1 || mes > 12) {
+                return ResponseEntity.badRequest().body("O mês deve estar entre 1 e 12.");
+            }
+
+            Double average = purchaseService.getAveragePurchaseCostByMonthAndYear(mes, ano);
+            return ResponseEntity.ok(average);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro ao calcular média de compras: " + e.getMessage());
+        }
+    }
+
     @GetMapping("/total")
     public ResponseEntity<PurchaseTotalCountResponseDTO> getTotalCompras() {
         int total = purchaseService.countAllPurchases();
@@ -71,6 +89,12 @@ public class PurchaseController {
     public ResponseEntity<Double> getTotalPurchaseCosts() {
         Double total = service.getTotalPurchaseCost();
         return ResponseEntity.ok(total);
+    }
+
+    @GetMapping("/average-costs")
+    public ResponseEntity<Double> getAveragePurchaseCost() {
+        Double average = purchaseService.getAveragePurchaseCost();
+        return ResponseEntity.ok(average);
     }
 
     @GetMapping("/payment-type-count")

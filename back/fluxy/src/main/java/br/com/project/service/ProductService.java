@@ -116,6 +116,14 @@ public class ProductService {
         }
     }
 
+    public List<ProductPurchaseCountResponseDTO> getMostPurchasedProducts() {
+        return productRepository.getMostPurchasedProducts();
+    }
+
+    public List<ProductPurchaseCountResponseDTO> getLeastPurchasedProducts() {
+        return productRepository.getLeastPurchasedProducts();
+    }
+
     public int getTotalStockQuantity() {
         try {
             return productRepository.getTotalStockQuantity();
