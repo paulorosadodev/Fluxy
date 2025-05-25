@@ -86,7 +86,7 @@ export const ListWrapper = styled.ol`
     }
 `;
 
-export const MotionListWrapper = motion(ListWrapper);
+export const MotionListWrapper = motion.create(ListWrapper);
 
 export const MotionListItem = styled(motion.li)`
     display: flex;

@@ -22,6 +22,7 @@ import { DeliveriesByMonth } from "../DashboardContents/DeliveriesByMonth";
 import { fetchTotalClientsByCity, fetchTotalClients, fetchTotalPhysicalClients, fetchTotalJuridicalClients } from "../../services/endpoints/customer/dashboard";
 import { ClientsByCityChart } from "../DashboardContents/ClientsByCityChart";
 import { PaymentTypesChart } from "../DashboardContents/PaymentTypesChart";
+import { MonthlyRevenue } from "../DashboardContents/MonthlyRevenue";
 
 type DashboardProps = {
     dataDashboards: string[][];
@@ -232,6 +233,11 @@ const dashboardsController: Record<string, DashboardRenderer> = {
             <PaymentTypesChart />
         ),
     },
+    monthlyRevenue: {
+        render: (_, delay = 0) => (
+            <MonthlyRevenue delay={delay} />
+        ),
+    },
 };
 
 export const Dashboard = ({ dataDashboards, graphs }: DashboardProps) => {
@@ -270,7 +276,8 @@ export const Dashboard = ({ dataDashboards, graphs }: DashboardProps) => {
                         "deliveriesMonthlyCount",
                         "deliveriesTotalCost",
                         "deliveriesTotalAverageCost",
-                        "purchasesTotalCount"
+                        "purchasesTotalCount",
+                        "monthlyRevenue"
                     ].includes(key);
                     const delay = isCard ? cardIndex * DELAY_BETWEEN_CARDS : 0;
                     
@@ -304,7 +311,8 @@ export const Dashboard = ({ dataDashboards, graphs }: DashboardProps) => {
                         "deliveriesMonthlyCount",
                         "deliveriesTotalCost",
                         "deliveriesTotalAverageCost",
-                        "purchasesTotalCount"
+                        "purchasesTotalCount",
+                        "monthlyRevenue"
                     ].includes(key);
                     const delay = isCard ? cardIndex * DELAY_BETWEEN_CARDS : 0;
                     const component = isCard ? controller.render(fallbackData, delay) : controller.render(fallbackData);

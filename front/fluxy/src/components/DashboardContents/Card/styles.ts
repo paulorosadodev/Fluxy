@@ -11,7 +11,9 @@ const fadeInUp = keyframes`
     }
 `;
 
-export const CardWrapper = styled.div<{ delay?: number }>`
+export const CardWrapper = styled.div.withConfig({
+    shouldForwardProp: (prop) => prop !== "delay",
+})<{ delay?: number }>`
     background-color: ${(props) => props.theme["white-dark"]};
     display: flex;
     align-items: center;

@@ -8,6 +8,7 @@ export const defaultTheme = {
     "purple-300": "#8D86C9", 
     "purple-400": "#9B75CB",
     "purple-500": "#9067C6", 
+    "purple-700": "#5A3A86",
     "purple-900": "#242038",
 
     "gray-50": "#F7ECE1",
@@ -16,7 +17,11 @@ export const defaultTheme = {
     "orange-300": "#F38D68",
     "orange-500": "#EE6C4D",
 
+    "red-50": "#FEE2E2",
     "red-500": "#D64550",
+
+    "green-50": "#EAF8F2",
+    "green-500": "#059669",
 
     "violet-700": "#662C91",
 

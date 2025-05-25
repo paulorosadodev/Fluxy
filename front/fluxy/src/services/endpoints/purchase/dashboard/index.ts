@@ -20,6 +20,7 @@ export const fetchTotalPurchaseCostByMonth = async (month: number, year: number)
             month: month,
             year: year
         });
+
         return response.data;
     } catch (error: any) {
         const errorMessage = error.response?.data;
