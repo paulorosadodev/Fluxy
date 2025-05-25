@@ -3,6 +3,7 @@ package br.com.project.controller;
 import br.com.project.dto.request.MonthYearRequest;
 import br.com.project.dto.request.PurchaseRequestDTO;
 import br.com.project.dto.response.PaymentTypeCountResponseDTO;
+import br.com.project.dto.response.PurchaseCountByMonthAndYearResponseDTO;
 import br.com.project.dto.response.PurchaseResponseDTO;
 import br.com.project.dto.response.PurchaseTotalCountResponseDTO;
 import br.com.project.model.Purchase;
@@ -70,6 +71,24 @@ public class PurchaseController {
     public ResponseEntity<List<PaymentTypeCountResponseDTO>> getPaymentTypeCounts() {
         List<PaymentTypeCountResponseDTO> result = purchaseService.getPaymentTypeCounts();
         return ResponseEntity.ok(result);
+    }
+
+    @PostMapping("/by-month-year")
+    public ResponseEntity<?> findByMonthAndYear(@RequestBody MonthYearRequest request) {
+        try {
+            int mes = request.getMonth();
+            int ano = request.getYear();
+
+            if (mes < 1 || mes > 12) {
+                return ResponseEntity.badRequest().body("O mês deve estar entre 1 e 12.");
+            }
+
+            PurchaseCountByMonthAndYearResponseDTO response = service.getPurchaseCountByMonthAndYear(mes, ano);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro ao buscar a quantidade de compras por mês e ano: " + e.getMessage());
+        }
     }
 
     @GetMapping("/most-expensive-purchases")
