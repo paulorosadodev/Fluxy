@@ -142,6 +142,7 @@ export function PurchasesByMonth({ height = 320 }: PurchasesByMonthProps) {
             valueFormatter={currentConfig.valueFormatter}
             dateFormatter={formatMonth}
             tooltipLabel={currentConfig.tooltipLabel}
+            isCurrency={chartType === "totalCost"}
             extraHeaderContent={
                 <ExtraSelect value={chartType} onChange={handleChartTypeChange}>
                     {chartTypeOptions.map(option => (

@@ -13,6 +13,24 @@ import {
 import { formatDate } from "../../../utils";
 import { useEffect, useState } from "react";
 
+// Função para formatar valores de forma abreviada (1K, 10K, 1M, etc.)
+const formatShortValue = (value: number, isCurrency: boolean = false): string => {
+    const isNegative = value < 0;
+    const absValue = Math.abs(value);
+    const prefix = isCurrency ? "R$ " : "";
+    const sign = isNegative ? "-" : "";
+    
+    if (absValue >= 1000000000) {
+        return `${sign}${prefix}${(absValue / 1000000000).toFixed(1)}B`;
+    } else if (absValue >= 1000000) {
+        return `${sign}${prefix}${(absValue / 1000000).toFixed(1)}M`;
+    } else if (absValue >= 1000) {
+        return `${sign}${prefix}${(absValue / 1000).toFixed(1)}K`;
+    } else {
+        return isCurrency ? `${sign}${prefix}${absValue.toFixed(2)}` : `${sign}${prefix}${absValue}`;
+    }
+};
+
 interface ChartDataPoint {
     value: number;
     date: string;
@@ -36,6 +54,7 @@ interface ReusableLineChartProps {
     dateFormatter?: (date: string) => string;
     tooltipLabel?: string;
     extraHeaderContent?: React.ReactNode;
+    isCurrency?: boolean;
 }
 
 export function ReusableLineChart({ 
@@ -49,7 +68,8 @@ export function ReusableLineChart({
     valueFormatter = (value: number) => `${value}`,
     dateFormatter = formatDate,
     tooltipLabel,
-    extraHeaderContent
+    extraHeaderContent,
+    isCurrency = false
 }: ReusableLineChartProps) {
     const [selectedValue, setSelectedValue] = useState<string>("");
     const [chartData, setChartData] = useState<ChartDataPoint[]>([]);
@@ -58,6 +78,8 @@ export function ReusableLineChart({
     useEffect(() => {
         if (options.length > 0 && !selectedValue) {
             setSelectedValue(options[0].value);
+        } else if (options.length === 0) {
+            setSelectedValue("default");
         }
     }, [options, selectedValue]);
 
@@ -111,7 +133,7 @@ export function ReusableLineChart({
                     <Title>{title}</Title>
                     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                         {extraHeaderContent}
-                        {selectInput}
+                        {options.length > 0 && selectInput}
                     </div>
                 </HeaderContainer>
                 <StyledResponsiveContainer width="100%" height={height} $loading={loading}>
@@ -128,11 +150,10 @@ export function ReusableLineChart({
                             padding={{ left: 10, right: 10 }}
                         />
                         <YAxis 
-                            dataKey={valueKey} 
-                            tickFormatter={valueFormatter}
-                            width={70}
+                            tickFormatter={(value: number) => formatShortValue(value, isCurrency)}
+                            width={80}
                             tick={{ fontSize: 12 }}
-                            domain={["auto", "dataMax + 5"]}
+                            domain={["dataMin", "dataMax"]}
                             allowDataOverflow={false}
                         />
                         <Tooltip 

@@ -9,6 +9,7 @@ export default function MainDashboard() {
                 dataDashboards={[
                     ["productsTotalCount", "suppliersTotalCount", "deliveriesTotalCount", "employeesTotalCount", "clientsTotalCount", "purchasesTotalCount"],
                     ["monthlyRevenue", "monthlyExpenses", "monthlyProfit"],
+                    ["financialLineChart"],
                     ["lowStockProducts"]
                 ]}
                 isMainDashboard={true}

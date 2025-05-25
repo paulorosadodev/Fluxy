@@ -113,7 +113,7 @@ export function DeliveriesByMonth({ height = 320 }: DeliveriesByMonthProps) {
         try {
             // Testa com um período pequeno para verificar se há dados
             const testData = await fetchDeliveriesData("3-months");
-            return testData && testData.length > 0 && testData.some(item => item.value > 0);
+            return testData && testData.length > 0 && testData.some(item => item.value >= 0);
         } catch {
             return false;
         }
@@ -147,6 +147,7 @@ export function DeliveriesByMonth({ height = 320 }: DeliveriesByMonthProps) {
             valueFormatter={currentConfig.valueFormatter}
             dateFormatter={formatMonth}
             tooltipLabel={currentConfig.tooltipLabel}
+            isCurrency={chartType === "totalCost"}
             extraHeaderContent={
                 <ExtraSelect value={chartType} onChange={handleChartTypeChange}>
                     {chartTypeOptions.map(option => (

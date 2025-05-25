@@ -28,6 +28,7 @@ import { MostPurchasedCategoriesChart } from "../DashboardContents/MostPurchased
 import { MonthlyRevenue } from "../DashboardContents/MonthlyRevenue";
 import { MonthlyExpenses } from "../DashboardContents/MonthlyExpenses";
 import { MonthlyProfit } from "../DashboardContents/MonthlyProfit";
+import { FinancialLineChart } from "../DashboardContents/FinancialLineChart";
 
 type DashboardProps = {
     dataDashboards: string[][];
@@ -330,6 +331,11 @@ const dashboardsController: Record<string, DashboardRenderer> = {
     monthlyProfit: {
         render: (_, delay = 0) => (
             <MonthlyProfit delay={delay} />
+        ),
+    },
+    financialLineChart: {
+        render: () => (
+            <FinancialLineChart />
         ),
     },
 };

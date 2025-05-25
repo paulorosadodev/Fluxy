@@ -60,6 +60,7 @@ export function ProductPriceHistory({ height = 320 }: PriceHistoryProps) {
             dateKey="date"
             lineColor="#8884d8"
             valueFormatter={(value: number) => `R$ ${value.toFixed(2)}`}
+            isCurrency={true}
         />
     );
 }
