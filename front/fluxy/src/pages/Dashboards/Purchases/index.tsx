@@ -152,6 +152,7 @@ export default function PurchasesDashboard() {
                                 [
                                     ["paymentTypesChart", "topTierPurchases"],
                                     ["purchasesByMonth"],
+                                    ["mostBoughtProductsChart", "leastBoughtProductsChart"],
                                     ["mostPurchasedCategories"]
                                 ]
                             } />

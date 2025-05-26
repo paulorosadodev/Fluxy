@@ -176,5 +176,33 @@ export const fetchMostPurchasedCategories = async () => {
     }
 };
 
+export const fetchMostBoughtProducts = async () => {
+    try {
+        const response = await api.get("/products/most-bought-products");
+        return response.data;
+    } catch (error: any) {
+        const errorMessage = error.response?.data;
+
+        if (errorMessage) {
+            throw new Error(errorMessage);
+        }
+        throw new Error("Erro inesperado ao recuperar produtos mais comprados");
+    }
+};
+
+export const fetchLeastBoughtProducts = async () => {
+    try {
+        const response = await api.get("/products/least-bought-products");
+        return response.data;
+    } catch (error: any) {
+        const errorMessage = error.response?.data;
+
+        if (errorMessage) {
+            throw new Error(errorMessage);
+        }
+        throw new Error("Erro inesperado ao recuperar produtos menos comprados");
+    }
+};
+
 
 

@@ -17,6 +17,8 @@ import { TopTierEmployees } from "../DashboardContents/TopTierEmployees";
 import { TopTierSuppliers } from "../DashboardContents/TopTierSuppliers";
 import { TopTierDeliveries } from "../DashboardContents/TopTierDeliveries";
 import { TopTierPurchases } from "../DashboardContents/TopTierPurchases";
+import { MostBoughtProductsChart } from "../DashboardContents/MostBoughtProductsChart";
+import { LeastBoughtProductsChart } from "../DashboardContents/LeastBoughtProductsChart";
 import { LowStockProducts } from "../DashboardContents/LowStockProducts";
 import { ProductPriceHistory } from "../DashboardContents/ProductPriceHistory";
 import { DeliveriesByMonth } from "../DashboardContents/DeliveriesByMonth";
@@ -131,6 +133,16 @@ const dashboardsController: Record<string, DashboardRenderer> = {
     topTierPurchases: {
         render: () => (
             <TopTierPurchases />
+        ),
+    },
+    mostBoughtProductsChart: {
+        render: () => (
+            <MostBoughtProductsChart />
+        ),
+    },
+    leastBoughtProductsChart: {
+        render: () => (
+            <LeastBoughtProductsChart />
         ),
     },
     deliveriesTotalCount: {

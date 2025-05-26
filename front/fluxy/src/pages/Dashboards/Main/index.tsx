@@ -10,8 +10,9 @@ export default function MainDashboard() {
                     ["productsTotalCount", "suppliersTotalCount", "deliveriesTotalCount", "employeesTotalCount", "clientsTotalCount", "purchasesTotalCount"],
                     ["monthlyRevenue", "monthlyExpenses", "monthlyProfit"],
                     ["financialLineChart"],
-                    ["productsCountByCategory", "lowStockProducts", "clientsByCity"],
-                    ["mostPurchasedCategories"]
+                    ["productsCountByCategory", "lowStockProducts", "employeesCountByRole"],
+                    ["mostPurchasedCategories"],
+                    ["mostBoughtProductsChart", "leastBoughtProductsChart"]
                 ]}
                 isMainDashboard={true}
             />
