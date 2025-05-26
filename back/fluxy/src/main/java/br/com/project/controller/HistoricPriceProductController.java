@@ -21,7 +21,6 @@ public class HistoricPriceProductController {
     @PostMapping
     public ResponseEntity<?> save(@RequestBody HistoricPriceProductRequestDTO requestDTO) {
         try {
-            System.out.println(requestDTO.getPrice());
             HistoricPriceProductResponseDTO response = historicPriceProductService.save(requestDTO);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
