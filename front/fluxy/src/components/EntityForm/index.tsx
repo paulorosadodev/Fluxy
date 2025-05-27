@@ -37,8 +37,6 @@ export function EntityForm({open, type, title, fields, formControllers, data, se
     const id = Number(data?.[0]);
     const rawData = useMemo(() => data?.slice(1), [data]);
 
-    console.log(fields);
-
     const createValidationSchema = (fields: Field[][]) => {
         const shape: Record<string, z.ZodTypeAny> = {};
         
@@ -99,8 +97,6 @@ export function EntityForm({open, type, title, fields, formControllers, data, se
                 );
             })
         );
-
-        console.log(filteredData);
 
         try {
             await onSubmitAPI(filteredData); 

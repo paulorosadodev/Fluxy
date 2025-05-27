@@ -24,7 +24,6 @@ public class PhoneRepository {
             if (phone.getNumber() != null && !phone.getNumber().isBlank()) {
                 String sql = "INSERT INTO telefone (numero, id_telefone) VALUES (?, ?)";
                 jdbcTemplate.update(sql, phone.getNumber(), phone.getIdPerson());
-                System.out.println("Telefone salvo com sucesso: " + phone.getNumber());
             }
         } catch (Exception e) {
             e.printStackTrace();
