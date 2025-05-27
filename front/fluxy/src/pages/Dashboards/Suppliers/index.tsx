@@ -132,7 +132,7 @@ export default function SuppliersDashboard() {
         [
             {
                 label: "Produto",
-                type: "combo",
+                type: "select",
                 value: "product",
                 placeholder: "Selecione o produto",
                 validation: z.string().min(1, { message: "Produto é obrigatório" }),
