@@ -27,7 +27,6 @@ public class PhoneRepository {
                 System.out.println("Telefone salvo com sucesso: " + phone.getNumber());
             }
         } catch (Exception e) {
-            System.out.println(e.getMessage());
             e.printStackTrace();
         }
     }
