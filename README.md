@@ -1,6 +1,8 @@
-# Fluxy - Sistema de Gestão para Supermercados
+![banner](https://github.com/user-attachments/assets/da9b063e-ac48-4dd0-81e6-aee9dae42f44)
 
 O **Fluxy** é uma plataforma completa de gestão para supermercados, desenvolvida com tecnologias modernas para transformar a maneira como estabelecimentos comerciais gerenciam seus dados. A solução oferece dashboards intuitivos e ferramentas poderosas para acompanhar vendas, estoque, fornecedores, funcionários e clientes em tempo real.
+
+---
 
 ### ✨ Características Principais
 
