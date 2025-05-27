@@ -30,6 +30,7 @@ O **Fluxy** é uma plataforma completa de gestão para supermercados, desenvolvi
 - **Validação**: Zod
 - **Gráficos**: Recharts
 - **Ícones**: Phosphor Icons
+- **Requisições**: Axios
 
 ## 🗄️ Modelo de Dados
 
@@ -104,23 +105,6 @@ echo "VITE_API_URL=http://localhost:8080" > .env
 
 # Executar em modo desenvolvimento
 npm run dev
-```
-
-## 🔧 Scripts Disponíveis
-
-### Backend
-```bash
-./mvnw clean install    # Compilar projeto
-./mvnw spring-boot:run  # Executar aplicação
-./mvnw test            # Executar testes
-```
-
-### Frontend
-```bash
-npm run dev      # Servidor de desenvolvimento
-npm run build    # Build para produção
-npm run preview  # Preview da build
-npm run lint     # Verificar código
 ```
 
 ## 🔐 Autenticação e Autorização
