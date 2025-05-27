@@ -2,6 +2,8 @@
 
 O **Fluxy** é uma plataforma completa de gestão para supermercados, desenvolvida com tecnologias modernas para transformar a maneira como estabelecimentos comerciais gerenciam seus dados. A solução oferece dashboards intuitivos e ferramentas poderosas para acompanhar vendas, estoque, fornecedores, funcionários e clientes em tempo real.
 
+Relatório: https://docs.google.com/document/d/1eiKyZxbbeewgxDmbU7_PvDfbVwolnDBptJC9rDMAeBs/edit?usp=drivesdk
+
 ---
 
 ### ✨ Características Principais
